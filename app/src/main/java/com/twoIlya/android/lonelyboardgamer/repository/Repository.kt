@@ -61,7 +61,7 @@ object Repository {
         location: String,
         description: String,
         categories: String,
-        mechs: String
+        mechanics: String
     ): LiveData<ServerResponse> {
         val responseLiveData = MutableLiveData<ServerResponse>()
 
@@ -70,7 +70,7 @@ object Repository {
             location.toRequestBody("text/plain".toMediaTypeOrNull()),
             description.toRequestBody("text/plain".toMediaTypeOrNull()),
             categories.toRequestBody("text/plain".toMediaTypeOrNull()),
-            mechs.toRequestBody("text/plain".toMediaTypeOrNull())
+            mechanics.toRequestBody("text/plain".toMediaTypeOrNull())
         )
 
         getProfileRequest.enqueue(MyCallback("register", responseLiveData))
