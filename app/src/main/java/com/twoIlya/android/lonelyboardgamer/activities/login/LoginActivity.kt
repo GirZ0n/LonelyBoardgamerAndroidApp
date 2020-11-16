@@ -19,7 +19,7 @@ import com.vk.api.sdk.auth.VKAuthCallback
 
 class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by lazy { ViewModelProvider(this).get(LoginViewModel::class.java) }
-    lateinit var binding: ActivityLoginBinding
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip: ClipData = ClipData.newPlainText("token", token.accessToken)
                 clipboard.setPrimaryClip(clip)
+                // ---------------------------
 
                 viewModel.login(token.accessToken)
             }
