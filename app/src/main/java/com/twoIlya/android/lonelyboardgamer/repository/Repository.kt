@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 object Repository {
     private val serverAPI: ServerAPI
@@ -19,7 +19,7 @@ object Repository {
     init {
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl("https://immense-dusk-70422.herokuapp.com/")
-            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         serverAPI = retrofit.create(ServerAPI::class.java)
@@ -81,7 +81,7 @@ object Repository {
     private fun onFailureHandling(): ServerResponse {
         val message = "There is no network connection available. Please check your " +
                 "connection settings and try again"
-        return ServerResponse("-1", message)
+        return ServerResponse(-1, message)
     }
 
     private class MyCallback(
@@ -99,7 +99,7 @@ object Repository {
         ) {
             responseLiveData.value = when {
                 isErrorCode(response.code()) -> ServerResponse(
-                    response.code().toString(),
+                    response.code(),
                     response.message()
                 )
                 else -> response.body()
