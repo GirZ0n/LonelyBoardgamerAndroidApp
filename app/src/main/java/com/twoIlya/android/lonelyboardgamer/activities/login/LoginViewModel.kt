@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.repository.Repository
-import com.twoIlya.android.lonelyboardgamer.sharedPref.Cache
 import com.twoIlya.android.lonelyboardgamer.sharedPref.TokenPref
 
 class LoginViewModel(private val app: Application): AndroidViewModel(app) {
