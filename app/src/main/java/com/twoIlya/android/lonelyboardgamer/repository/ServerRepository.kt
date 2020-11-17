@@ -110,7 +110,7 @@ object ServerRepository {
     }
 
     private object Constants {
-        const val TAG = "Repository_TAG"
+        const val TAG = "ServerRepository_TAG"
     }
 
     private fun isErrorCode(code: Int): Boolean {
