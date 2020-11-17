@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.databinding.ActivityLoginBinding
-import com.twoIlya.android.lonelyboardgamer.sharedPref.Cache
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.auth.VKAuthCallback
@@ -26,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
         // Если мы залогинены, то пропускаем это activity
-        if (Cache.isLoggedIn(this)) {
+        if (viewModel.isUserLoggedIn()) {
             // TODO: Уходим на основной экран
 
             Toast.makeText(this, "Вы уже залогинены", Toast.LENGTH_SHORT).show()
