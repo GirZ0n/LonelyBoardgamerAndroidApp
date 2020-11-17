@@ -11,7 +11,7 @@ object CacheRepository {
         CacheRepository.context = context
     }
 
-    private const val IS_LOGGED_IN_KEY = "is_logged_in"
+    private const val IS_LOGGED_IN_KEY = "IS_LOGGED_IN"
 
     fun isLoggedIn(): Boolean {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

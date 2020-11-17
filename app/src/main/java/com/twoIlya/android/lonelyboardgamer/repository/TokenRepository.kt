@@ -14,8 +14,8 @@ object TokenRepository {
     }
 
     private const val SHARED_PREF_NAME = "token_preferences"
-    private const val SERVER_TOKEN_KEY = "server_token"
-    private const val VK_TOKEN_KEY = "vk_token"
+    private const val SERVER_TOKEN_KEY = "SERVER_TOKEN"
+    private const val VK_TOKEN_KEY = "VK_TOKEN"
 
     fun getServerToken() =
         getEncryptedSharedPreferences().getString(SERVER_TOKEN_KEY, "") ?: ""
