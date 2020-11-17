@@ -13,7 +13,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object Repository {
+object ServerRepository {
     private val serverAPI: ServerAPI
 
     init {
