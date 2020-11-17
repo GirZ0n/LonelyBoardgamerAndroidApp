@@ -1,29 +1,35 @@
-package com.twoIlya.android.lonelyboardgamer.sharedPref
+package com.twoIlya.android.lonelyboardgamer.repository
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-object TokenPref {
+object TokenRepository {
+
+    private lateinit var context: Context
+
+    fun setContext(context: Context) {
+        TokenRepository.context = context
+    }
 
     private const val SHARED_PREF_NAME = "token_preferences"
     private const val SERVER_TOKEN_KEY = "server_token"
     private const val VK_TOKEN_KEY = "vk_token"
 
-    fun getServerToken(context: Context) =
-        getEncryptedSharedPreferences(context).getString(SERVER_TOKEN_KEY, "") ?: ""
+    fun getServerToken() =
+        getEncryptedSharedPreferences().getString(SERVER_TOKEN_KEY, "") ?: ""
 
-    fun setServerToken(context: Context, value: String) =
-        getEncryptedSharedPreferences(context).edit().putString(SERVER_TOKEN_KEY, value).apply()
+    fun setServerToken(value: String) =
+        getEncryptedSharedPreferences().edit().putString(SERVER_TOKEN_KEY, value).apply()
 
-    fun getVKToken(context: Context) =
-        getEncryptedSharedPreferences(context).getString(VK_TOKEN_KEY, "") ?: ""
+    fun getVKToken() =
+        getEncryptedSharedPreferences().getString(VK_TOKEN_KEY, "") ?: ""
 
-    fun setVKToken(context: Context, value: String) =
-        getEncryptedSharedPreferences(context).edit().putString(VK_TOKEN_KEY, value).apply()
+    fun setVKToken(value: String) =
+        getEncryptedSharedPreferences().edit().putString(VK_TOKEN_KEY, value).apply()
 
-    private fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
+    private fun getEncryptedSharedPreferences(): SharedPreferences {
         val masterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
