@@ -4,13 +4,15 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.twoIlya.android.lonelyboardgamer.R
+import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
+import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.databinding.ActivityLoginBinding
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAccessToken
@@ -39,17 +41,38 @@ class LoginActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        viewModel.loginServerResponse.observe(this) {
-            // TODO: или обработать ошибку, или отправить пользователя куда-то
+        viewModel.serverToken.observe(this) {
+            // TODO: Перейти в профиль
+            Toast.makeText(this, it.value, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.eventLiveData.observe(this) {
+            when (it.isHandle) {
+                true -> return@observe
+                false -> it.isHandle = true
+            }
+
+            when (it.type) {
+                EventType.Warning -> {
+                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                }
+                EventType.Move -> {
+                    if (it.message == "Personalization") {
+                        // TODO: Перейти на страницу персонализации
+                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                EventType.Error -> {
+                    // TODO: Передать extras
+                    val intent = Intent(this, ErrorActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
         }
 
         binding.loginButton.setOnClickListener {
-            if (!it.isEnabled) {
-                Toast.makeText(this, "Запрос обрабатывается", Toast.LENGTH_SHORT).show()
-            }
-
             VK.login(this, emptyList())
-            it.isEnabled = false
         }
     }
 
@@ -70,7 +93,6 @@ class LoginActivity : AppCompatActivity() {
             override fun onLoginFailed(errorCode: Int) {
                 Toast.makeText(this@LoginActivity, "VK AUTH ERROR: $errorCode", Toast.LENGTH_SHORT)
                     .show()
-                binding.loginButton.isEnabled = true
             }
         }
 
