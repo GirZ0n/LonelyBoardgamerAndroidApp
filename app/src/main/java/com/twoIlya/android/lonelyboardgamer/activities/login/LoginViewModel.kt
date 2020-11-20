@@ -27,16 +27,18 @@ class LoginViewModel : ViewModel() {
         eventLiveData.addSource(loginServerResponse) {
             if (errorHandler.isError(it)) {
                 eventLiveData.postValue(errorHandler.loginErrorHandler(it as ServerError))
-            } else {
-                _serverToken.postValue(it as Token)
+            } else if (it is Token) {
+                TokenRepository.setServerToken(it)
+                CacheRepository.setIsLoggedIn(true)
+                _serverToken.postValue(it)
             }
         }
     }
 
     fun login(accessToken: String) {
         val token = Token(accessToken)
-        this.accessToken.value = token
         TokenRepository.setVKToken(token)
+        this.accessToken.value = token
     }
 
     fun isUserLoggedIn() = CacheRepository.isLoggedIn()
