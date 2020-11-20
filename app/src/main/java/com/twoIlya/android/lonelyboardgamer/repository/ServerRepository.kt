@@ -15,6 +15,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.net.SocketTimeoutException
 
 object ServerRepository {
     private val serverAPI: ServerAPI
@@ -156,6 +157,11 @@ object ServerRepository {
         return when (t) {
             // Network problems
             is IOException -> onNetworkFailureHandling()
+            // Server fell asleep
+            is SocketTimeoutException -> ServerError(
+                -1,
+                "The server fell asleep. Repeat your action"
+            )
             // Other problems
             else -> ServerError(
                 -3,
