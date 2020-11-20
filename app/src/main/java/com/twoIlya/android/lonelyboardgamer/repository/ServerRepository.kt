@@ -28,10 +28,10 @@ object ServerRepository {
         serverAPI = retrofit.create(ServerAPI::class.java)
     }
 
-    fun login(VKAccessToken: String): LiveData<ServerRepositoryResponse> {
+    fun login(vkToken: Token): LiveData<ServerRepositoryResponse> {
         val responseLiveData: MutableLiveData<ServerRepositoryResponse> = MutableLiveData()
 
-        val tokenBody = VKAccessToken.toRequestBody("text/plain".toMediaTypeOrNull())
+        val tokenBody = vkToken.value.toRequestBody("text/plain".toMediaTypeOrNull())
         val loginRequest = serverAPI.login(tokenBody)
 
         loginRequest.enqueue(MyCallback("Login", responseLiveData) { serverResponse ->

@@ -16,7 +16,7 @@ class LoginViewModel : ViewModel() {
     private val _serverToken = MutableLiveData<Token>()
     val serverToken: LiveData<Token> = _serverToken
 
-    private val accessToken = MutableLiveData<String>()
+    private val accessToken = MutableLiveData<Token>()
     private val loginServerResponse = Transformations.switchMap(accessToken) { token ->
         repo.login(token)
     }
@@ -34,8 +34,9 @@ class LoginViewModel : ViewModel() {
     }
 
     fun login(accessToken: String) {
-        this.accessToken.value = accessToken
-        TokenRepository.setVKToken(accessToken)
+        val token = Token(accessToken)
+        this.accessToken.value = token
+        TokenRepository.setVKToken(token)
     }
 
     fun isUserLoggedIn() = CacheRepository.isLoggedIn()

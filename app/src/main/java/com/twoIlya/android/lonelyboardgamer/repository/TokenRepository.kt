@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 
 object TokenRepository {
 
@@ -17,17 +18,21 @@ object TokenRepository {
     private const val SERVER_TOKEN_KEY = "SERVER_TOKEN"
     private const val VK_TOKEN_KEY = "VK_TOKEN"
 
-    fun getServerToken() =
-        getEncryptedSharedPreferences().getString(SERVER_TOKEN_KEY, "") ?: ""
+    fun getServerToken(): Token {
+        val value = getEncryptedSharedPreferences().getString(SERVER_TOKEN_KEY, "") ?: ""
+        return Token(value)
+    }
 
-    fun setServerToken(value: String) =
-        getEncryptedSharedPreferences().edit().putString(SERVER_TOKEN_KEY, value).apply()
+    fun setServerToken(token: Token) =
+        getEncryptedSharedPreferences().edit().putString(SERVER_TOKEN_KEY, token.value).apply()
 
-    fun getVKToken() =
-        getEncryptedSharedPreferences().getString(VK_TOKEN_KEY, "") ?: ""
+    fun getVKToken(): Token {
+        val value = getEncryptedSharedPreferences().getString(VK_TOKEN_KEY, "") ?: ""
+        return Token(value)
+    }
 
-    fun setVKToken(value: String) =
-        getEncryptedSharedPreferences().edit().putString(VK_TOKEN_KEY, value).apply()
+    fun setVKToken(token: Token) =
+        getEncryptedSharedPreferences().edit().putString(VK_TOKEN_KEY, token.value).apply()
 
     private fun getEncryptedSharedPreferences(): SharedPreferences {
         val masterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
