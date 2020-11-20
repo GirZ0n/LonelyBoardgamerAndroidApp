@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
 
             when (it.type) {
                 EventType.Warning -> {
-                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
                 }
                 EventType.Move -> {
                     if (it.message == "Personalization") {

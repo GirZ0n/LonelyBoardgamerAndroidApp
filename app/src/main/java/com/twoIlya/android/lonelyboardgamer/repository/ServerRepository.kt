@@ -68,7 +68,6 @@ object ServerRepository {
         override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
             responseLiveData.value = onFailureHandling(t)
             Log.d(Constants.TAG, "$functionName (onF): $t")
-            Log.e(Constants.TAG, "$functionName (onF): something went wrong", t)
         }
     }
 
@@ -144,8 +143,8 @@ object ServerRepository {
     */
 
     private fun onNetworkFailureHandling(): ServerError {
-        val message = "There is no network connection available. Please check your " +
-                "connection settings and try again"
+        val message = "There was a problem sending your request. Check your internet connection. " +
+                "If the problem persists, please contact us at: placeholder@placeholder.com"
         return ServerError(-1, message)
     }
 
