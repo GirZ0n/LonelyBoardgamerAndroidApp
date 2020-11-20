@@ -4,5 +4,5 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="vk_primary">#2787F5</color>
-    <color name="mainFontColor">#000000</color>
+    <color name="fontMainColor">#000000</color>
 </resources>
