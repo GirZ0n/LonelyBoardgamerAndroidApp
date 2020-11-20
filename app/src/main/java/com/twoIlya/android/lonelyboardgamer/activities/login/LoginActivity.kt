@@ -19,7 +19,9 @@ import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.auth.VKAuthCallback
 
 class LoginActivity : AppCompatActivity() {
-    private val viewModel: LoginViewModel by lazy { ViewModelProvider(this).get(LoginViewModel::class.java) }
+    private val viewModel: LoginViewModel by lazy {
+        ViewModelProvider(this).get(LoginViewModel::class.java)
+    }
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
         // Если мы залогинены, то пропускаем это activity
         if (viewModel.isUserLoggedIn()) {
             // TODO: Уходим в профиль
+            Log.d(TAG, "isUserLoggedIn")
         }
 
         supportActionBar?.hide()
@@ -36,9 +39,12 @@ class LoginActivity : AppCompatActivity() {
         // Если с сервера пришёл токен, то переходим в профиль
         viewModel.serverToken.observe(this) {
             // TODO: Перейти в профиль
+            Log.d(TAG, "ServerToken: ${it.value}")
         }
 
         viewModel.eventLiveData.observe(this) {
+            Log.d(TAG, "Event: $it")
+
             when (it.isHandle) {
                 true -> return@observe
                 false -> it.isHandle = true
@@ -84,6 +90,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun onLoginFailed(errorCode: Int) {
+                Log.d(TAG, "onActRes (onLoginFailed): $errorCode")
                 Toast.makeText(this@LoginActivity, "VK AUTH ERROR: $errorCode", Toast.LENGTH_SHORT)
                     .show()
             }
