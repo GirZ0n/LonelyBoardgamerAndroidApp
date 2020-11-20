@@ -1,9 +1,44 @@
-package com.twoIlya.android.lonelyboardgamer.database
+package com.twoIlya.android.lonelyboardgamer.repository
 
 import com.androidbuts.multispinnerfilter.KeyPairBoolData
 
-object Mechanics {
-    private val array = arrayOf(
+object PreferencesRepository {
+    private val categories = arrayOf(
+        "Соревновательные",
+        "Кооперативные",
+        "Один против всех",
+        "Абстрактные",
+        "Евро",
+        "Америтреш",
+        "Варгеймы",
+        "Социальные игры",
+        "Спокойные",
+        "Агрессивные",
+        "Точный просчет",
+        "Рандом",
+        "Ролевые",
+        "На ассоциации",
+        "Атмосферные",
+        "Сложные",
+        "Простые",
+        "Карточные",
+    )
+
+    fun getCategories(selected: List<String>): List<KeyPairBoolData> {
+        val answer = mutableListOf<KeyPairBoolData>()
+        categories.forEachIndexed { index, it ->
+            val item = KeyPairBoolData()
+            item.name = it
+            item.isSelected = it in selected
+            item.id = index.toLong()
+            answer.add(item)
+        }
+        return answer
+    }
+
+    // ----------------------------------------
+
+    private val mechanics = arrayOf(
         "Контроль над территориями",
         "Аукцион",
         "Блеф",
@@ -32,9 +67,9 @@ object Mechanics {
         "Разнящиеся способности игроков",
     )
 
-    fun getAsListOfKeyPairBoolData(selected: List<String>): List<KeyPairBoolData> {
+    fun getMechanics(selected: List<String>): List<KeyPairBoolData> {
         val answer = mutableListOf<KeyPairBoolData>()
-        array.forEachIndexed { index, it ->
+        mechanics.forEachIndexed { index, it ->
             val item = KeyPairBoolData()
             item.name = it
             item.isSelected = it in selected
