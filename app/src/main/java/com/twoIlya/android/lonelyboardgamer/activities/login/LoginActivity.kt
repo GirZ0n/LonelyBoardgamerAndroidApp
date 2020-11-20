@@ -63,8 +63,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
                 EventType.Error -> {
-                    // TODO: Передать extras
-                    val intent = Intent(this, ErrorActivity::class.java)
+                    val intent = ErrorActivity.newActivity(this, it.message)
                     startActivity(intent)
                     finish()
                 }
