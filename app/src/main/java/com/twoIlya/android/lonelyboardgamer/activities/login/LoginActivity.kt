@@ -28,22 +28,14 @@ class LoginActivity : AppCompatActivity() {
 
         // Если мы залогинены, то пропускаем это activity
         if (viewModel.isUserLoggedIn()) {
-            // TODO: Уходим на основной экран
-
-            Toast.makeText(this, "Вы уже залогинены", Toast.LENGTH_SHORT).show()
-
-            /*
-            val intent = Intent(this, BossActivity::class.java)
-            startActivity(intent)
-            finish()
-            */
+            // TODO: Уходим в профиль
         }
 
         supportActionBar?.hide()
 
+        // Если с сервера пришёл токен, то переходим в профиль
         viewModel.serverToken.observe(this) {
             // TODO: Перейти в профиль
-            Toast.makeText(this, it.value, Toast.LENGTH_SHORT).show()
         }
 
         viewModel.eventLiveData.observe(this) {
@@ -55,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
             when (it.type) {
                 EventType.Warning -> {
                     Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                    binding.loginButton.isEnabled = true
                 }
                 EventType.Move -> {
                     if (it.message == "Personalization") {
@@ -86,6 +79,7 @@ class LoginActivity : AppCompatActivity() {
                 clipboard.setPrimaryClip(clip)
                 // ---------------------------
 
+                binding.loginButton.isEnabled = false
                 viewModel.login(token.accessToken)
             }
 
