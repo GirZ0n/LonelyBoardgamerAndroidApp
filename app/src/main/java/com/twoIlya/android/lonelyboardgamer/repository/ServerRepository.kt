@@ -62,7 +62,11 @@ object ServerRepository {
             } else {
                 responseLiveData.value = ServerError(response.code(), response.message())
             }
-            Log.d(Constants.TAG, "$functionName (onR): ${response.body()}")
+            val errorMessage = "$functionName (onR): \n" +
+                    "body - ${response.body()} \n" +
+                    "code - ${response.code()} \n" +
+                    "message - ${response.message()}"
+            Log.d(Constants.TAG, errorMessage)
         }
 
         override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
