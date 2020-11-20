@@ -147,20 +147,18 @@ object ServerRepository {
         }
     */
 
-    private fun onNetworkFailureHandling(): ServerError {
-        val message = "There was a problem sending your request. Check your internet connection. " +
-                "If the problem persists, please contact us at: placeholder@placeholder.com"
-        return ServerError(-1, message)
-    }
-
     private fun onFailureHandling(t: Throwable): ServerError {
         return when (t) {
-            // Network problems
-            is IOException -> onNetworkFailureHandling()
             // Server fell asleep
             is SocketTimeoutException -> ServerError(
                 -1,
                 "The server fell asleep. Repeat your action"
+            )
+            // Network problems
+            is IOException -> ServerError(
+                -1,
+                "There was a problem sending your request. Check your internet connection. " +
+                        "If the problem persists, please contact us at: placeholder@placeholder.com"
             )
             // Other problems
             else -> ServerError(
