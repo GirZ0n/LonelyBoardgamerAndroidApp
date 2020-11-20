@@ -18,7 +18,7 @@ object ErrorHandler {
                 Event(EventType.Move, "Personalization")
             }
             else -> {
-                Event(EventType.Error, error.message)
+                Event(EventType.Error, "${error.code}: ${error.message}")
             }
         }
     }
