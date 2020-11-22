@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
+import com.twoIlya.android.lonelyboardgamer.activities.main.MainActivity
 import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.databinding.ActivityLoginBinding
 import com.vk.api.sdk.VK
@@ -28,17 +29,27 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
+        // TODO: DEBUG
+        val intentD = Intent(this, MainActivity::class.java)
+        startActivity(intentD)
+        finish()
+        // ------
+
         // Если мы залогинены, то пропускаем это activity
         if (viewModel.isUserLoggedIn()) {
-            // TODO: Уходим в профиль
-            Log.d(TAG, "isUserLoggedIn")
+            val intent = MainActivity.newActivity(this, R.id.myProfileFragment)
+            startActivity(intent)
+            finish()
         }
 
         supportActionBar?.hide()
 
         // Если с сервера пришёл токен, то переходим в профиль
         viewModel.serverToken.observe(this) {
-            // TODO: Перейти в профиль
+            val intent = MainActivity.newActivity(this, R.id.myProfileFragment)
+            startActivity(intent)
+            finish()
+
             Log.d(TAG, "ServerToken: ${it.value}")
         }
 
@@ -56,9 +67,10 @@ class LoginActivity : AppCompatActivity() {
                     binding.loginButton.isEnabled = true
                 }
                 EventType.Move -> {
-                    if (it.message == "Personalization") {
-                        // TODO: Перейти на страницу персонализации
-                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    if (it.message == "Registration") {
+                        val intent = MainActivity.newActivity(this, R.id.registrationFragment)
+                        startActivity(intent)
+                        finish()
                     }
                 }
                 EventType.Error -> {
