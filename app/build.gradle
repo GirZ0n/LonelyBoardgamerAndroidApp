@@ -65,6 +65,11 @@ dependencies {
     // Spinner
     implementation 'com.github.pratikbutani:MultiSelectSpinner:-SNAPSHOT'
 
+    // Fragments
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
+    implementation "androidx.fragment:fragment:1.2.5"
+
     // Tests
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
