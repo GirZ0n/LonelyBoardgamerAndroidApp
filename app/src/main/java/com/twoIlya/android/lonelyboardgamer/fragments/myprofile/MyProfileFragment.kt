@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.twoIlya.android.lonelyboardgamer.R
 
-class MyProfile : Fragment() {
+class MyProfileFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
