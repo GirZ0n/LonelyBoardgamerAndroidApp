@@ -42,6 +42,51 @@ object ServerRepository {
         return responseLiveData
     }
 
+    fun register(
+        vkToken: Token,
+        location: String,
+        categories: String,
+        mechanics: String,
+        description: String
+    ): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val getProfileRequest = serverAPI.register(
+            vkToken.value.toRequestBody("text/plain".toMediaTypeOrNull()),
+            location.toRequestBody("text/plain".toMediaTypeOrNull()),
+            description.toRequestBody("text/plain".toMediaTypeOrNull()),
+            categories.toRequestBody("text/plain".toMediaTypeOrNull()),
+            mechanics.toRequestBody("text/plain".toMediaTypeOrNull())
+        )
+
+        getProfileRequest.enqueue(MyCallback("register", responseLiveData) { serverResponse ->
+            Token(serverResponse.message)
+        })
+
+        return responseLiveData
+    }
+/*
+    fun logout(serverToken: String): LiveData<ServerResponse> {
+        val responseLiveData: MutableLiveData<ServerResponse> = MutableLiveData()
+
+        val logoutRequest = serverAPI.logout("Bearer $serverToken")
+
+        logoutRequest.enqueue(MyCallback("logout", responseLiveData))
+
+        return responseLiveData
+    }
+
+    fun getProfile(serverToken: String): LiveData<ServerResponse> {
+        val responseLiveData = MutableLiveData<ServerResponse>()
+
+        val getProfileRequest = serverAPI.getProfile("Bearer $serverToken")
+
+        getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData))
+
+        return responseLiveData
+    }
+*/
+
     private class MyCallback(
         val functionName: String,
         val responseLiveData: MutableLiveData<ServerRepositoryResponse>,
@@ -75,50 +120,6 @@ object ServerRepository {
             Log.d(Constants.TAG, "$functionName (onF): $t")
         }
     }
-
-/*
-    fun logout(serverToken: String): LiveData<ServerResponse> {
-        val responseLiveData: MutableLiveData<ServerResponse> = MutableLiveData()
-
-        val logoutRequest = serverAPI.logout("Bearer $serverToken")
-
-        logoutRequest.enqueue(MyCallback("logout", responseLiveData))
-
-        return responseLiveData
-    }
-
-    fun getProfile(serverToken: String): LiveData<ServerResponse> {
-        val responseLiveData = MutableLiveData<ServerResponse>()
-
-        val getProfileRequest = serverAPI.getProfile("Bearer $serverToken")
-
-        getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData))
-
-        return responseLiveData
-    }
-
-    fun register(
-        VKAccessToken: String,
-        location: String,
-        description: String,
-        categories: String,
-        mechanics: String
-    ): LiveData<ServerResponse> {
-        val responseLiveData = MutableLiveData<ServerResponse>()
-
-        val getProfileRequest = serverAPI.register(
-            VKAccessToken.toRequestBody("text/plain".toMediaTypeOrNull()),
-            location.toRequestBody("text/plain".toMediaTypeOrNull()),
-            description.toRequestBody("text/plain".toMediaTypeOrNull()),
-            categories.toRequestBody("text/plain".toMediaTypeOrNull()),
-            mechanics.toRequestBody("text/plain".toMediaTypeOrNull())
-        )
-
-        getProfileRequest.enqueue(MyCallback("register", responseLiveData))
-
-        return responseLiveData
-    }
-*/
 
     /*
         private class MyCallback(
