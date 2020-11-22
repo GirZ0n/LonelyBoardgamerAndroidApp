@@ -15,7 +15,7 @@ object ErrorHandler {
                 Event(EventType.Warning, error.message)
             }
             3 -> {
-                Event(EventType.Move, "Personalization")
+                Event(EventType.Move, "Registration")
             }
             else -> {
                 Event(EventType.Error, "${error.code}: ${error.message}")
