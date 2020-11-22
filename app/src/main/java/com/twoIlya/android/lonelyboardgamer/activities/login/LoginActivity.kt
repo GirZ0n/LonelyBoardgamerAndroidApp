@@ -30,10 +30,10 @@ class LoginActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
         // TODO: DEBUG
-        val intentD = Intent(this, MainActivity::class.java)
+        val intentD = MainActivity.newActivity(this, true)
         startActivity(intentD)
         finish()
-        // ------
+        // ---------------
 
         // Если мы залогинены, то пропускаем это activity
         if (viewModel.isUserLoggedIn()) {
@@ -43,15 +43,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         supportActionBar?.hide()
-
-        // Если с сервера пришёл токен, то переходим в профиль
-        viewModel.serverToken.observe(this) {
-            val intent = MainActivity.newActivity(this, false)
-            startActivity(intent)
-            finish()
-
-            Log.d(TAG, "ServerToken: ${it.value}")
-        }
 
         viewModel.eventLiveData.observe(this) {
             Log.d(TAG, "Event: $it")
@@ -67,11 +58,13 @@ class LoginActivity : AppCompatActivity() {
                     binding.loginButton.isEnabled = true
                 }
                 EventType.Move -> {
-                    if (it.message == "Registration") {
-                        val intent = MainActivity.newActivity(this, true)
-                        startActivity(intent)
-                        finish()
+                    val intent = when (it.message) {
+                        "Registration" -> MainActivity.newActivity(this, true)
+                        "MyProfile" -> MainActivity.newActivity(this, false)
+                        else -> ErrorActivity.newActivity(this, "Unknown destination")
                     }
+                    startActivity(intent)
+                    finish()
                 }
                 EventType.Error -> {
                     val intent = ErrorActivity.newActivity(this, it.message)

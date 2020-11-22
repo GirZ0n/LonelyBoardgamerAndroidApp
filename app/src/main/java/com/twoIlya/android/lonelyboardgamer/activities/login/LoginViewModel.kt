@@ -3,6 +3,7 @@ package com.twoIlya.android.lonelyboardgamer.activities.login
 import androidx.lifecycle.*
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
+import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import com.twoIlya.android.lonelyboardgamer.repository.CacheRepository
@@ -12,9 +13,6 @@ import com.twoIlya.android.lonelyboardgamer.repository.TokenRepository
 class LoginViewModel : ViewModel() {
     private val repo = ServerRepository
     private val errorHandler = ErrorHandler
-
-    private val _serverToken = MutableLiveData<Token>()
-    val serverToken: LiveData<Token> = _serverToken
 
     private val accessToken = MutableLiveData<Token>()
     private val loginServerResponse = Transformations.switchMap(accessToken) { token ->
@@ -30,7 +28,7 @@ class LoginViewModel : ViewModel() {
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
-                _serverToken.postValue(it)
+                eventLiveData.postValue(Event(EventType.Move, "MyProfile"))
             }
         }
     }
