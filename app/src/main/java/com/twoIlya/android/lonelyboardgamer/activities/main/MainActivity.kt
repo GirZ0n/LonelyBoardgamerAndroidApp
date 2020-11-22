@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             "com.twoIlya.android.lonelyboardgamer.activities.main.is_registration_needed"
 
         fun newActivity(context: Context, isRegistrationNeeded: Boolean): Intent {
-            return Intent(context, ErrorActivity::class.java).apply {
+            return Intent(context, MainActivity::class.java).apply {
                 putExtra(EXTRA_IS_REGISTRATION_NEEDED, isRegistrationNeeded)
             }
         }
