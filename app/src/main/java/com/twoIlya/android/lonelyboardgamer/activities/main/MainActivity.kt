@@ -1,10 +1,12 @@
 package com.twoIlya.android.lonelyboardgamer.activities.main
 
+import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.twoIlya.android.lonelyboardgamer.R
+import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,15 +19,23 @@ class MainActivity : AppCompatActivity() {
         val navGraph = graphInflater.inflate(R.navigation.navigation)
         val navController = navHostFragment.navController
 
-        /*
-        val destination = if (intent.getBooleanExtra(
-                IS_PRIVACY_POLICY_ACCEPTED,
-                false
-            )
-        ) R.id.homeFragment else R.id.newPrivacyPolicyFragment
-        */
+        val destination = when (intent.getBooleanExtra(EXTRA_IS_REGISTRATION_NEEDED, false)) {
+            true -> R.id.registrationFragment
+            else -> R.id.myProfileFragment
+        }
 
-        navGraph.startDestination = R.id.registrationFragment
+        navGraph.startDestination = destination
         navController.graph = navGraph
+    }
+
+    companion object {
+        private const val EXTRA_IS_REGISTRATION_NEEDED =
+            "com.twoIlya.android.lonelyboardgamer.activities.main.is_registration_needed"
+
+        fun newActivity(context: Context, isRegistrationNeeded: Boolean): Intent {
+            return Intent(context, ErrorActivity::class.java).apply {
+                putExtra(EXTRA_IS_REGISTRATION_NEEDED, isRegistrationNeeded)
+            }
+        }
     }
 }
