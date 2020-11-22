@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Если мы залогинены, то пропускаем это activity
         if (viewModel.isUserLoggedIn()) {
-            val intent = MainActivity.newActivity(this, R.id.myProfileFragment)
+            val intent = MainActivity.newActivity(this, false)
             startActivity(intent)
             finish()
         }
@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Если с сервера пришёл токен, то переходим в профиль
         viewModel.serverToken.observe(this) {
-            val intent = MainActivity.newActivity(this, R.id.myProfileFragment)
+            val intent = MainActivity.newActivity(this, false)
             startActivity(intent)
             finish()
 
@@ -68,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
                 }
                 EventType.Move -> {
                     if (it.message == "Registration") {
-                        val intent = MainActivity.newActivity(this, R.id.registrationFragment)
+                        val intent = MainActivity.newActivity(this, true)
                         startActivity(intent)
                         finish()
                     }
