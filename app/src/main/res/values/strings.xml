@@ -19,4 +19,8 @@
     <string name="register_button">Зарегистрироваться</string>
     <string name="multispinner_hint">Нажмите для выбора</string>
     <string name="description_hint">Нажмите сюда</string>
+
+    <!-- My Profile Fragment -->
+    <string name="logout_button">Logout</string>
+    <string name="avatar_contentDescription">Аватар пользователя</string>
 </resources>
