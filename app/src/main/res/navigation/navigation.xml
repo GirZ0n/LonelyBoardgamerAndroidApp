@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/myProfile">
+
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.registration.RegistrationFragment"
+        android:label="fragment_registration"
+        tools:layout="@layout/fragment_registration" >
+        <action
+            android:id="@+id/action_registrationFragment_to_myProfile"
+            app:destination="@id/myProfile"
+            app:popUpTo="@id/registrationFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/myProfile"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.myprofile.MyProfile"
+        android:label="MyProfile"
+        tools:layout="@layout/fragment_my_profile" />
+</navigation>
