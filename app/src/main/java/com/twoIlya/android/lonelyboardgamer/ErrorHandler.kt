@@ -22,4 +22,18 @@ object ErrorHandler {
             }
         }
     }
+
+    fun registrationErrorHandler(error: ServerError): Event {
+        return when (error.code) {
+            -1, 2 -> {
+                Event(EventType.Warning, error.message)
+            }
+            1, 3 -> {
+                Event(EventType.Move, "Login")
+            }
+            else -> {
+                Event(EventType.Error, "${error.code}: ${error.message}")
+            }
+        }
+    }
 }
