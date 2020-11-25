@@ -2,11 +2,10 @@ package com.twoIlya.android.lonelyboardgamer.activities.main
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.twoIlya.android.lonelyboardgamer.R
-import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
