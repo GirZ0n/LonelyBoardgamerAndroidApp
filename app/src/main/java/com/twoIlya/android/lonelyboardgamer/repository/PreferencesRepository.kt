@@ -24,7 +24,7 @@ object PreferencesRepository {
         "Карточные",
     )
 
-    fun getCategories(selected: List<String>): List<KeyPairBoolData> {
+    fun getCategories(selected: List<String> = emptyList()): List<KeyPairBoolData> {
         val answer = mutableListOf<KeyPairBoolData>()
         categories.forEachIndexed { index, it ->
             val item = KeyPairBoolData()
@@ -67,7 +67,7 @@ object PreferencesRepository {
         "Разнящиеся способности игроков",
     )
 
-    fun getMechanics(selected: List<String>): List<KeyPairBoolData> {
+    fun getMechanics(selected: List<String> = emptyList()): List<KeyPairBoolData> {
         val answer = mutableListOf<KeyPairBoolData>()
         mechanics.forEachIndexed { index, it ->
             val item = KeyPairBoolData()
@@ -78,4 +78,8 @@ object PreferencesRepository {
         }
         return answer
     }
+
+    // ----------------------------------------
+
+    fun convertToList(items: List<KeyPairBoolData>) = items.map { it.name }.toList()
 }
