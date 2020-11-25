@@ -45,8 +45,8 @@ object ServerRepository {
     fun register(
         vkToken: Token,
         location: String,
-        categories: String,
-        mechanics: String,
+        categories: List<String>,
+        mechanics: List<String>,
         description: String
     ): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
@@ -55,8 +55,8 @@ object ServerRepository {
             vkToken.value.toRequestBody("text/plain".toMediaTypeOrNull()),
             location.toRequestBody("text/plain".toMediaTypeOrNull()),
             description.toRequestBody("text/plain".toMediaTypeOrNull()),
-            categories.toRequestBody("text/plain".toMediaTypeOrNull()),
-            mechanics.toRequestBody("text/plain".toMediaTypeOrNull())
+            categories.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull()),
+            mechanics.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull())
         )
 
         getProfileRequest.enqueue(MyCallback("register", responseLiveData) { serverResponse ->
