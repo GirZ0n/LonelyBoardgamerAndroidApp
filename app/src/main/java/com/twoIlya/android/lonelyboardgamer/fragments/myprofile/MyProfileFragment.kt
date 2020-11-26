@@ -68,6 +68,10 @@ class MyProfileFragment : Fragment() {
                 }
             }
         }
+
+        binding.logoutButton.setOnClickListener {
+            viewModel.logout()
+        }
     }
 
     companion object {

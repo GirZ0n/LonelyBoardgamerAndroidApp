@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
+import com.twoIlya.android.lonelyboardgamer.dataClasses.LogoutMessage
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Profile
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
@@ -93,18 +94,18 @@ object ServerRepository {
         return responseLiveData
     }
 
-/*
-    fun logout(serverToken: String): LiveData<ServerResponse> {
-        val responseLiveData = MutableLiveData<ServerResponse>()
 
-        val logoutRequest = serverAPI.getProfile("Bearer $serverToken")
+    fun logout(serverToken: Token): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        logoutRequest.enqueue(MyCallback("getProfile", responseLiveData))
+        val logoutRequest = serverAPI.logout("Bearer ${serverToken.value}")
 
-        return responseLiveDataimport org.json.JSONObject
+        logoutRequest.enqueue(MyCallback("logout", responseLiveData) {
+            LogoutMessage(it.message.toString())
+        })
 
+        return responseLiveData
     }
-*/
 
     private class MyCallback(
         val functionName: String,

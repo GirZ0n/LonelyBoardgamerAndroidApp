@@ -23,9 +23,14 @@ class MyProfileViewModel : ViewModel() {
     private val _description = MutableLiveData<String>()
     val description: LiveData<String> = _description
 
-    private val serverToken = MutableLiveData<Token>()
-    private val getProfileServerResponse = Transformations.switchMap(serverToken) {
+    private val serverTokenForGetProfile = MutableLiveData<Token>()
+    private val getProfileServerResponse = Transformations.switchMap(serverTokenForGetProfile) {
         ServerRepository.getProfile(it)
+    }
+
+    private val serverTokenForLogout = MutableLiveData<Token>()
+    private val logoutServerResponse = Transformations.switchMap(serverTokenForLogout) {
+        ServerRepository.logout(it)
     }
 
     val events = MediatorLiveData<Event>()
@@ -47,10 +52,24 @@ class MyProfileViewModel : ViewModel() {
                 updateLiveData(it)
             }
         }
+
+        events.addSource(logoutServerResponse) {
+            CacheRepository.setIsLoggedIn(false)
+            if (ErrorHandler.isError(it)) {
+                val event = ErrorHandler.logoutErrorHandler(it as ServerError)
+                events.postValue(event)
+            } else if (it is LogoutMessage) {
+                events.postValue(Event(EventType.Move, "Login"))
+            }
+        }
     }
 
     private fun updateProfile() {
-        serverToken.postValue(TokenRepository.getServerToken())
+        serverTokenForGetProfile.postValue(TokenRepository.getServerToken())
+    }
+
+    fun logout() {
+        serverTokenForLogout.postValue(TokenRepository.getServerToken())
     }
 
     private fun updateLiveData(profile: Profile) {
