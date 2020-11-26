@@ -40,7 +40,8 @@ object ServerRepository {
         val loginRequest = serverAPI.login(tokenBody)
 
         loginRequest.enqueue(MyCallback("Login", responseLiveData) { serverResponse ->
-            Token(serverResponse.message.toString())
+            val jsonElementAsString = serverResponse.message.toString()
+            Token(jsonElementAsString.trim { it == '"' })
         })
 
         return responseLiveData
@@ -64,7 +65,8 @@ object ServerRepository {
         )
 
         getProfileRequest.enqueue(MyCallback("register", responseLiveData) { serverResponse ->
-            Token(serverResponse.message.toString())
+            val jsonElementAsString = serverResponse.message.toString()
+            Token(jsonElementAsString.trim { it == '"' })
         })
 
         return responseLiveData

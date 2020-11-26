@@ -103,9 +103,8 @@ class LoginActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "LoginActivity_TAG"
 
-
         fun newActivity(context: Context): Intent {
-            return Intent(context, MainActivity::class.java)
+            return Intent(context, LoginActivity::class.java)
         }
     }
 }
