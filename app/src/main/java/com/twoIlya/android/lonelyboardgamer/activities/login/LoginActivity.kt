@@ -29,12 +29,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
 
-        // TODO: DEBUG
-        val intentD = MainActivity.newActivity(this, true)
-        startActivity(intentD)
-        finish()
-        // ---------------
-
         // Если мы залогинены, то пропускаем это activity
         if (viewModel.isUserLoggedIn()) {
             val intent = MainActivity.newActivity(this, false)
