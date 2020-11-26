@@ -154,6 +154,6 @@ class RegistrationFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "LoginActivity_TAG"
+        private const val TAG = "Registration_TAG"
     }
 }
