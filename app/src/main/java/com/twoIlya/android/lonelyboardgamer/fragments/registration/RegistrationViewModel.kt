@@ -41,7 +41,13 @@ class RegistrationViewModel : ViewModel() {
     init {
         eventLiveData.addSource(registrationServerResponse) {
             if (ErrorHandler.isError(it)) {
-                eventLiveData.postValue(ErrorHandler.registrationErrorHandler(it as ServerError))
+                val event = ErrorHandler.registrationErrorHandler(it as ServerError)
+
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
+                }
+
+                eventLiveData.postValue(event)
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
@@ -84,7 +90,7 @@ class RegistrationViewModel : ViewModel() {
             return false
         }
 
-        if (description.length <= MAX_LENGTH_OF_DESCRIPTION) {
+        if (description.length > MAX_LENGTH_OF_DESCRIPTION) {
             eventLiveData.postValue(
                 Event(
                     EventType.Warning,
