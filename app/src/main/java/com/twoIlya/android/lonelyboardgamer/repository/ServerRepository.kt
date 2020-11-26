@@ -3,8 +3,11 @@ package com.twoIlya.android.lonelyboardgamer.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Profile
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -15,6 +18,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.lang.NullPointerException
 import java.net.SocketTimeoutException
 
 object ServerRepository {
@@ -36,7 +40,7 @@ object ServerRepository {
         val loginRequest = serverAPI.login(tokenBody)
 
         loginRequest.enqueue(MyCallback("Login", responseLiveData) { serverResponse ->
-            Token(serverResponse.message)
+            Token(serverResponse.message.toString())
         })
 
         return responseLiveData
@@ -60,30 +64,43 @@ object ServerRepository {
         )
 
         getProfileRequest.enqueue(MyCallback("register", responseLiveData) { serverResponse ->
-            Token(serverResponse.message)
+            Token(serverResponse.message.toString())
         })
 
         return responseLiveData
     }
-/*
-    fun logout(serverToken: String): LiveData<ServerResponse> {
-        val responseLiveData: MutableLiveData<ServerResponse> = MutableLiveData()
 
-        val logoutRequest = serverAPI.logout("Bearer $serverToken")
+    fun getProfile(serverToken: Token): LiveData<ServerRepositoryResponse> {
+        val responseLiveData: MutableLiveData<ServerRepositoryResponse> = MutableLiveData()
 
-        logoutRequest.enqueue(MyCallback("logout", responseLiveData))
+        val getProfileRequest = serverAPI.getProfile("Bearer ${serverToken.value}")
+
+        getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData) {
+            val response: ServerRepositoryResponse = try {
+                Gson().fromJson(it.message.toString(), Profile::class.java)
+            } catch (e: JsonSyntaxException) {
+                Log.d(Constants.TAG, e.toString())
+                ServerError(-2, "Error during deserialization: ${e.message} ")
+            } catch (e: NullPointerException) {
+                Log.d(Constants.TAG, e.toString())
+                ServerError(-2, "Error during deserialization: ${e.message} ")
+            }
+            response
+        })
 
         return responseLiveData
     }
 
-    fun getProfile(serverToken: String): LiveData<ServerResponse> {
+/*
+    fun logout(serverToken: String): LiveData<ServerResponse> {
         val responseLiveData = MutableLiveData<ServerResponse>()
 
-        val getProfileRequest = serverAPI.getProfile("Bearer $serverToken")
+        val logoutRequest = serverAPI.getProfile("Bearer $serverToken")
 
-        getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData))
+        logoutRequest.enqueue(MyCallback("getProfile", responseLiveData))
 
-        return responseLiveData
+        return responseLiveDataimport org.json.JSONObject
+
     }
 */
 
@@ -102,7 +119,7 @@ object ServerRepository {
                     if (it.status == 0) {
                         responseLiveData.value = parser(it)
                     } else {
-                        responseLiveData.value = ServerError(it.status, it.message)
+                        responseLiveData.value = ServerError(it.status, it.message.toString())
                     }
                 } ?: run { responseLiveData.value = ServerError(-2, "Empty body") }
             } else {
