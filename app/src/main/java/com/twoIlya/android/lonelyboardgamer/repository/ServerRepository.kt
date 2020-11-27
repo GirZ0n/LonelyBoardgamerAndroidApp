@@ -3,8 +3,12 @@ package com.twoIlya.android.lonelyboardgamer.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
+import com.twoIlya.android.lonelyboardgamer.dataClasses.LogoutMessage
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Profile
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -15,6 +19,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.lang.NullPointerException
 import java.net.SocketTimeoutException
 
 object ServerRepository {
@@ -36,7 +41,66 @@ object ServerRepository {
         val loginRequest = serverAPI.login(tokenBody)
 
         loginRequest.enqueue(MyCallback("Login", responseLiveData) { serverResponse ->
-            Token(serverResponse.message)
+            val jsonElementAsString = serverResponse.message.toString()
+            Token(jsonElementAsString.trim { it == '"' })
+        })
+
+        return responseLiveData
+    }
+
+    fun register(
+        vkToken: Token,
+        location: String,
+        categories: List<String>,
+        mechanics: List<String>,
+        description: String
+    ): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val getProfileRequest = serverAPI.register(
+            vkToken.value.toRequestBody("text/plain".toMediaTypeOrNull()),
+            location.toRequestBody("text/plain".toMediaTypeOrNull()),
+            description.toRequestBody("text/plain".toMediaTypeOrNull()),
+            categories.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull()),
+            mechanics.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull())
+        )
+
+        getProfileRequest.enqueue(MyCallback("register", responseLiveData) { serverResponse ->
+            val jsonElementAsString = serverResponse.message.toString()
+            Token(jsonElementAsString.trim { it == '"' })
+        })
+
+        return responseLiveData
+    }
+
+    fun getProfile(serverToken: Token): LiveData<ServerRepositoryResponse> {
+        val responseLiveData: MutableLiveData<ServerRepositoryResponse> = MutableLiveData()
+
+        val getProfileRequest = serverAPI.getProfile("Bearer ${serverToken.value}")
+
+        getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData) {
+            val response: ServerRepositoryResponse = try {
+                Gson().fromJson(it.message.toString(), Profile::class.java)
+            } catch (e: JsonSyntaxException) {
+                Log.d(Constants.TAG, e.toString())
+                ServerError(-2, "Error during deserialization: ${e.message} ")
+            } catch (e: NullPointerException) {
+                Log.d(Constants.TAG, e.toString())
+                ServerError(-2, "Error during deserialization: ${e.message} ")
+            }
+            response
+        })
+
+        return responseLiveData
+    }
+
+    fun logout(serverToken: Token): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val logoutRequest = serverAPI.logout("Bearer ${serverToken.value}")
+
+        logoutRequest.enqueue(MyCallback("logout", responseLiveData) {
+            LogoutMessage(it.message.toString())
         })
 
         return responseLiveData
@@ -57,7 +121,7 @@ object ServerRepository {
                     if (it.status == 0) {
                         responseLiveData.value = parser(it)
                     } else {
-                        responseLiveData.value = ServerError(it.status, it.message)
+                        responseLiveData.value = ServerError(it.status, it.message.toString())
                     }
                 } ?: run { responseLiveData.value = ServerError(-2, "Empty body") }
             } else {
@@ -75,77 +139,6 @@ object ServerRepository {
             Log.d(Constants.TAG, "$functionName (onF): $t")
         }
     }
-
-/*
-    fun logout(serverToken: String): LiveData<ServerResponse> {
-        val responseLiveData: MutableLiveData<ServerResponse> = MutableLiveData()
-
-        val logoutRequest = serverAPI.logout("Bearer $serverToken")
-
-        logoutRequest.enqueue(MyCallback("logout", responseLiveData))
-
-        return responseLiveData
-    }
-
-    fun getProfile(serverToken: String): LiveData<ServerResponse> {
-        val responseLiveData = MutableLiveData<ServerResponse>()
-
-        val getProfileRequest = serverAPI.getProfile("Bearer $serverToken")
-
-        getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData))
-
-        return responseLiveData
-    }
-
-    fun register(
-        VKAccessToken: String,
-        location: String,
-        description: String,
-        categories: String,
-        mechanics: String
-    ): LiveData<ServerResponse> {
-        val responseLiveData = MutableLiveData<ServerResponse>()
-
-        val getProfileRequest = serverAPI.register(
-            VKAccessToken.toRequestBody("text/plain".toMediaTypeOrNull()),
-            location.toRequestBody("text/plain".toMediaTypeOrNull()),
-            description.toRequestBody("text/plain".toMediaTypeOrNull()),
-            categories.toRequestBody("text/plain".toMediaTypeOrNull()),
-            mechanics.toRequestBody("text/plain".toMediaTypeOrNull())
-        )
-
-        getProfileRequest.enqueue(MyCallback("register", responseLiveData))
-
-        return responseLiveData
-    }
-*/
-
-    /*
-        private class MyCallback(
-            val functionName: String,
-            val responseLiveData: MutableLiveData<ServerResponse>
-        ) : Callback<ServerResponse> {
-            override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
-                responseLiveData.value = onNetworkFailureHandling()
-                Log.e(Constants.TAG, "$functionName (onF): something went wrong", t)
-            }
-
-            override fun onResponse(
-                call: Call<ServerResponse>,
-                response: Response<ServerResponse>
-            ) {
-                responseLiveData.value = when {
-                    isErrorCode(response.code()) -> ServerResponse(
-                        response.code(),
-                        response.message()
-                    )
-                    else -> response.body()
-                }
-
-                Log.d(Constants.TAG, "$functionName (onR): ${response.body()}")
-            }
-        }
-    */
 
     private fun onFailureHandling(t: Throwable): ServerError {
         return when (t) {

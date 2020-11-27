@@ -1,8 +1,26 @@
 <resources>
+    <!-- Login Activity -->
     <string name="app_name">Lonely Boardgamer</string>
     <string name="vk_login_button">Войти с ВКонтакте</string>
+
+    <!-- Error Activity -->
     <string name="error_title">Что-то поломалось :(</string>
     <string name="error_contact">Попробуйте перезапустить приложение.\n Если это не поможет, то напишите нам на:\nplaceholder@placeholder.com</string>
 
     <integer name="com_vk_sdk_AppId">7647393</integer>
+
+    <!-- Registration Fragment -->
+    <string name="your_location_title">Ваше местоположение</string>
+    <string name="your_location_hint">Нажмите на кнопку</string>
+    <string name="get_location_button">Указать местоположение</string>
+    <string name="categories_title">Любимые категории</string>
+    <string name="mechanics_title">Любимые особенности</string>
+    <string name="description_title">О себе</string>
+    <string name="register_button">Зарегистрироваться</string>
+    <string name="multispinner_hint">Нажмите для выбора</string>
+    <string name="description_hint">Нажмите сюда</string>
+
+    <!-- My Profile Fragment -->
+    <string name="logout_button">Logout</string>
+    <string name="avatar_contentDescription">Аватар пользователя</string>
 </resources>

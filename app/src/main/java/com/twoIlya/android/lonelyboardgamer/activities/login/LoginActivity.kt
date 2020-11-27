@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
+import com.twoIlya.android.lonelyboardgamer.activities.main.MainActivity
 import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.databinding.ActivityLoginBinding
 import com.vk.api.sdk.VK
@@ -30,19 +31,14 @@ class LoginActivity : AppCompatActivity() {
 
         // Если мы залогинены, то пропускаем это activity
         if (viewModel.isUserLoggedIn()) {
-            // TODO: Уходим в профиль
-            Log.d(TAG, "isUserLoggedIn")
+            val intent = MainActivity.newActivity(this, false)
+            startActivity(intent)
+            finish()
         }
 
         supportActionBar?.hide()
 
-        // Если с сервера пришёл токен, то переходим в профиль
-        viewModel.serverToken.observe(this) {
-            // TODO: Перейти в профиль
-            Log.d(TAG, "ServerToken: ${it.value}")
-        }
-
-        viewModel.eventLiveData.observe(this) {
+        viewModel.events.observe(this) {
             Log.d(TAG, "Event: $it")
 
             when (it.isHandle) {
@@ -56,10 +52,13 @@ class LoginActivity : AppCompatActivity() {
                     binding.loginButton.isEnabled = true
                 }
                 EventType.Move -> {
-                    if (it.message == "Personalization") {
-                        // TODO: Перейти на страницу персонализации
-                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    val intent = when (it.message) {
+                        "Registration" -> MainActivity.newActivity(this, true)
+                        "MyProfile" -> MainActivity.newActivity(this, false)
+                        else -> ErrorActivity.newActivity(this, "Unknown destination")
                     }
+                    startActivity(intent)
+                    finish()
                 }
                 EventType.Error -> {
                     val intent = ErrorActivity.newActivity(this, it.message)
@@ -101,7 +100,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private companion object {
+    companion object {
         private const val TAG = "LoginActivity_TAG"
+
+        fun newActivity(context: Context): Intent {
+            return Intent(context, LoginActivity::class.java)
+        }
     }
 }
