@@ -19,16 +19,16 @@ class LoginViewModel : ViewModel() {
         repo.login(token)
     }
 
-    val eventLiveData = MediatorLiveData<Event>()
+    val events = MediatorLiveData<Event>()
 
     init {
-        eventLiveData.addSource(loginServerResponse) {
+        events.addSource(loginServerResponse) {
             if (errorHandler.isError(it)) {
-                eventLiveData.postValue(errorHandler.loginErrorHandler(it as ServerError))
+                events.postValue(errorHandler.loginErrorHandler(it as ServerError))
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
-                eventLiveData.postValue(Event(EventType.Move, "MyProfile"))
+                events.postValue(Event(EventType.Move, "MyProfile"))
             }
         }
     }

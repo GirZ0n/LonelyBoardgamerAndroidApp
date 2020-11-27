@@ -94,7 +94,6 @@ object ServerRepository {
         return responseLiveData
     }
 
-
     fun logout(serverToken: Token): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
@@ -140,33 +139,6 @@ object ServerRepository {
             Log.d(Constants.TAG, "$functionName (onF): $t")
         }
     }
-
-    /*
-        private class MyCallback(
-            val functionName: String,
-            val responseLiveData: MutableLiveData<ServerResponse>
-        ) : Callback<ServerResponse> {
-            override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
-                responseLiveData.value = onNetworkFailureHandling()
-                Log.e(Constants.TAG, "$functionName (onF): something went wrong", t)
-            }
-
-            override fun onResponse(
-                call: Call<ServerResponse>,
-                response: Response<ServerResponse>
-            ) {
-                responseLiveData.value = when {
-                    isErrorCode(response.code()) -> ServerResponse(
-                        response.code(),
-                        response.message()
-                    )
-                    else -> response.body()
-                }
-
-                Log.d(Constants.TAG, "$functionName (onR): ${response.body()}")
-            }
-        }
-    */
 
     private fun onFailureHandling(t: Throwable): ServerError {
         return when (t) {

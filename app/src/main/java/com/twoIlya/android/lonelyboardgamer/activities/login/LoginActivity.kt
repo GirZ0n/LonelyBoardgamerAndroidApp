@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        viewModel.eventLiveData.observe(this) {
+        viewModel.events.observe(this) {
             Log.d(TAG, "Event: $it")
 
             when (it.isHandle) {

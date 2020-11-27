@@ -13,20 +13,20 @@ import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository
 import com.twoIlya.android.lonelyboardgamer.repository.TokenRepository
 
 class RegistrationViewModel : ViewModel() {
-    private val _locationLiveData = MutableLiveData<String>()
-    val locationLiveData: LiveData<String> = _locationLiveData
+    private val _location = MutableLiveData<String>()
+    val location: LiveData<String> = _location
 
     fun updateLocation(address: String) {
-        _locationLiveData.postValue(address)
+        _location.postValue(address)
     }
 
     private var categories = listOf<String>()
     private var mechanics = listOf<String>()
 
-    val descriptionLiveData = MutableLiveData<String>()
+    val description = MutableLiveData<String>()
 
-    private val registrationDataLiveData = MutableLiveData<RegistrationData>()
-    private val registrationServerResponse = Transformations.switchMap(registrationDataLiveData) {
+    private val registrationData = MutableLiveData<RegistrationData>()
+    private val registrationServerResponse = Transformations.switchMap(registrationData) {
         ServerRepository.register(
             it.token,
             it.location,
@@ -36,10 +36,10 @@ class RegistrationViewModel : ViewModel() {
         )
     }
 
-    val eventLiveData = MediatorLiveData<Event>()
+    val events = MediatorLiveData<Event>()
 
     init {
-        eventLiveData.addSource(registrationServerResponse) {
+        events.addSource(registrationServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.registrationErrorHandler(it as ServerError)
 
@@ -47,25 +47,25 @@ class RegistrationViewModel : ViewModel() {
                     CacheRepository.setIsLoggedIn(false)
                 }
 
-                eventLiveData.postValue(event)
+                events.postValue(event)
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
-                eventLiveData.postValue(Event(EventType.Move, "MyProfile"))
+                events.postValue(Event(EventType.Move, "MyProfile"))
             }
         }
     }
 
     fun register() {
-        val location = locationLiveData.value ?: ""
-        val description = descriptionLiveData.value ?: ""
+        val location = location.value ?: ""
+        val description = description.value ?: ""
 
         if (!checkFields(location, description)) {
             return
         }
 
         val token = TokenRepository.getVKToken()
-        registrationDataLiveData.postValue(
+        registrationData.postValue(
             RegistrationData(
                 token,
                 location,
@@ -86,12 +86,12 @@ class RegistrationViewModel : ViewModel() {
 
     private fun checkFields(location: String, description: String): Boolean {
         if (location.isBlank()) {
-            eventLiveData.postValue(Event(EventType.Warning, "Укажите местоположение"))
+            events.postValue(Event(EventType.Warning, "Укажите местоположение"))
             return false
         }
 
         if (description.length > MAX_LENGTH_OF_DESCRIPTION) {
-            eventLiveData.postValue(
+            events.postValue(
                 Event(
                     EventType.Warning,
                     "Описание должно содержать не более 250 символов"

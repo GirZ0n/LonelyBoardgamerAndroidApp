@@ -61,7 +61,7 @@ class RegistrationFragment : Fragment() {
         categoriesSpinnerSetup()
         mechanicsSpinnerSetup()
 
-        viewModel.eventLiveData.observe(viewLifecycleOwner) {
+        viewModel.events.observe(viewLifecycleOwner) {
             Log.d(TAG, "Event: $it")
 
             when (it.isHandle) {
