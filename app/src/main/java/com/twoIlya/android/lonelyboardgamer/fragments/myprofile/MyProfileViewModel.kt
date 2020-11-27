@@ -11,8 +11,8 @@ class MyProfileViewModel : ViewModel() {
     private val _name = MutableLiveData<String>()
     val name: LiveData<String> = _name
 
-    private val _location = MutableLiveData<String>()
-    val location: LiveData<String> = _location
+    private val _address = MutableLiveData<String>()
+    val address: LiveData<String> = _address
 
     private val _categories = MutableLiveData<List<String>>()
     val categories: LiveData<List<String>> = _categories
@@ -78,7 +78,7 @@ class MyProfileViewModel : ViewModel() {
     private fun updateLiveData(profile: Profile) {
         val fullName = "${profile.firstName} ${profile.secondName}"
         _name.postValue(fullName)
-        _location.postValue(profile.address)
+        _address.postValue(profile.address)
         _categories.postValue(profile.categories)
         _mechanics.postValue(profile.mechanics)
         _description.postValue(profile.description)

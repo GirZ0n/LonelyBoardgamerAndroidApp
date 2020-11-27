@@ -106,7 +106,7 @@ class RegistrationFragment : Fragment() {
         if (resultCode == Activity.RESULT_OK && data != null) {
             if (requestCode == 1) {
                 val address = data.getStringExtra(LOCATION_ADDRESS) ?: ""
-                viewModel.updateLocation(address)
+                viewModel.updateAddress(address)
             }
         }
     }
