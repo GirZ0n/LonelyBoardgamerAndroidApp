@@ -8,38 +8,14 @@ import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 
 object TokenRepository {
 
-    private lateinit var context: Context
+    private lateinit var encryptedSharedPreferences: SharedPreferences
 
-    fun setContext(context: Context) {
-        TokenRepository.context = context
-    }
-
-    private const val SHARED_PREF_NAME = "token_preferences"
-    private const val SERVER_TOKEN_KEY = "SERVER_TOKEN"
-    private const val VK_TOKEN_KEY = "VK_TOKEN"
-
-    fun getServerToken(): Token {
-        val value = getEncryptedSharedPreferences().getString(SERVER_TOKEN_KEY, "") ?: ""
-        return Token(value)
-    }
-
-    fun setServerToken(token: Token) =
-        getEncryptedSharedPreferences().edit().putString(SERVER_TOKEN_KEY, token.value).apply()
-
-    fun getVKToken(): Token {
-        val value = getEncryptedSharedPreferences().getString(VK_TOKEN_KEY, "") ?: ""
-        return Token(value)
-    }
-
-    fun setVKToken(token: Token) =
-        getEncryptedSharedPreferences().edit().putString(VK_TOKEN_KEY, token.value).apply()
-
-    private fun getEncryptedSharedPreferences(): SharedPreferences {
+    fun setSharedPreferences(context: Context) {
         val masterKey = MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
 
-        return EncryptedSharedPreferences.create(
+        encryptedSharedPreferences = EncryptedSharedPreferences.create(
             context,
             SHARED_PREF_NAME,
             masterKey,
@@ -47,4 +23,25 @@ object TokenRepository {
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
     }
+
+    private const val SHARED_PREF_NAME = "token_preferences"
+    private const val SERVER_TOKEN_KEY = "SERVER_TOKEN"
+    private const val VK_TOKEN_KEY = "VK_TOKEN"
+
+    fun getServerToken(): Token {
+        val value = encryptedSharedPreferences.getString(SERVER_TOKEN_KEY, "") ?: ""
+        return Token(value)
+    }
+
+    fun setServerToken(token: Token) =
+        encryptedSharedPreferences.edit().putString(SERVER_TOKEN_KEY, token.value).apply()
+
+    fun getVKToken(): Token {
+        val value = encryptedSharedPreferences.getString(VK_TOKEN_KEY, "") ?: ""
+        return Token(value)
+    }
+
+    fun setVKToken(token: Token) =
+        encryptedSharedPreferences.edit().putString(VK_TOKEN_KEY, token.value).apply()
+
 }
