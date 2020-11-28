@@ -11,8 +11,8 @@ class MyProfileViewModel : ViewModel() {
     private val _name = MutableLiveData<String>()
     val name: LiveData<String> = _name
 
-    private val _location = MutableLiveData<String>()
-    val location: LiveData<String> = _location
+    private val _address = MutableLiveData<String>()
+    val address: LiveData<String> = _address
 
     private val _categories = MutableLiveData<List<String>>()
     val categories: LiveData<List<String>> = _categories
@@ -22,6 +22,12 @@ class MyProfileViewModel : ViewModel() {
 
     private val _description = MutableLiveData<String>()
     val description: LiveData<String> = _description
+
+    private val _imageUrl = MutableLiveData<String>()
+    val imageUrl: LiveData<String> = _imageUrl
+
+    private val _isLayoutRefreshing = MutableLiveData(false)
+    val isLayoutRefreshing: LiveData<Boolean> = _isLayoutRefreshing
 
     private val serverTokenForGetProfile = MutableLiveData<Token>()
     private val getProfileServerResponse = Transformations.switchMap(serverTokenForGetProfile) {
@@ -36,7 +42,7 @@ class MyProfileViewModel : ViewModel() {
     val events = MediatorLiveData<Event>()
 
     init {
-        updateProfile()
+        CacheRepository.getProfile()?.let { updateLiveData(it) } ?: updateProfile()
 
         events.addSource(getProfileServerResponse) {
             if (ErrorHandler.isError(it)) {
@@ -46,9 +52,10 @@ class MyProfileViewModel : ViewModel() {
                     CacheRepository.setIsLoggedIn(false)
                 }
 
+                _isLayoutRefreshing.postValue(false)
                 events.postValue(event)
             } else if (it is Profile) {
-                // TODO: ЗАПИСЫВАЕМ В КЭШ
+                CacheRepository.setProfile(it)
                 updateLiveData(it)
             }
         }
@@ -64,7 +71,7 @@ class MyProfileViewModel : ViewModel() {
         }
     }
 
-    private fun updateProfile() {
+    fun updateProfile() {
         serverTokenForGetProfile.postValue(TokenRepository.getServerToken())
     }
 
@@ -75,9 +82,19 @@ class MyProfileViewModel : ViewModel() {
     private fun updateLiveData(profile: Profile) {
         val fullName = "${profile.firstName} ${profile.secondName}"
         _name.postValue(fullName)
-        _location.postValue(profile.address)
+        _address.postValue(profile.address)
         _categories.postValue(profile.categories)
         _mechanics.postValue(profile.mechanics)
         _description.postValue(profile.description)
+        _isLayoutRefreshing.postValue(false)
+        _imageUrl.postValue(
+            "https://eu.ui-avatars.com/api/" +
+                    "?name=${profile.firstName}+${profile.secondName}" +
+                    "&bold=true" +
+                    "&size=512" +
+                    "&rounded=true" +
+                    "&color=fff" +
+                    "&background=000"
+        )
     }
 }

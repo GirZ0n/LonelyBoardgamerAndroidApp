@@ -13,11 +13,11 @@ import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository
 import com.twoIlya.android.lonelyboardgamer.repository.TokenRepository
 
 class RegistrationViewModel : ViewModel() {
-    private val _location = MutableLiveData<String>()
-    val location: LiveData<String> = _location
+    private val _address = MutableLiveData<String>()
+    val address: LiveData<String> = _address
 
-    fun updateLocation(address: String) {
-        _location.postValue(address)
+    fun updateAddress(address: String) {
+        _address.postValue(address)
     }
 
     private var categories = listOf<String>()
@@ -29,7 +29,7 @@ class RegistrationViewModel : ViewModel() {
     private val registrationServerResponse = Transformations.switchMap(registrationData) {
         ServerRepository.register(
             it.token,
-            it.location,
+            it.address,
             it.categories,
             it.mechanics,
             it.description
@@ -57,10 +57,10 @@ class RegistrationViewModel : ViewModel() {
     }
 
     fun register() {
-        val location = location.value ?: ""
+        val address = address.value ?: ""
         val description = description.value ?: ""
 
-        if (!checkFields(location, description)) {
+        if (!checkFields(address, description)) {
             return
         }
 
@@ -68,7 +68,7 @@ class RegistrationViewModel : ViewModel() {
         registrationData.postValue(
             RegistrationData(
                 token,
-                location,
+                address,
                 description,
                 categories,
                 mechanics
@@ -84,8 +84,8 @@ class RegistrationViewModel : ViewModel() {
         mechanics = PreferencesRepository.convertToList(items)
     }
 
-    private fun checkFields(location: String, description: String): Boolean {
-        if (location.isBlank()) {
+    private fun checkFields(address: String, description: String): Boolean {
+        if (address.isBlank()) {
             events.postValue(Event(EventType.Warning, "Укажите местоположение"))
             return false
         }
@@ -105,7 +105,7 @@ class RegistrationViewModel : ViewModel() {
 
     private data class RegistrationData(
         val token: Token,
-        val location: String,
+        val address: String,
         val description: String,
         val categories: List<String>,
         val mechanics: List<String>,
