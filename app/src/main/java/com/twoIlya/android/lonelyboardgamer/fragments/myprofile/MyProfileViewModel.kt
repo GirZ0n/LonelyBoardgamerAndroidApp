@@ -42,7 +42,7 @@ class MyProfileViewModel : ViewModel() {
     val events = MediatorLiveData<Event>()
 
     init {
-        updateProfile()
+        CacheRepository.getProfile()?.let { updateLiveData(it) } ?: updateProfile()
 
         events.addSource(getProfileServerResponse) {
             if (ErrorHandler.isError(it)) {
@@ -52,9 +52,10 @@ class MyProfileViewModel : ViewModel() {
                     CacheRepository.setIsLoggedIn(false)
                 }
 
+                _isLayoutRefreshing.postValue(false)
                 events.postValue(event)
             } else if (it is Profile) {
-                // TODO: ЗАПИСЫВАЕМ В КЭШ
+                CacheRepository.setProfile(it)
                 updateLiveData(it)
             }
         }
