@@ -43,7 +43,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Google json parser
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
     // Data binding
     kapt 'com.android.databinding:compiler:3.1.4'
@@ -55,6 +55,7 @@ dependencies {
     implementation 'androidx.security:security-crypto:1.1.0-alpha02'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // VK SDK
     implementation 'com.vk:androidsdk:2.4.0'
