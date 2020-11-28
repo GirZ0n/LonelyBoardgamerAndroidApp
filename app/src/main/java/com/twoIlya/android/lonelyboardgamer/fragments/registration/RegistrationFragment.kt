@@ -81,12 +81,12 @@ class RegistrationFragment : Fragment() {
                     activity?.finish()
                 }
                 EventType.Move -> {
-                    when {
-                        it.message == "MyProfile" -> {
+                    when (it.message) {
+                        "MyProfile" -> {
                             findNavController().navigate(R.id.action_registrationFragment_to_myProfile)
                             return@observe
                         }
-                        it.message == "Login" -> {
+                        "Login" -> {
                             val intent = LoginActivity.newActivity(requireContext())
                             startActivity(intent)
                             activity?.finish()
