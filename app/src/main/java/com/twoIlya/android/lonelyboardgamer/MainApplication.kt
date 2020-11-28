@@ -8,7 +8,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        CacheRepository.setContext(this)
-        TokenRepository.setContext(this)
+        CacheRepository.setSharedPreferences(this)
+        TokenRepository.setSharedPreferences(this)
     }
 }
