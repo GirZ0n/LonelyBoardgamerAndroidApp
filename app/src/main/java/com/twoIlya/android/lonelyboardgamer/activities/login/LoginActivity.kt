@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.github.ybq.android.spinkit.style.ThreeBounce
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.main.MainActivity
@@ -49,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
             when (it.type) {
                 EventType.Warning -> {
                     Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                    binding.loginButton.isEnabled = true
+                    updateLoginButton(true)
                 }
                 EventType.Move -> {
                     val intent = when (it.message) {
@@ -84,7 +85,8 @@ class LoginActivity : AppCompatActivity() {
                 clipboard.setPrimaryClip(clip)
                 // ---------------------------
 
-                binding.loginButton.isEnabled = false
+                updateLoginButton(false)
+
                 viewModel.login(token.accessToken)
             }
 
@@ -97,6 +99,26 @@ class LoginActivity : AppCompatActivity() {
 
         if (!VK.onActivityResult(requestCode, resultCode, data, callback)) {
             super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    private fun updateLoginButton(isEnabled: Boolean) {
+        binding.loginButton.isEnabled = isEnabled
+
+        when (isEnabled) {
+            true -> {
+                val leftDrawable = binding.loginButton.compoundDrawables.first()
+                if (leftDrawable is ThreeBounce) {
+                    leftDrawable.stop()
+                }
+                binding.loginButton.setCompoundDrawables(null, null, null, null)
+            }
+            false -> {
+                val dots = ThreeBounce()
+                dots.setBounds(0, 0, 100, 100)
+                binding.loginButton.setCompoundDrawables(dots, null, null, null)
+                dots.start()
+            }
         }
     }
 
