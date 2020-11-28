@@ -26,6 +26,9 @@ class MyProfileViewModel : ViewModel() {
     private val _imageUrl = MutableLiveData<String>()
     val imageUrl: LiveData<String> = _imageUrl
 
+    private val _isLayoutRefreshing = MutableLiveData(false)
+    val isLayoutRefreshing: LiveData<Boolean> = _isLayoutRefreshing
+
     private val serverTokenForGetProfile = MutableLiveData<Token>()
     private val getProfileServerResponse = Transformations.switchMap(serverTokenForGetProfile) {
         ServerRepository.getProfile(it)
@@ -67,7 +70,7 @@ class MyProfileViewModel : ViewModel() {
         }
     }
 
-    private fun updateProfile() {
+    fun updateProfile() {
         serverTokenForGetProfile.postValue(TokenRepository.getServerToken())
     }
 
@@ -82,6 +85,7 @@ class MyProfileViewModel : ViewModel() {
         _categories.postValue(profile.categories)
         _mechanics.postValue(profile.mechanics)
         _description.postValue(profile.description)
+        _isLayoutRefreshing.postValue(false)
         _imageUrl.postValue(
             "https://eu.ui-avatars.com/api/" +
                     "?name=${profile.firstName}+${profile.secondName}" +
