@@ -13,10 +13,10 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
-        app:onRefreshListener="@{() -> viewModel.updateProfile()}"
-        app:refreshing="@{viewModel.isLayoutRefreshing}"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:onRefreshListener="@{() -> viewModel.updateProfile()}"
+        app:refreshing="@{viewModel.isLayoutRefreshing}">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -164,7 +164,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="32dp"
                     android:drawablePadding="10dp"
+                    android:enabled="@{viewModel.isFormEnabled}"
+                    android:onClick="@{() -> viewModel.logout()}"
                     android:text="@string/logout_button"
+                    app:isLoading="@{viewModel.isButtonLoading}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -175,6 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
+                    android:clickable="@{viewModel.isFormEnabled}"
                     android:contentDescription="@string/edit_ContentDescription"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
