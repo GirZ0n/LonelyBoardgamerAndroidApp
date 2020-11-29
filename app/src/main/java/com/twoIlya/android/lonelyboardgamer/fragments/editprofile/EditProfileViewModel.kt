@@ -244,8 +244,8 @@ class EditProfileViewModel : ViewModel() {
         mechanics: List<String>,
         description: String
     ): Boolean {
-        return oldAddress == address && oldCategories == categories &&
-                oldMechanics == mechanics && oldDescription == description
+        return oldAddress != address || oldCategories != categories ||
+                oldMechanics != mechanics || oldDescription != description
     }
 
     private fun updateLiveData(profile: Profile) {
