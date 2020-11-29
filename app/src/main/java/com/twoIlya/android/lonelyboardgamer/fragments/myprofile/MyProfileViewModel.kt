@@ -65,7 +65,7 @@ class MyProfileViewModel : ViewModel() {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.logoutErrorHandler(it as ServerError)
                 events.postValue(event)
-            } else if (it is LogoutMessage) {
+            } else if (it is ServerMessage) {
                 events.postValue(Event(EventType.Move, "Login"))
             }
         }
