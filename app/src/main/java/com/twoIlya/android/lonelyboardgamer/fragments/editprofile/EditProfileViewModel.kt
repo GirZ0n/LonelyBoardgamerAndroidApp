@@ -25,7 +25,8 @@ class EditProfileViewModel : ViewModel() {
     private lateinit var oldDescription: String
     val description = MutableLiveData<String>()
 
-    val isFormEnabled = MutableLiveData(true)
+    private val _isFormEnabled = MutableLiveData(true)
+    val isFormEnabled: LiveData<Boolean> = _isFormEnabled
 
     private val _isLayoutLoading = MutableLiveData(false)
     val isLayoutLoading: LiveData<Boolean> = _isLayoutLoading
@@ -66,113 +67,101 @@ class EditProfileViewModel : ViewModel() {
 
     init {
         _isLayoutLoading.postValue(true)
+        updateForm(isFormEnabled = false, isButtonLoading = false)
 
         CacheRepository.getProfile()?.let {
-            initLiveData(it)
+            updateLiveData(it)
             _isLayoutLoading.postValue(false)
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         } ?: serverTokenForGetProfile.postValue(TokenRepository.getServerToken())
 
         events.addSource(getProfileServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.getProfileErrorHandler(it as ServerError)
-
-                when (event.type) {
-                    EventType.Move, EventType.Error -> CacheRepository.setIsLoggedIn(false)
-                    EventType.Warning -> isFormEnabled.postValue(true)
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
                 }
-
                 events.postValue(event)
             } else if (it is Profile) {
                 CacheRepository.setProfile(it)
-                initLiveData(it)
+                updateLiveData(it)
             }
 
             _isLayoutLoading.postValue(false)
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         }
 
         events.addSource(changeAddressServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.changeProfileErrorHandler(it as ServerError)
-
-                when (event.type) {
-                    EventType.Move, EventType.Error -> CacheRepository.setIsLoggedIn(false)
-                    EventType.Warning -> updateForm(true)
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
                 }
-
                 events.postValue(event)
             } else if (it is ServerMessage) {
                 _address.value?.let { address ->
                     CacheRepository.setAddress(address)
                     oldAddress = address
                 }
-                updateForm(true)
                 events.postValue(Event(EventType.Warning, "Адрес изменён"))
             }
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         }
 
         events.addSource(changeCategoriesServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.changeProfileErrorHandler(it as ServerError)
-
-                when (event.type) {
-                    EventType.Move, EventType.Error -> CacheRepository.setIsLoggedIn(false)
-                    EventType.Warning -> updateForm(true)
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
                 }
-
                 events.postValue(event)
             } else if (it is ServerMessage) {
                 _categories.value?.let { categories ->
                     CacheRepository.setCategories(categories)
                     oldCategories = categories
                 }
-                updateForm(true)
                 events.postValue(Event(EventType.Warning, "Категории изменены"))
             }
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         }
 
         events.addSource(changeMechanicsServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.changeProfileErrorHandler(it as ServerError)
-
-                when (event.type) {
-                    EventType.Move, EventType.Error -> CacheRepository.setIsLoggedIn(false)
-                    EventType.Warning -> updateForm(true)
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
                 }
-
                 events.postValue(event)
             } else if (it is ServerMessage) {
                 _mechanics.value?.let { mechanics ->
                     CacheRepository.setMechanics(mechanics)
                     oldMechanics = mechanics
                 }
-                updateForm(true)
                 events.postValue(Event(EventType.Warning, "Механики изменены"))
             }
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         }
 
         events.addSource(changeDescriptionServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.changeProfileErrorHandler(it as ServerError)
-
-                when (event.type) {
-                    EventType.Move, EventType.Error -> CacheRepository.setIsLoggedIn(false)
-                    EventType.Warning -> updateForm(true)
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
                 }
-
                 events.postValue(event)
             } else if (it is ServerMessage) {
                 description.value?.let { description ->
                     CacheRepository.setDescription(description)
                     oldDescription = description
                 }
-                updateForm(true)
                 events.postValue(Event(EventType.Warning, "Описание изменено"))
             }
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         }
     }
 
     fun edit() {
-        updateForm(false)
+        updateForm(isFormEnabled = false, isButtonLoading = true)
 
         val address = address.value ?: ""
         val description = description.value ?: ""
@@ -180,7 +169,7 @@ class EditProfileViewModel : ViewModel() {
         val mechanics = mechanics.value ?: emptyList()
 
         if (!checkFields(address, description, categories, mechanics)) {
-            updateForm(true)
+            updateForm(isFormEnabled = true, isButtonLoading = false)
             return
         }
 
@@ -219,9 +208,9 @@ class EditProfileViewModel : ViewModel() {
         serverTokenForGetProfile.postValue(TokenRepository.getServerToken())
     }
 
-    private fun updateForm(isEnabled: Boolean) {
-        isFormEnabled.postValue(isEnabled)
-        _isButtonLoading.postValue(!isEnabled)
+    private fun updateForm(isFormEnabled: Boolean, isButtonLoading: Boolean) {
+        _isFormEnabled.postValue(isFormEnabled)
+        _isButtonLoading.postValue(isButtonLoading)
     }
 
     private fun checkFields(
@@ -254,7 +243,7 @@ class EditProfileViewModel : ViewModel() {
         }
     }
 
-    private fun initLiveData(profile: Profile) {
+    private fun updateLiveData(profile: Profile) {
         oldAddress = profile.address
         _address.postValue(profile.address)
 
