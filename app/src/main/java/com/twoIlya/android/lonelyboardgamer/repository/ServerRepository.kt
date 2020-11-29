@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
-import com.twoIlya.android.lonelyboardgamer.dataClasses.LogoutMessage
+import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerMessage
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Profile
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
@@ -100,7 +100,69 @@ object ServerRepository {
         val logoutRequest = serverAPI.logout("Bearer ${serverToken.value}")
 
         logoutRequest.enqueue(MyCallback("logout", responseLiveData) {
-            LogoutMessage(it.message.toString())
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
+    fun changeAddress(serverToken: Token, address: String): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val changeAddressRequest = serverAPI.changeAddress("Bearer ${serverToken.value}", address)
+
+        changeAddressRequest.enqueue(MyCallback("changeAddress", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
+    fun changeDescription(
+        serverToken: Token,
+        description: String
+    ): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val changeDescriptionRequest =
+            serverAPI.changeDescription("Bearer ${serverToken.value}", description)
+
+        changeDescriptionRequest.enqueue(MyCallback("changeDescription", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
+    fun changeCategories(
+        serverToken: Token,
+        categories: List<String>
+    ): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val categoriesAsString = categories.joinToString(",")
+        val changeCategoriesRequest =
+            serverAPI.changeCategories("Bearer ${serverToken.value}", categoriesAsString)
+
+        changeCategoriesRequest.enqueue(MyCallback("changeCategories", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
+    fun changeMechanics(
+        serverToken: Token,
+        mechanics: List<String>
+    ): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val mechanicsAsString = mechanics.joinToString(",")
+        val changeMechanicsRequest =
+            serverAPI.changeMechanics("Bearer ${serverToken.value}", mechanicsAsString)
+
+        changeMechanicsRequest.enqueue(MyCallback("changeMechanics", responseLiveData) {
+            ServerMessage(it.message.toString())
         })
 
         return responseLiveData

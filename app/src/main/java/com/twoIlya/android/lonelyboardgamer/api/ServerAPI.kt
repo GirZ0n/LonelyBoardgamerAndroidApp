@@ -25,4 +25,28 @@ interface ServerAPI {
 
     @POST("profile/logout")
     fun logout(@Header("Authorization") serverToken: String): Call<ServerResponse>
+
+    @POST("profile/change/address")
+    fun changeAddress(
+        @Header("Authorization") serverToken: String,
+        @Query("new") newAddress: String
+    ): Call<ServerResponse>
+
+    @POST("profile/change/description")
+    fun changeDescription(
+        @Header("Authorization") serverToken: String,
+        @Query("new") newDescription: String
+    ): Call<ServerResponse>
+
+    @POST("profile/change/prefCategories")
+    fun changeCategories(
+        @Header("Authorization") serverToken: String,
+        @Query("new") newCategories: String
+    ): Call<ServerResponse>
+
+    @POST("profile/change/prefMechanics")
+    fun changeMechanics(
+        @Header("Authorization") serverToken: String,
+        @Query("new") newMechanics: String
+    ): Call<ServerResponse>
 }

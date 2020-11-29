@@ -37,4 +37,68 @@ object CacheRepository {
             null
         }
     }
+
+    fun setAddress(address: String) {
+        getProfile()?.let {
+            setProfile(
+                Profile(
+                    it.id,
+                    it.firstName,
+                    it.secondName,
+                    address,
+                    it.description,
+                    it.categories,
+                    it.mechanics,
+                )
+            )
+        }
+    }
+
+    fun setDescription(description: String) {
+        getProfile()?.let {
+            setProfile(
+                Profile(
+                    it.id,
+                    it.firstName,
+                    it.secondName,
+                    it.address,
+                    description,
+                    it.categories,
+                    it.mechanics
+                )
+            )
+        }
+    }
+
+    fun setCategories(categories: List<String>) {
+        getProfile()?.let {
+            setProfile(
+                Profile(
+                    it.id,
+                    it.firstName,
+                    it.secondName,
+                    it.address,
+                    it.description,
+                    categories,
+                    it.mechanics,
+                )
+            )
+        }
+    }
+
+    fun setMechanics(mechanics: List<String>) {
+        getProfile()?.let {
+            setProfile(
+                Profile(
+                    it.id,
+                    it.firstName,
+                    it.secondName,
+                    it.address,
+                    it.description,
+                    it.categories,
+                    mechanics,
+                )
+            )
+        }
+    }
 }
