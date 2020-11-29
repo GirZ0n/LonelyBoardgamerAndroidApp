@@ -23,5 +23,9 @@
     <!-- My Profile Fragment -->
     <string name="logout_button">Logout</string>
     <string name="avatar_contentDescription">Аватар пользователя</string>
+    <string name="edit_ContentDescription">Редактировать</string>
     <string name="empty_text_hint">Не указано</string>
+
+    <!-- Edit Profile Fragment -->
+    <string name="edit_button">Изменить</string>
 </resources>

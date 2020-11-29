@@ -42,8 +42,6 @@ class MyProfileViewModel : ViewModel() {
     val events = MediatorLiveData<Event>()
 
     init {
-        CacheRepository.getProfile()?.let { updateLiveData(it) } ?: updateProfile()
-
         events.addSource(getProfileServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.getProfileErrorHandler(it as ServerError)
@@ -65,7 +63,7 @@ class MyProfileViewModel : ViewModel() {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.logoutErrorHandler(it as ServerError)
                 events.postValue(event)
-            } else if (it is LogoutMessage) {
+            } else if (it is ServerMessage) {
                 events.postValue(Event(EventType.Move, "Login"))
             }
         }
@@ -73,6 +71,10 @@ class MyProfileViewModel : ViewModel() {
 
     fun updateProfile() {
         serverTokenForGetProfile.postValue(TokenRepository.getServerToken())
+    }
+
+    fun updateProfileFromCache() {
+        CacheRepository.getProfile()?.let { updateLiveData(it) } ?: updateProfile()
     }
 
     fun logout() {

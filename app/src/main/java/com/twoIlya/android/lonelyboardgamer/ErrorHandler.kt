@@ -64,4 +64,18 @@ object ErrorHandler {
             }
         }
     }
+
+    fun changeProfileErrorHandler(error: ServerError): Event {
+        return when (error.code) {
+            -1, 2, 3 -> {
+                Event(EventType.Warning, error.message)
+            }
+            1, 401 -> {
+                Event(EventType.Move, "Login")
+            }
+            else -> {
+                Event(EventType.Error, "${error.code}: ${error.message}")
+            }
+        }
+    }
 }

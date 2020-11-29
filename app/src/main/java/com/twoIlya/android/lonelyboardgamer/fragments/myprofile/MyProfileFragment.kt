@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.github.ybq.android.spinkit.style.ThreeBounce
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
@@ -71,10 +72,16 @@ class MyProfileFragment : Fragment() {
             }
         }
 
+        binding.editButton.setOnClickListener {
+            findNavController().navigate(R.id.action_myProfileFragment_to_editProfileFragment)
+        }
+
         binding.logoutButton.setOnClickListener {
             updateLogoutButton(false)
             viewModel.logout()
         }
+
+        viewModel.updateProfileFromCache()
     }
 
     private fun updateLogoutButton(isEnabled: Boolean) {
@@ -96,7 +103,6 @@ class MyProfileFragment : Fragment() {
             }
         }
     }
-
 
     companion object {
         private const val TAG = "MyProfileFragment_TAG"
