@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             when (it.type) {
-                EventType.Warning -> {
+                EventType.Notification -> {
                     Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
                     updateLoginButton(true)
                 }

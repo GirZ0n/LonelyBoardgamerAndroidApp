@@ -71,7 +71,7 @@ class RegistrationFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Warning -> {
+                EventType.Notification -> {
                     updateForm(true)
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }

@@ -86,14 +86,14 @@ class RegistrationViewModel : ViewModel() {
 
     private fun checkFields(address: String, description: String): Boolean {
         if (address.isBlank()) {
-            events.postValue(Event(EventType.Warning, "Укажите местоположение"))
+            events.postValue(Event(EventType.Notification, "Укажите местоположение"))
             return false
         }
 
         if (description.length > MAX_LENGTH_OF_DESCRIPTION) {
             events.postValue(
                 Event(
-                    EventType.Warning,
+                    EventType.Notification,
                     "Описание должно содержать не более 250 символов"
                 )
             )

@@ -52,7 +52,7 @@ class MyProfileFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Warning -> {
+                EventType.Notification -> {
                     updateLogoutButton(true)
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
