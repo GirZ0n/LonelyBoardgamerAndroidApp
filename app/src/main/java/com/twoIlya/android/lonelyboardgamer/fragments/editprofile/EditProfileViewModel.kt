@@ -233,14 +233,19 @@ class EditProfileViewModel : ViewModel() {
                 )
                 false
             }
-            oldAddress == address &&
-                    oldCategories == categories &&
-                    oldMechanics == mechanics &&
-                    oldDescription == description -> {
-                false
-            }
+            isSomethingChanged(address, categories, mechanics, description) -> false
             else -> true
         }
+    }
+
+    private fun isSomethingChanged(
+        address: String,
+        categories: List<String>,
+        mechanics: List<String>,
+        description: String
+    ): Boolean {
+        return oldAddress == address && oldCategories == categories &&
+                oldMechanics == mechanics && oldDescription == description
     }
 
     private fun updateLiveData(profile: Profile) {
