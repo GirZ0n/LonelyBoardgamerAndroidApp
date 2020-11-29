@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/vk_primary"
                 android:drawablePadding="10dp"
-                android:enabled="@{viewModel.isFormEnabled}"
+                android:enabled="@{viewModel.isButtonEnabled}"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/vk_login_button"
                 android:textColor="@color/common_google_signin_btn_text_dark_default"

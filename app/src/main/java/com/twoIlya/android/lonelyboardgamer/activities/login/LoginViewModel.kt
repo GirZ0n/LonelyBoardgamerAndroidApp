@@ -14,8 +14,8 @@ class LoginViewModel : ViewModel() {
     private val repo = ServerRepository
     private val errorHandler = ErrorHandler
 
-    private val _isFormEnabled = MutableLiveData(true)
-    val isFormEnabled: LiveData<Boolean> = _isFormEnabled
+    private val _isButtonEnabled = MutableLiveData(true)
+    val isButtonEnabled: LiveData<Boolean> = _isButtonEnabled
 
     private val _isButtonLoading = MutableLiveData(false)
     val isButtonLoading: LiveData<Boolean> = _isButtonLoading
@@ -50,7 +50,7 @@ class LoginViewModel : ViewModel() {
     fun isUserLoggedIn() = CacheRepository.isLoggedIn()
 
     private fun updateForm(isFormEnabled: Boolean, isButtonLoading: Boolean) {
-        _isFormEnabled.postValue(isFormEnabled)
+        _isButtonEnabled.postValue(isFormEnabled)
         _isButtonLoading.postValue(isButtonLoading)
     }
 }
