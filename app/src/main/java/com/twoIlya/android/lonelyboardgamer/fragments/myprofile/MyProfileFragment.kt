@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.github.ybq.android.spinkit.style.ThreeBounce
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
@@ -69,6 +70,10 @@ class MyProfileFragment : Fragment() {
                     activity?.finish()
                 }
             }
+        }
+
+        binding.editButton.setOnClickListener {
+            findNavController().navigate(R.id.action_myProfileFragment_to_editProfileFragment)
         }
 
         binding.logoutButton.setOnClickListener {
