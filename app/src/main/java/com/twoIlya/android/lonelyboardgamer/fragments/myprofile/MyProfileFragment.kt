@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.github.ybq.android.spinkit.style.ThreeBounce
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
@@ -52,8 +51,7 @@ class MyProfileFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Warning -> {
-                    updateLogoutButton(true)
+                EventType.Notification -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
                 EventType.Error -> {
@@ -76,32 +74,7 @@ class MyProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_myProfileFragment_to_editProfileFragment)
         }
 
-        binding.logoutButton.setOnClickListener {
-            updateLogoutButton(false)
-            viewModel.logout()
-        }
-
         viewModel.updateProfileFromCache()
-    }
-
-    private fun updateLogoutButton(isEnabled: Boolean) {
-        binding.logoutButton.isEnabled = isEnabled
-
-        when (isEnabled) {
-            true -> {
-                val leftDrawable = binding.logoutButton.compoundDrawables.first()
-                if (leftDrawable is ThreeBounce) {
-                    leftDrawable.stop()
-                }
-                binding.logoutButton.setCompoundDrawables(null, null, null, null)
-            }
-            false -> {
-                val dots = ThreeBounce()
-                dots.setBounds(0, 0, 100, 100)
-                binding.logoutButton.setCompoundDrawables(dots, null, null, null)
-                dots.start()
-            }
-        }
     }
 
     companion object {

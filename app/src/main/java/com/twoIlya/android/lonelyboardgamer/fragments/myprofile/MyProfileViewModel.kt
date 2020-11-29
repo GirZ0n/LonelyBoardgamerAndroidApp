@@ -29,6 +29,12 @@ class MyProfileViewModel : ViewModel() {
     private val _isLayoutRefreshing = MutableLiveData(false)
     val isLayoutRefreshing: LiveData<Boolean> = _isLayoutRefreshing
 
+    private val _isFormEnabled = MutableLiveData(true)
+    val isFormEnabled: LiveData<Boolean> = _isFormEnabled
+
+    private val _isButtonLoading = MutableLiveData(false)
+    val isButtonLoading: LiveData<Boolean> = _isButtonLoading
+
     private val serverTokenForGetProfile = MutableLiveData<Token>()
     private val getProfileServerResponse = Transformations.switchMap(serverTokenForGetProfile) {
         ServerRepository.getProfile(it)
@@ -45,17 +51,17 @@ class MyProfileViewModel : ViewModel() {
         events.addSource(getProfileServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.getProfileErrorHandler(it as ServerError)
-
                 if (event.type == EventType.Move || event.type == EventType.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
-
-                _isLayoutRefreshing.postValue(false)
                 events.postValue(event)
             } else if (it is Profile) {
                 CacheRepository.setProfile(it)
                 updateLiveData(it)
             }
+
+            _isLayoutRefreshing.postValue(false)
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         }
 
         events.addSource(logoutServerResponse) {
@@ -66,6 +72,7 @@ class MyProfileViewModel : ViewModel() {
             } else if (it is ServerMessage) {
                 events.postValue(Event(EventType.Move, "Login"))
             }
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         }
     }
 
@@ -74,10 +81,18 @@ class MyProfileViewModel : ViewModel() {
     }
 
     fun updateProfileFromCache() {
-        CacheRepository.getProfile()?.let { updateLiveData(it) } ?: updateProfile()
+        _isLayoutRefreshing.postValue(true)
+        updateForm(isFormEnabled = false, isButtonLoading = false)
+
+        CacheRepository.getProfile()?.let {
+            updateLiveData(it)
+            _isLayoutRefreshing.postValue(false)
+            updateForm(isFormEnabled = true, isButtonLoading = false)
+        } ?: updateProfile()
     }
 
     fun logout() {
+        updateForm(isFormEnabled = false, isButtonLoading = true)
         serverTokenForLogout.postValue(TokenRepository.getServerToken())
     }
 
@@ -98,5 +113,10 @@ class MyProfileViewModel : ViewModel() {
                     "&color=fff" +
                     "&background=000"
         )
+    }
+
+    private fun updateForm(isFormEnabled: Boolean, isButtonLoading: Boolean) {
+        _isFormEnabled.postValue(isFormEnabled)
+        _isButtonLoading.postValue(isButtonLoading)
     }
 }

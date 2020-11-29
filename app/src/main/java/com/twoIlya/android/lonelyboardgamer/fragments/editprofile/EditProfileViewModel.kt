@@ -103,7 +103,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setAddress(address)
                     oldAddress = address
                 }
-                events.postValue(Event(EventType.Warning, "Адрес изменён"))
+                events.postValue(Event(EventType.Notification, "Адрес изменён"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -120,7 +120,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setCategories(categories)
                     oldCategories = categories
                 }
-                events.postValue(Event(EventType.Warning, "Категории изменены"))
+                events.postValue(Event(EventType.Notification, "Категории изменены"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -137,7 +137,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setMechanics(mechanics)
                     oldMechanics = mechanics
                 }
-                events.postValue(Event(EventType.Warning, "Механики изменены"))
+                events.postValue(Event(EventType.Notification, "Механики изменены"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -154,7 +154,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setDescription(description)
                     oldDescription = description
                 }
-                events.postValue(Event(EventType.Warning, "Описание изменено"))
+                events.postValue(Event(EventType.Notification, "Описание изменено"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -221,13 +221,13 @@ class EditProfileViewModel : ViewModel() {
     ): Boolean {
         return when {
             address.isBlank() -> {
-                events.postValue(Event(EventType.Warning, "Укажите местоположение"))
+                events.postValue(Event(EventType.Notification, "Укажите местоположение"))
                 false
             }
             description.length > MAX_LENGTH_OF_DESCRIPTION -> {
                 events.postValue(
                     Event(
-                        EventType.Warning,
+                        EventType.Notification,
                         "Описание должно содержать не более 250 символов"
                     )
                 )

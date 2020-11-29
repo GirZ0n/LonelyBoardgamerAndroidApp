@@ -16,14 +16,16 @@ class RegistrationViewModel : ViewModel() {
     private val _address = MutableLiveData<String>()
     val address: LiveData<String> = _address
 
-    fun updateAddress(address: String) {
-        _address.postValue(address)
-    }
-
     private var categories = listOf<String>()
     private var mechanics = listOf<String>()
 
     val description = MutableLiveData<String>()
+
+    private val _isFormEnabled = MutableLiveData(true)
+    val isFormEnabled: LiveData<Boolean> = _isFormEnabled
+
+    private val _isButtonLoading = MutableLiveData(false)
+    val isButtonLoading: LiveData<Boolean> = _isButtonLoading
 
     private val registrationData = MutableLiveData<RegistrationData>()
     private val registrationServerResponse = Transformations.switchMap(registrationData) {
@@ -42,25 +44,27 @@ class RegistrationViewModel : ViewModel() {
         events.addSource(registrationServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.registrationErrorHandler(it as ServerError)
-
                 if (event.type == EventType.Move || event.type == EventType.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
-
                 events.postValue(event)
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
                 events.postValue(Event(EventType.Move, "MyProfile"))
             }
+            updateForm(isFormEnabled = true, isButtonLoading = false)
         }
     }
 
     fun register() {
+        updateForm(isFormEnabled = false, isButtonLoading = true)
+
         val address = address.value ?: ""
         val description = description.value ?: ""
 
         if (!checkFields(address, description)) {
+            updateForm(isFormEnabled = true, isButtonLoading = false)
             return
         }
 
@@ -84,16 +88,20 @@ class RegistrationViewModel : ViewModel() {
         mechanics = PreferencesRepository.convertToList(items)
     }
 
+    fun updateAddress(address: String) {
+        _address.postValue(address)
+    }
+
     private fun checkFields(address: String, description: String): Boolean {
         if (address.isBlank()) {
-            events.postValue(Event(EventType.Warning, "Укажите местоположение"))
+            events.postValue(Event(EventType.Notification, "Укажите местоположение"))
             return false
         }
 
         if (description.length > MAX_LENGTH_OF_DESCRIPTION) {
             events.postValue(
                 Event(
-                    EventType.Warning,
+                    EventType.Notification,
                     "Описание должно содержать не более 250 символов"
                 )
             )
@@ -101,6 +109,11 @@ class RegistrationViewModel : ViewModel() {
         }
 
         return true
+    }
+
+    private fun updateForm(isFormEnabled: Boolean, isButtonLoading: Boolean) {
+        _isFormEnabled.postValue(isFormEnabled)
+        _isButtonLoading.postValue(isButtonLoading)
     }
 
     private data class RegistrationData(

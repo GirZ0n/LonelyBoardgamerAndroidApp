@@ -12,7 +12,7 @@ object ErrorHandler {
     fun loginErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 1, 2 -> {
-                Event(EventType.Warning, error.message)
+                Event(EventType.Notification, error.message)
             }
             3 -> {
                 Event(EventType.Move, "Registration")
@@ -26,7 +26,7 @@ object ErrorHandler {
     fun registrationErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2, 3 -> {
-                Event(EventType.Warning, error.message)
+                Event(EventType.Notification, error.message)
             }
             1 -> {
                 Event(EventType.Move, "Login")
@@ -40,7 +40,7 @@ object ErrorHandler {
     fun getProfileErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2 -> {
-                Event(EventType.Warning, error.message)
+                Event(EventType.Notification, error.message)
             }
             1, 3, 401 -> {
                 Event(EventType.Move, "Login")
@@ -54,7 +54,7 @@ object ErrorHandler {
     fun logoutErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2 -> {
-                Event(EventType.Warning, error.message)
+                Event(EventType.Notification, error.message)
             }
             1, 3, 401 -> {
                 Event(EventType.Move, "Login")
@@ -68,7 +68,7 @@ object ErrorHandler {
     fun changeProfileErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2, 3 -> {
-                Event(EventType.Warning, error.message)
+                Event(EventType.Notification, error.message)
             }
             1, 401 -> {
                 Event(EventType.Move, "Login")

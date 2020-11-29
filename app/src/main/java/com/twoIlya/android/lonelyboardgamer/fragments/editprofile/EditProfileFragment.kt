@@ -72,7 +72,7 @@ class EditProfileFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Warning -> {
+                EventType.Notification -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
                 EventType.Error -> {
