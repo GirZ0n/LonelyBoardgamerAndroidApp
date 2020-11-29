@@ -32,7 +32,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:text="@{viewModel.address}"
                 android:id="@+id/address_textfield"
                 style="@style/Text"
                 android:layout_width="wrap_content"
@@ -41,6 +40,7 @@
                 android:hint="@string/your_location_hint"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:text="@{viewModel.address}"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,6 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:enabled="@{viewModel.isFormEnabled}"
                 android:text="@string/get_location_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -75,6 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:enabled="@{viewModel.isFormEnabled}"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"
@@ -100,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:enabled="@{viewModel.isFormEnabled}"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textAlignment="center"
@@ -129,6 +132,7 @@
                 android:layout_marginBottom="32dp"
                 android:autofillHints=""
                 android:background="@null"
+                android:enabled="@{viewModel.isFormEnabled}"
                 android:hint="@string/description_hint"
                 android:inputType="textMultiLine"
                 android:maxLength="250"
@@ -149,7 +153,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
                 android:drawablePadding="10dp"
+                android:onClick="@{() -> viewModel.register()}"
                 android:text="@string/register_button"
+                app:isLoading="@{viewModel.isButtonLoading}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

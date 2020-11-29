@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.github.ybq.android.spinkit.style.ThreeBounce
 import com.schibstedspain.leku.LOCATION_ADDRESS
 import com.schibstedspain.leku.LocationPickerActivity
 import com.twoIlya.android.lonelyboardgamer.R
@@ -54,11 +53,6 @@ class RegistrationFragment : Fragment() {
             startActivityForResult(locationPickerIntent, 1)
         }
 
-        binding.registerButton.setOnClickListener {
-            updateForm(false)
-            viewModel.register()
-        }
-
         categoriesSpinnerSetup()
         mechanicsSpinnerSetup()
 
@@ -72,7 +66,6 @@ class RegistrationFragment : Fragment() {
 
             when (it.type) {
                 EventType.Notification -> {
-                    updateForm(true)
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
                 EventType.Error -> {
@@ -144,30 +137,6 @@ class RegistrationFragment : Fragment() {
             .withVoiceSearchHidden() // Прячем голосовой поиск
             .withUnnamedRoadHidden() // Прячем неизвестные дороги
             .build(requireContext())
-    }
-
-    private fun updateForm(isEnabled: Boolean) {
-        binding.locationButton.isEnabled = isEnabled
-        binding.categoryMultiSpinner.isEnabled = isEnabled
-        binding.mechanicsMultiSpinner.isEnabled = isEnabled
-        binding.descriptionTextfield.isEnabled = isEnabled
-        binding.registerButton.isEnabled = isEnabled
-
-        when (isEnabled) {
-            true -> {
-                val leftDrawable = binding.registerButton.compoundDrawables.first()
-                if (leftDrawable is ThreeBounce) {
-                    leftDrawable.stop()
-                }
-                binding.registerButton.setCompoundDrawables(null, null, null, null)
-            }
-            false -> {
-                val dots = ThreeBounce()
-                dots.setBounds(0, 0, 100, 100)
-                binding.registerButton.setCompoundDrawables(dots, null, null, null)
-                dots.start()
-            }
-        }
     }
 
     companion object {
