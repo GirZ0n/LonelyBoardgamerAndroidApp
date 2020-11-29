@@ -80,6 +80,8 @@ class MyProfileFragment : Fragment() {
             updateLogoutButton(false)
             viewModel.logout()
         }
+
+        viewModel.updateProfileFromCache()
     }
 
     private fun updateLogoutButton(isEnabled: Boolean) {
@@ -101,7 +103,6 @@ class MyProfileFragment : Fragment() {
             }
         }
     }
-
 
     companion object {
         private const val TAG = "MyProfileFragment_TAG"
