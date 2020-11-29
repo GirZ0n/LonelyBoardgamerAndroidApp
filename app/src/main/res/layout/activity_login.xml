@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.twoIlya.android.lonelyboardgamer.activities.login.LoginViewModel" />
+    </data>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,21 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:context=".activities.login.LoginActivity">
-
-            <Button
-                android:id="@+id/login_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/vk_primary"
-                android:drawablePadding="10dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/vk_login_button"
-                android:textColor="@color/common_google_signin_btn_text_dark_default"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/app_name" />
 
             <TextView
                 android:id="@+id/app_name"
@@ -40,6 +32,23 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/vk_primary"
+                android:drawablePadding="10dp"
+                android:enabled="@{viewModel.isFormEnabled}"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/vk_login_button"
+                android:textColor="@color/common_google_signin_btn_text_dark_default"
+                android:textSize="14sp"
+                app:isLoading="@{viewModel.isButtonLoading}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/app_name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
