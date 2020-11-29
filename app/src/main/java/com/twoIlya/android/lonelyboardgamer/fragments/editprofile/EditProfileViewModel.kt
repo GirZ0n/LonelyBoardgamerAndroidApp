@@ -233,7 +233,7 @@ class EditProfileViewModel : ViewModel() {
                 )
                 false
             }
-            isSomethingChanged(address, categories, mechanics, description) -> false
+            !isSomethingChanged(address, categories, mechanics, description) -> false
             else -> true
         }
     }
