@@ -31,4 +31,7 @@
     <!-- Edit Profile Fragment -->
     <string name="edit_profile_fragment_label">Редактирование</string>
     <string name="edit_button">Изменить</string>
+
+    <!-- Search Fragment -->
+    <string name="search_fragment_label">Поиск</string>
 </resources>
