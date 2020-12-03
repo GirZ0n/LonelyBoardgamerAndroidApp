@@ -10,6 +10,7 @@
     <integer name="com_vk_sdk_AppId">7647393</integer>
 
     <!-- Registration Fragment -->
+    <string name="registration_fragment_label">Регистрация</string>
     <string name="your_location_title">Ваше местоположение</string>
     <string name="your_location_hint">Нажмите на кнопку</string>
     <string name="get_location_button">Указать местоположение</string>
@@ -21,11 +22,13 @@
     <string name="description_hint">Нажмите сюда</string>
 
     <!-- My Profile Fragment -->
+    <string name="my_profile_fragment_label">Профиль</string>
     <string name="logout_button">Logout</string>
     <string name="avatar_contentDescription">Аватар пользователя</string>
     <string name="edit_ContentDescription">Редактировать</string>
     <string name="empty_text_hint">Не указано</string>
 
     <!-- Edit Profile Fragment -->
+    <string name="edit_profile_fragment_label">Редактирование</string>
     <string name="edit_button">Изменить</string>
 </resources>

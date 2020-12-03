@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/registrationFragment"
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.registration.RegistrationFragment"
-        android:label="fragment_registration"
+        android:label="@string/registration_fragment_label"
         tools:layout="@layout/fragment_registration">
         <action
             android:id="@+id/action_registrationFragment_to_myProfile"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/myProfileFragment"
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.myprofile.MyProfileFragment"
-        android:label="fragment_myProfile"
+        android:label="@string/my_profile_fragment_label"
         tools:layout="@layout/fragment_my_profile">
         <action
             android:id="@+id/action_myProfileFragment_to_editProfileFragment"
@@ -30,6 +30,6 @@
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.editprofile.EditProfileFragment"
-        android:label="EditProfileFragment"
+        android:label="@string/edit_profile_fragment_label"
         tools:layout="@layout/fragment_edit_profile" />
 </navigation>
