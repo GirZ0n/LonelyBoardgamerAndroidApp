@@ -4,19 +4,53 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.twoIlya.android.lonelyboardgamer.R
+import com.twoIlya.android.lonelyboardgamer.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        navController = findNavController(R.id.myNavHostFragment)
+
+        startDestinationSetup()
+
+        appBarConfigurationSetup()
+
+        setupDrawerLayout()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    private fun startDestinationSetup() {
         val navHostFragment = myNavHostFragment as NavHostFragment
-        val graphInflater = navHostFragment.navController.navInflater
-        val navGraph = graphInflater.inflate(R.navigation.navigation)
-        val navController = navHostFragment.navController
+        val navInflater = navHostFragment.navController.navInflater
+        val navGraph = navInflater.inflate(R.navigation.navigation)
 
         val destination = when (intent.getBooleanExtra(EXTRA_IS_REGISTRATION_NEEDED, false)) {
             true -> R.id.registrationFragment
@@ -25,6 +59,16 @@ class MainActivity : AppCompatActivity() {
 
         navGraph.startDestination = destination
         navController.graph = navGraph
+    }
+
+    private fun appBarConfigurationSetup() {
+        val topLevelDestinations = setOf(R.id.myProfileFragment)
+        appBarConfiguration = AppBarConfiguration(topLevelDestinations, binding.drawerLayout)
+    }
+
+    private fun setupDrawerLayout() {
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        binding.navView.setupWithNavController(navController)
     }
 
     companion object {
