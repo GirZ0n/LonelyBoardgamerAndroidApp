@@ -49,4 +49,11 @@ interface ServerAPI {
         @Header("Authorization") serverToken: String,
         @Query("new") newMechanics: String
     ): Call<ServerResponse>
+
+    @POST("profile/change/prefMechanics")
+    fun search(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
 }

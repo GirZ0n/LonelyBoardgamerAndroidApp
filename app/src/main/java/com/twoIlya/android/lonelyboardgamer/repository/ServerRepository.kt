@@ -3,23 +3,23 @@ package com.twoIlya.android.lonelyboardgamer.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
-import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerMessage
-import com.twoIlya.android.lonelyboardgamer.dataClasses.Profile
-import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
-import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
+import com.twoIlya.android.lonelyboardgamer.dataClasses.*
+import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
+import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.lang.NullPointerException
 import java.net.SocketTimeoutException
 
 object ServerRepository {
@@ -168,6 +168,40 @@ object ServerRepository {
         return responseLiveData
     }
 
+    private fun getSearchResult(serverToken: Token, limit: Int, offset: Int): ServerResponse {
+        return serverAPI.search("Bearer ${serverToken.value}", limit, offset)
+    }
+
+    fun search(serverToken: Token, limit: Int, offset: Int): Flow<PagingData<SearchProfile>> {
+        Log.d(Constants.TAG, "Limit: $limit, offset: $offset")
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { SearchProfilePagingSource(serverToken) }
+        ).flow
+    }
+
+    private fun onFailureHandling(t: Throwable): ServerError {
+        return when (t) {
+            // Server fell asleep
+            is SocketTimeoutException -> ServerError(
+                -1,
+                "The server fell asleep. Repeat your action"
+            )
+            // Network problems
+            is IOException -> ServerError(
+                -1,
+                "There was a problem sending your request. Check your internet connection. " +
+                        "If the problem persists, please contact us at: placeholder@placeholder.com"
+            )
+            // Other problems
+            else -> ServerError(
+                -3,
+                "Something went wrong while sending or receiving your request: ${t.message}"
+            )
+        }
+    }
+
+
     private class MyCallback(
         val functionName: String,
         val responseLiveData: MutableLiveData<ServerRepositoryResponse>,
@@ -202,28 +236,38 @@ object ServerRepository {
         }
     }
 
-    private fun onFailureHandling(t: Throwable): ServerError {
-        return when (t) {
-            // Server fell asleep
-            is SocketTimeoutException -> ServerError(
-                -1,
-                "The server fell asleep. Repeat your action"
-            )
-            // Network problems
-            is IOException -> ServerError(
-                -1,
-                "There was a problem sending your request. Check your internet connection. " +
-                        "If the problem persists, please contact us at: placeholder@placeholder.com"
-            )
-            // Other problems
-            else -> ServerError(
-                -3,
-                "Something went wrong while sending or receiving your request: ${t.message}"
-            )
+    private class SearchProfilePagingSource(private val serverToken: Token) :
+        PagingSource<Int, SearchProfile>() {
+        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchProfile> {
+            val position = params.key ?: Constants.SERVER_STARTING_PAGE_INDEX
+            return try {
+                val response = getSearchResult(serverToken, params.loadSize, position)
+                val profileType = object : TypeToken<List<SearchProfile>>() {}.type
+                val profiles =
+                    Gson().fromJson<List<SearchProfile>>(
+                        response.message.toString(),
+                        profileType
+                    )
+                LoadResult.Page(
+                    data = profiles,
+                    prevKey = if (position == Constants.SERVER_STARTING_PAGE_INDEX) null else position - params.loadSize,
+                    nextKey = if (profiles.isEmpty()) null else position + params.loadSize
+                )
+            } catch (exception: IOException) {
+                LoadResult.Error(exception)
+            } catch (exception: HttpException) {
+                LoadResult.Error(exception)
+            } catch (exception: JsonSyntaxException) {
+                LoadResult.Error(exception)
+            } catch (exception: NullPointerException) {
+                LoadResult.Error(exception)
+            }
         }
     }
 
     private object Constants {
         const val TAG = "ServerRepository_TAG"
+        const val NETWORK_PAGE_SIZE = 50
+        const val SERVER_STARTING_PAGE_INDEX = 0
     }
 }

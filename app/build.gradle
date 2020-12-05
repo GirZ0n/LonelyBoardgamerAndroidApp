@@ -60,6 +60,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0-alpha10"
 
     // VK SDK
     implementation 'com.vk:androidsdk:2.4.0'
