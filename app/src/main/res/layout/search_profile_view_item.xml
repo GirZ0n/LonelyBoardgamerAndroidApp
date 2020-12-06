@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="@{profile.firstName + profile.secondName}"
+            android:text="@{profile.firstName + ' ' + profile.secondName}"
             app:layout_constraintStart_toEndOf="@+id/avatar"
             app:layout_constraintTop_toTopOf="@+id/avatar"
             tools:text="Вася Пупкин" />
@@ -49,16 +49,6 @@
             android:text="@{profile.distance}"
             tools:text="Расстояние: 42 м" />
 
-        <Button
-            android:id="@+id/button"
-            style="@style/Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/avatar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/avatar"
-            tools:text="Добавить" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
