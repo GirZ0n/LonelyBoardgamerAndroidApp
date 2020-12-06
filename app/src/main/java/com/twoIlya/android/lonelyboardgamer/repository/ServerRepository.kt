@@ -240,7 +240,8 @@ object ServerRepository {
             Log.d(Constants.TAG, "load params: $params")
             val position = params.key ?: Constants.SERVER_STARTING_PAGE_INDEX
             return try {
-                val response = api.search("Bearer ${serverToken.value}", params.loadSize, position)
+                val response =
+                    api.search("Bearer ${serverToken.value}", NETWORK_PAGE_SIZE, position)
                 Log.d(Constants.TAG, response.toString())
                 val profileType = object : TypeToken<List<SearchProfile>>() {}.type
                 val profiles =
