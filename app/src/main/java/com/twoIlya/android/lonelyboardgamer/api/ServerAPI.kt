@@ -50,8 +50,8 @@ interface ServerAPI {
         @Query("new") newMechanics: String
     ): Call<ServerResponse>
 
-    @POST("profile/change/prefMechanics")
-    fun search(
+    @GET("search")
+    suspend fun search(
         @Header("Authorization") serverToken: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
