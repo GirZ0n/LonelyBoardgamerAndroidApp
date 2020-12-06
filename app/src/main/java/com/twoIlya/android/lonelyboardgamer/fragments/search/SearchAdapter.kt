@@ -4,9 +4,11 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.twoIlya.android.lonelyboardgamer.OnItemClickListener
 import com.twoIlya.android.lonelyboardgamer.dataClasses.SearchProfile
 
-class SearchAdapter : PagingDataAdapter<SearchProfile, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
+class SearchAdapter(private val itemClickListener: OnItemClickListener) :
+    PagingDataAdapter<SearchProfile, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return SearchProfileViewHolder.create(parent)
@@ -15,7 +17,7 @@ class SearchAdapter : PagingDataAdapter<SearchProfile, RecyclerView.ViewHolder>(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val profile = getItem(position)
         profile?.let {
-            (holder as SearchProfileViewHolder).bind(profile)
+            (holder as SearchProfileViewHolder).bind(profile, itemClickListener)
         }
     }
 
