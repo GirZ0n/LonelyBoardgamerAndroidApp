@@ -168,15 +168,10 @@ object ServerRepository {
         return responseLiveData
     }
 
-    private fun getSearchResult(serverToken: Token, limit: Int, offset: Int): ServerResponse {
-        return serverAPI.search("Bearer ${serverToken.value}", limit, offset)
-    }
-
-    fun search(serverToken: Token, limit: Int, offset: Int): Flow<PagingData<SearchProfile>> {
-        Log.d(Constants.TAG, "Limit: $limit, offset: $offset")
+    fun search(serverToken: Token): Flow<PagingData<SearchProfile>> {
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { SearchProfilePagingSource(serverToken) }
+            pagingSourceFactory = { SearchProfilePagingSource(serverToken, serverAPI) }
         ).flow
     }
 
@@ -236,12 +231,17 @@ object ServerRepository {
         }
     }
 
-    private class SearchProfilePagingSource(private val serverToken: Token) :
+    private class SearchProfilePagingSource(
+        private val serverToken: Token,
+        private val api: ServerAPI
+    ) :
         PagingSource<Int, SearchProfile>() {
         override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchProfile> {
+            Log.d(Constants.TAG, "load params: $params")
             val position = params.key ?: Constants.SERVER_STARTING_PAGE_INDEX
             return try {
-                val response = getSearchResult(serverToken, params.loadSize, position)
+                val response = api.search("Bearer ${serverToken.value}", params.loadSize, position)
+                Log.d(Constants.TAG, response.toString())
                 val profileType = object : TypeToken<List<SearchProfile>>() {}.type
                 val profiles =
                     Gson().fromJson<List<SearchProfile>>(
@@ -250,16 +250,20 @@ object ServerRepository {
                     )
                 LoadResult.Page(
                     data = profiles,
-                    prevKey = if (position == Constants.SERVER_STARTING_PAGE_INDEX) null else position - params.loadSize,
-                    nextKey = if (profiles.isEmpty()) null else position + params.loadSize
+                    prevKey = if (position == Constants.SERVER_STARTING_PAGE_INDEX) null else position - NETWORK_PAGE_SIZE,
+                    nextKey = if (profiles.isEmpty()) null else position + NETWORK_PAGE_SIZE,
                 )
             } catch (exception: IOException) {
+                Log.d(Constants.TAG, "exception: ${exception.localizedMessage}")
                 LoadResult.Error(exception)
             } catch (exception: HttpException) {
+                Log.d(Constants.TAG, "exception: ${exception.localizedMessage}")
                 LoadResult.Error(exception)
             } catch (exception: JsonSyntaxException) {
+                Log.d(Constants.TAG, "exception: ${exception.localizedMessage}")
                 LoadResult.Error(exception)
             } catch (exception: NullPointerException) {
+                Log.d(Constants.TAG, "exception: ${exception.localizedMessage}")
                 LoadResult.Error(exception)
             }
         }
