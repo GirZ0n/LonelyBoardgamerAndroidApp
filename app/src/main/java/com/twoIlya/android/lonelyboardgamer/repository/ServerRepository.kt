@@ -12,7 +12,7 @@ import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
-import com.twoIlya.android.lonelyboardgamer.paging.SearchProfilePagingSource
+import com.twoIlya.android.lonelyboardgamer.paging.SearchPagingSource
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -174,7 +174,7 @@ object ServerRepository {
     fun search(serverToken: Token): LiveData<PagingData<SearchProfile>> {
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { SearchProfilePagingSource(serverToken, serverAPI) }
+            pagingSourceFactory = { SearchPagingSource(serverToken, serverAPI) }
         ).liveData
     }
 

@@ -11,7 +11,7 @@ import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository
 import retrofit2.HttpException
 import java.io.IOException
 
-class SearchProfilePagingSource(
+class SearchPagingSource(
     private val serverToken: Token,
     private val api: ServerAPI
 ) :
