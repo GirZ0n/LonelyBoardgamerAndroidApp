@@ -1,7 +1,9 @@
 package com.twoIlya.android.lonelyboardgamer
 
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingConversion
 import androidx.lifecycle.LiveData
@@ -38,4 +40,9 @@ fun updateDrawable(view: Button, isLoading: Boolean) {
             view.setCompoundDrawables(null, null, null, null)
         }
     }
+}
+
+@BindingAdapter("bind:isVisible")
+fun setVisibility(view: View, isVisible: Boolean) {
+    view.isVisible = isVisible
 }
