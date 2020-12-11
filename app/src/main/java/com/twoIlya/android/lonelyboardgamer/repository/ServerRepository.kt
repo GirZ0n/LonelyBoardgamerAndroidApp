@@ -3,17 +3,24 @@ package com.twoIlya.android.lonelyboardgamer.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
+import com.twoIlya.android.lonelyboardgamer.paging.SearchProfilePagingSource
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
+import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.net.SocketTimeoutException
@@ -78,10 +85,10 @@ object ServerRepository {
             val response: ServerRepositoryResponse = try {
                 Gson().fromJson(it.message.toString(), Profile::class.java)
             } catch (e: JsonSyntaxException) {
-                Log.d(Constants.TAG, e.toString())
+                Log.d(TAG, e.toString())
                 ServerError(-2, "Error during deserialization: ${e.message} ")
             } catch (e: NullPointerException) {
-                Log.d(Constants.TAG, e.toString())
+                Log.d(TAG, e.toString())
                 ServerError(-2, "Error during deserialization: ${e.message} ")
             }
             response
@@ -192,7 +199,6 @@ object ServerRepository {
         }
     }
 
-
     private class MyCallback(
         val functionName: String,
         val responseLiveData: MutableLiveData<ServerRepositoryResponse>,
@@ -218,56 +224,20 @@ object ServerRepository {
                     "body - ${response.body()} \n" +
                     "code - ${response.code()} \n" +
                     "message - ${response.message()}"
-            Log.d(Constants.TAG, message)
+            Log.d(TAG, message)
         }
 
         override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
             responseLiveData.value = onFailureHandling(t)
-            Log.d(Constants.TAG, "$functionName (onF): $t")
+            Log.d(TAG, "$functionName (onF): $t")
         }
     }
 
-    private class SearchProfilePagingSource(
-        private val serverToken: Token,
-        private val api: ServerAPI
-    ) :
-        PagingSource<Int, SearchProfile>() {
-        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchProfile> {
-            Log.d(Constants.TAG, "load params: $params")
-            val position = params.key ?: Constants.SERVER_STARTING_PAGE_INDEX
-            return try {
-                val response =
-                    api.search("Bearer ${serverToken.value}", NETWORK_PAGE_SIZE, position)
-                Log.d(Constants.TAG, response.toString())
-                val profileType = object : TypeToken<List<SearchProfile>>() {}.type
-                val profiles =
-                    Gson().fromJson<List<SearchProfile>>(
-                        response.message.toString(),
-                        profileType
-                    )
-                LoadResult.Page(
-                    data = profiles,
-                    prevKey = if (position == Constants.SERVER_STARTING_PAGE_INDEX) null else position - NETWORK_PAGE_SIZE,
-                    nextKey = if (profiles.isEmpty()) null else position + NETWORK_PAGE_SIZE,
-                )
-            } catch (exception: IOException) {
-                Log.d(Constants.TAG, "exception: ${exception.localizedMessage}")
-                LoadResult.Error(exception)
-            } catch (exception: HttpException) {
-                Log.d(Constants.TAG, "exception: ${exception.localizedMessage}")
-                LoadResult.Error(exception)
-            } catch (exception: JsonSyntaxException) {
-                Log.d(Constants.TAG, "exception: ${exception.localizedMessage}")
-                LoadResult.Error(exception)
-            } catch (exception: NullPointerException) {
-                Log.d(Constants.TAG, "exception: ${exception.localizedMessage}")
-                LoadResult.Error(exception)
-            }
-        }
-    }
-
-    private object Constants {
+    private object Tag {
         const val TAG = "ServerRepository_TAG"
+    }
+
+    object Constants {
         const val NETWORK_PAGE_SIZE = 50
         const val SERVER_STARTING_PAGE_INDEX = 0
     }
