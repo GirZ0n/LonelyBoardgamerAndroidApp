@@ -16,6 +16,7 @@ import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
 import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentSearchBinding
+import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
 import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
@@ -85,8 +86,8 @@ class SearchFragment : Fragment() {
         }
 
         binding.list.adapter = adapter.withLoadStateHeaderAndFooter(
-            header = SearchLoadStateAdapter { adapter.retry() },
-            footer = SearchLoadStateAdapter { adapter.retry() }
+            header = LoadStateAdapter { adapter.retry() },
+            footer = LoadStateAdapter { adapter.retry() }
         )
 
         adapter.addLoadStateListener(viewModel::loadStateListener)
