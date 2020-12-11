@@ -4,6 +4,8 @@ import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
 import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepositoryResponse
+import retrofit2.HttpException
+import java.io.IOException
 
 object ErrorHandler {
 
@@ -75,6 +77,20 @@ object ErrorHandler {
             }
             else -> {
                 Event(EventType.Error, "${error.code}: ${error.message}")
+            }
+        }
+    }
+
+    fun searchErrorHandler(exception: Throwable): Event {
+        return when (exception) {
+            is HttpException -> {
+                Event(EventType.Move, "Login")
+            }
+            is IOException -> {
+                Event(EventType.Notification, exception.localizedMessage ?: "")
+            }
+            else -> {
+                Event(EventType.Error, exception.toString())
             }
         }
     }

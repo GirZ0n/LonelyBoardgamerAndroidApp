@@ -3,14 +3,18 @@ package com.twoIlya.android.lonelyboardgamer.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
-import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerMessage
-import com.twoIlya.android.lonelyboardgamer.dataClasses.Profile
-import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
-import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
+import com.twoIlya.android.lonelyboardgamer.dataClasses.*
+import com.twoIlya.android.lonelyboardgamer.paging.SearchPagingSource
+import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
+import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
@@ -19,7 +23,6 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
-import java.lang.NullPointerException
 import java.net.SocketTimeoutException
 
 object ServerRepository {
@@ -82,10 +85,10 @@ object ServerRepository {
             val response: ServerRepositoryResponse = try {
                 Gson().fromJson(it.message.toString(), Profile::class.java)
             } catch (e: JsonSyntaxException) {
-                Log.d(Constants.TAG, e.toString())
+                Log.d(TAG, e.toString())
                 ServerError(-2, "Error during deserialization: ${e.message} ")
             } catch (e: NullPointerException) {
-                Log.d(Constants.TAG, e.toString())
+                Log.d(TAG, e.toString())
                 ServerError(-2, "Error during deserialization: ${e.message} ")
             }
             response
@@ -168,6 +171,34 @@ object ServerRepository {
         return responseLiveData
     }
 
+    fun search(serverToken: Token): LiveData<PagingData<SearchProfile>> {
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { SearchPagingSource(serverToken, serverAPI) }
+        ).liveData
+    }
+
+    private fun onFailureHandling(t: Throwable): ServerError {
+        return when (t) {
+            // Server fell asleep
+            is SocketTimeoutException -> ServerError(
+                -1,
+                "The server fell asleep. Repeat your action"
+            )
+            // Network problems
+            is IOException -> ServerError(
+                -1,
+                "There was a problem sending your request. Check your internet connection. " +
+                        "If the problem persists, please contact us at: placeholder@placeholder.com"
+            )
+            // Other problems
+            else -> ServerError(
+                -3,
+                "Something went wrong while sending or receiving your request: ${t.message}"
+            )
+        }
+    }
+
     private class MyCallback(
         val functionName: String,
         val responseLiveData: MutableLiveData<ServerRepositoryResponse>,
@@ -193,37 +224,21 @@ object ServerRepository {
                     "body - ${response.body()} \n" +
                     "code - ${response.code()} \n" +
                     "message - ${response.message()}"
-            Log.d(Constants.TAG, message)
+            Log.d(TAG, message)
         }
 
         override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
             responseLiveData.value = onFailureHandling(t)
-            Log.d(Constants.TAG, "$functionName (onF): $t")
+            Log.d(TAG, "$functionName (onF): $t")
         }
     }
 
-    private fun onFailureHandling(t: Throwable): ServerError {
-        return when (t) {
-            // Server fell asleep
-            is SocketTimeoutException -> ServerError(
-                -1,
-                "The server fell asleep. Repeat your action"
-            )
-            // Network problems
-            is IOException -> ServerError(
-                -1,
-                "There was a problem sending your request. Check your internet connection. " +
-                        "If the problem persists, please contact us at: placeholder@placeholder.com"
-            )
-            // Other problems
-            else -> ServerError(
-                -3,
-                "Something went wrong while sending or receiving your request: ${t.message}"
-            )
-        }
-    }
-
-    private object Constants {
+    private object Tag {
         const val TAG = "ServerRepository_TAG"
+    }
+
+    object Constants {
+        const val NETWORK_PAGE_SIZE = 50
+        const val SERVER_STARTING_PAGE_INDEX = 0
     }
 }

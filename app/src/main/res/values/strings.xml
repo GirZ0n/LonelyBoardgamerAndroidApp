@@ -34,4 +34,5 @@
 
     <!-- Search Fragment -->
     <string name="search_fragment_label">Поиск</string>
+    <string name="retry">Повторить</string>
 </resources>

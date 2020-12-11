@@ -40,5 +40,15 @@
         android:id="@+id/searchFragment"
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.search.SearchFragment"
         android:label="@string/search_fragment_label"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.userprofile.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
 </navigation>
