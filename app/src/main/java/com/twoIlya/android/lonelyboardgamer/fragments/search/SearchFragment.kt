@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.twoIlya.android.lonelyboardgamer.OnItemClickListener
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
@@ -76,16 +75,14 @@ class SearchFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        adapter = SearchAdapter(object : OnItemClickListener {
-            override fun onItemClicked(id: Int) {
-                val bundle = Bundle()
-                bundle.putInt("id", id)
-                findNavController().navigate(
-                    R.id.action_searchFragment_to_userProfileFragment,
-                    bundle
-                )
-            }
-        })
+        adapter = SearchAdapter { id ->
+            val bundle = Bundle()
+            bundle.putInt("id", id)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_userProfileFragment,
+                bundle
+            )
+        }
 
         binding.list.adapter = adapter.withLoadStateHeaderAndFooter(
             header = SearchLoadStateAdapter { adapter.retry() },

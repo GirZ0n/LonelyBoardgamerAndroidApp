@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import com.twoIlya.android.lonelyboardgamer.OnItemClickListener
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.dataClasses.SearchProfile
 import com.twoIlya.android.lonelyboardgamer.databinding.SearchProfileViewItemBinding
@@ -15,22 +14,19 @@ class SearchProfileViewHolder(private val binding: SearchProfileViewItemBinding)
     RecyclerView.ViewHolder(binding.root) {
     private var profile: SearchProfile? = null
 
-    fun bind(profile: SearchProfile?, clickListener: OnItemClickListener) {
+    fun bind(profile: SearchProfile?, clickListener: (Int) -> Unit) {
         if (profile == null) {
             binding.profile = SearchProfile(-1, "?", "?", "?")
         } else {
             showRepoData(profile)
             binding.root.setOnClickListener {
-                clickListener.onItemClicked(profile.id)
+                clickListener(profile.id)
             }
         }
     }
 
     private fun showRepoData(profile: SearchProfile) {
         this.profile = profile
-
-        // Здесь будет также менять навзание кнопки и ставить listener
-
         binding.profile = profile
         val imageUrl = "https://eu.ui-avatars.com/api/" +
                 "?name=${profile.firstName}+${profile.secondName}" +
