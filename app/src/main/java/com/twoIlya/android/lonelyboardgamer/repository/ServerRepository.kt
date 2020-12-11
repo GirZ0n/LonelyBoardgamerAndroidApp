@@ -3,10 +3,7 @@ package com.twoIlya.android.lonelyboardgamer.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
+import androidx.paging.*
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -14,7 +11,6 @@ import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
-import kotlinx.coroutines.flow.Flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.*
@@ -168,11 +164,11 @@ object ServerRepository {
         return responseLiveData
     }
 
-    fun search(serverToken: Token): Flow<PagingData<SearchProfile>> {
+    fun search(serverToken: Token): LiveData<PagingData<SearchProfile>> {
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { SearchProfilePagingSource(serverToken, serverAPI) }
-        ).flow
+        ).liveData
     }
 
     private fun onFailureHandling(t: Throwable): ServerError {
