@@ -1,4 +1,4 @@
-package com.twoIlya.android.lonelyboardgamer.fragments.search
+package com.twoIlya.android.lonelyboardgamer.paging
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.databinding.LoadStateFooterViewItemBinding
 
-class SearchLoadStateViewHolder(
+class LoadStateViewHolder(
     private val binding: LoadStateFooterViewItemBinding,
     retry: () -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -28,7 +28,7 @@ class SearchLoadStateViewHolder(
     }
 
     companion object {
-        fun create(parent: ViewGroup, retry: () -> Unit): SearchLoadStateViewHolder {
+        fun create(parent: ViewGroup, retry: () -> Unit): LoadStateViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding: LoadStateFooterViewItemBinding =
                 DataBindingUtil.inflate(
@@ -37,7 +37,7 @@ class SearchLoadStateViewHolder(
                     parent,
                     false
                 )
-            return SearchLoadStateViewHolder(binding, retry)
+            return LoadStateViewHolder(binding, retry)
         }
     }
 }
