@@ -10,13 +10,13 @@ class SearchAdapter(private val itemClickListener: (Int) -> Unit) :
     PagingDataAdapter<SearchProfile, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return SearchProfileViewHolder.create(parent)
+        return SearchViewHolder.create(parent)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val profile = getItem(position)
         profile?.let {
-            (holder as SearchProfileViewHolder).bind(profile, itemClickListener)
+            (holder as SearchViewHolder).bind(profile, itemClickListener)
         }
     }
 
