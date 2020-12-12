@@ -112,7 +112,10 @@ object ServerRepository {
     fun changeAddress(serverToken: Token, address: String): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        val changeAddressRequest = serverAPI.changeAddress("Bearer ${serverToken.value}", address)
+        val addressRequestBody = address.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val changeAddressRequest =
+            serverAPI.changeAddress("Bearer ${serverToken.value}", addressRequestBody)
 
         changeAddressRequest.enqueue(MyCallback("changeAddress", responseLiveData) {
             ServerMessage(it.message.toString())
@@ -127,8 +130,10 @@ object ServerRepository {
     ): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
+        val descriptionRequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
+
         val changeDescriptionRequest =
-            serverAPI.changeDescription("Bearer ${serverToken.value}", description)
+            serverAPI.changeDescription("Bearer ${serverToken.value}", descriptionRequestBody)
 
         changeDescriptionRequest.enqueue(MyCallback("changeDescription", responseLiveData) {
             ServerMessage(it.message.toString())
@@ -143,9 +148,11 @@ object ServerRepository {
     ): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        val categoriesAsString = categories.joinToString(",")
+        val categoriesRequestBody =
+            categories.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull())
+
         val changeCategoriesRequest =
-            serverAPI.changeCategories("Bearer ${serverToken.value}", categoriesAsString)
+            serverAPI.changeCategories("Bearer ${serverToken.value}", categoriesRequestBody)
 
         changeCategoriesRequest.enqueue(MyCallback("changeCategories", responseLiveData) {
             ServerMessage(it.message.toString())
@@ -160,9 +167,11 @@ object ServerRepository {
     ): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        val mechanicsAsString = mechanics.joinToString(",")
+        val mechanicsRequestBody =
+            mechanics.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull())
+
         val changeMechanicsRequest =
-            serverAPI.changeMechanics("Bearer ${serverToken.value}", mechanicsAsString)
+            serverAPI.changeMechanics("Bearer ${serverToken.value}", mechanicsRequestBody)
 
         changeMechanicsRequest.enqueue(MyCallback("changeMechanics", responseLiveData) {
             ServerMessage(it.message.toString())
