@@ -11,16 +11,16 @@ import com.twoIlya.android.lonelyboardgamer.databinding.SearchProfileViewItemBin
 
 
 class SearchViewHolder(private val binding: SearchProfileViewItemBinding) :
-    RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
 
     fun bind(profile: SearchProfile?, clickListener: (Int) -> Unit) {
-        if (profile == null) {
-            binding.profile = SearchProfile(-1, "?", "?", "?")
-        } else {
+        profile?.let {
             showRepoData(profile)
             binding.root.setOnClickListener {
                 clickListener(profile.id)
             }
+        } ?: run {
+            binding.profile = SearchProfile(-1, "?", "?", "?")
         }
     }
 
@@ -36,14 +36,14 @@ class SearchViewHolder(private val binding: SearchProfileViewItemBinding) :
                 "&color=fff" +
                 "&background=000"
         Picasso.get().load(imageUrl).placeholder(R.drawable.ic_user_placeholder)
-            .into(binding.avatar)
+                .into(binding.avatar)
     }
 
     companion object {
         fun create(parent: ViewGroup): SearchViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding: SearchProfileViewItemBinding =
-                DataBindingUtil.inflate(inflater, R.layout.search_profile_view_item, parent, false)
+                    DataBindingUtil.inflate(inflater, R.layout.search_profile_view_item, parent, false)
             return SearchViewHolder(binding)
         }
     }
