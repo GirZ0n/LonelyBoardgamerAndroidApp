@@ -26,6 +26,8 @@ class SearchViewHolder(private val binding: SearchProfileViewItemBinding) :
 
     private fun showRepoData(profile: SearchProfile) {
         binding.profile = profile
+        binding.executePendingBindings()
+
         val imageUrl = "https://eu.ui-avatars.com/api/" +
                 "?name=${profile.firstName}+${profile.secondName}" +
                 "&bold=true" +
@@ -35,7 +37,6 @@ class SearchViewHolder(private val binding: SearchProfileViewItemBinding) :
                 "&background=000"
         Picasso.get().load(imageUrl).placeholder(R.drawable.ic_user_placeholder)
             .into(binding.avatar)
-        binding.executePendingBindings()
     }
 
     companion object {
