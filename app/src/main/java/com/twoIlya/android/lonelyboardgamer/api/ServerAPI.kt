@@ -26,27 +26,38 @@ interface ServerAPI {
     @POST("profile/logout")
     fun logout(@Header("Authorization") serverToken: String): Call<ServerResponse>
 
+    @Multipart
     @POST("profile/change/address")
     fun changeAddress(
         @Header("Authorization") serverToken: String,
-        @Query("new") newAddress: String
+        @Part("new") newAddress: RequestBody
     ): Call<ServerResponse>
 
+    @Multipart
     @POST("profile/change/description")
     fun changeDescription(
         @Header("Authorization") serverToken: String,
-        @Query("new") newDescription: String
+        @Part("new") newDescription: RequestBody
     ): Call<ServerResponse>
 
+    @Multipart
     @POST("profile/change/prefCategories")
     fun changeCategories(
         @Header("Authorization") serverToken: String,
-        @Query("new") newCategories: String
+        @Part("new") newCategories: RequestBody
     ): Call<ServerResponse>
 
+    @Multipart
     @POST("profile/change/prefMechanics")
     fun changeMechanics(
         @Header("Authorization") serverToken: String,
-        @Query("new") newMechanics: String
+        @Part("new") newMechanics: RequestBody
     ): Call<ServerResponse>
+
+    @GET("search")
+    suspend fun search(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
 }
