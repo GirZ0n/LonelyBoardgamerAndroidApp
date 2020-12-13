@@ -121,7 +121,7 @@ class UserProfileViewModel : ViewModel() {
                 if (it.value.isDigitsOnly()) {
                     idVK = it.value
                     state = FriendState()
-                    _friendStatus.postValue(0)
+                    _friendStatus.postValue(3)
                 } else {
                     state = InRequestState()
                     _friendStatus.postValue(2)

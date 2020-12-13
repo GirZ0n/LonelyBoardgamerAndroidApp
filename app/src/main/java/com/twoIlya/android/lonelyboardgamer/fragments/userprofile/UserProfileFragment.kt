@@ -87,7 +87,7 @@ class UserProfileFragment : Fragment() {
                     binding.upButton.setImageResource(R.drawable.ic_baseline_delete_24)
                     binding.upButton.isVisible = true
                     binding.upButton.setOnClickListener {
-                        viewModel.bottomButtonClick("unfriend")
+                        viewModel.upButtonClick("unfriend")
                     }
                 }
                 // Out Request
@@ -96,6 +96,7 @@ class UserProfileFragment : Fragment() {
                     binding.bottomButtom.setOnClickListener {
                         viewModel.bottomButtonClick("withdraw")
                     }
+
                     binding.upButton.isVisible = false
                 }
                 // In Request
@@ -105,6 +106,7 @@ class UserProfileFragment : Fragment() {
                         // TODO: диалог
                         // viewModel.bottomButtonClick()
                     }
+
                     binding.upButton.isVisible = false
                 }
                 // Foreign user
