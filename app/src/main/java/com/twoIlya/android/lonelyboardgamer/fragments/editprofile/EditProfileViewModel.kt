@@ -82,7 +82,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
-            } else if (it is Profile) {
+            } else if (it is MyProfile) {
                 CacheRepository.setProfile(it)
                 updateLiveData(it)
             }
@@ -248,7 +248,7 @@ class EditProfileViewModel : ViewModel() {
                 oldMechanics != mechanics || oldDescription != description
     }
 
-    private fun updateLiveData(profile: Profile) {
+    private fun updateLiveData(profile: MyProfile) {
         oldAddress = profile.address
         _address.postValue(profile.address)
 

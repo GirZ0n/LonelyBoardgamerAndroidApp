@@ -55,7 +55,7 @@ class MyProfileViewModel : ViewModel() {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
-            } else if (it is Profile) {
+            } else if (it is MyProfile) {
                 CacheRepository.setProfile(it)
                 updateLiveData(it)
             }
@@ -96,7 +96,7 @@ class MyProfileViewModel : ViewModel() {
         serverTokenForLogout.postValue(TokenRepository.getServerToken())
     }
 
-    private fun updateLiveData(profile: Profile) {
+    private fun updateLiveData(profile: MyProfile) {
         val fullName = "${profile.firstName} ${profile.secondName}"
         _name.postValue(fullName)
         _address.postValue(profile.address)
@@ -105,13 +105,13 @@ class MyProfileViewModel : ViewModel() {
         _description.postValue(profile.description)
         _isLayoutRefreshing.postValue(false)
         _imageUrl.postValue(
-            "https://eu.ui-avatars.com/api/" +
-                    "?name=${profile.firstName}+${profile.secondName}" +
-                    "&bold=true" +
-                    "&size=512" +
-                    "&rounded=true" +
-                    "&color=fff" +
-                    "&background=000"
+                "https://eu.ui-avatars.com/api/" +
+                        "?name=${profile.firstName}+${profile.secondName}" +
+                        "&bold=true" +
+                        "&size=512" +
+                        "&rounded=true" +
+                        "&color=fff" +
+                        "&background=000"
         )
     }
 
