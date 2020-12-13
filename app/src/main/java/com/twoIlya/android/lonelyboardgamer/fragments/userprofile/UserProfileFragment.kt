@@ -40,8 +40,12 @@ class UserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val id = (arguments?.get("id") as? Int) ?: -1
-        viewModel.updateProfile(id)
+        viewModel.id = (arguments?.get("id") as? Int) ?: -1
+        viewModel.updateProfile()
+
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.updateProfile()
+        }
 
         viewModel.events.observe(viewLifecycleOwner) {
             Log.d(TAG, "Event: $it")
@@ -71,7 +75,7 @@ class UserProfileFragment : Fragment() {
             }
         }
 
-        viewModel.stateCode.observe(viewLifecycleOwner) {
+        viewModel.friendStatus.observe(viewLifecycleOwner) {
             when (it) {
                 3 -> {
                     binding.bottomButtom.setText(R.string.chat_button)

@@ -11,11 +11,12 @@ import com.twoIlya.android.lonelyboardgamer.repository.TokenRepository
 class UserProfileViewModel : ViewModel() {
     private var state: State = LoadingState()
 
-    private var id: Int = 0
+    var id: Int = 0
 
     private var idVK: String = ""
 
-    private var friendStatus: Int = 0
+    private var _friendStatus = MutableLiveData(0)
+    val friendStatus: LiveData<Int> = _friendStatus
 
     private val _name = MutableLiveData<String>()
     val name: LiveData<String> = _name
@@ -46,9 +47,6 @@ class UserProfileViewModel : ViewModel() {
 
     private val _isUpButtonLoading = MutableLiveData(false)
     val isUpButtonLoading: LiveData<Boolean> = _isUpButtonLoading
-
-    private val _stateCode = MutableLiveData(0)
-    val stateCode: LiveData<Int> = _stateCode
 
     // -----------------------------------------------------
 
@@ -86,22 +84,10 @@ class UserProfileViewModel : ViewModel() {
                 updateData(it)
 
                 state = when (it.friendStatus) {
-                    3 -> {
-                        _stateCode.postValue(3)
-                        FriendState()
-                    }
-                    2 -> {
-                        _stateCode.postValue(2)
-                        InRequestState()
-                    }
-                    1 -> {
-                        _stateCode.postValue(1)
-                        OutRequestState()
-                    }
-                    else -> {
-                        _stateCode.postValue(0)
-                        ForeignUserState()
-                    }
+                    3 -> FriendState()
+                    2 -> InRequestState()
+                    1 -> OutRequestState()
+                    else -> ForeignUserState()
                 }
             }
 
@@ -118,7 +104,7 @@ class UserProfileViewModel : ViewModel() {
                 events.postValue(event)
             } else if (it is ServerMessage) {
                 state = OutRequestState()
-                _stateCode.postValue(1)
+                _friendStatus.postValue(1)
             }
 
             updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
@@ -135,10 +121,10 @@ class UserProfileViewModel : ViewModel() {
                 if (it.value.isDigitsOnly()) {
                     idVK = it.value
                     state = FriendState()
-                    _stateCode.postValue(0)
+                    _friendStatus.postValue(0)
                 } else {
                     state = InRequestState()
-                    _stateCode.postValue(2)
+                    _friendStatus.postValue(2)
                     events.postValue(Event(EventType.Notification, "Пользователь заблокирован"))
                 }
             }
@@ -147,7 +133,7 @@ class UserProfileViewModel : ViewModel() {
         }
     }
 
-    fun updateProfile(id: Int) {
+    fun updateProfile() {
         _isLayoutRefreshing.postValue(true)
         updateForm(isFormEnabled = false, isBottomButtonLoading = false, isUpButtonLoading = false)
         val serverToken = TokenRepository.getServerToken()
@@ -165,7 +151,7 @@ class UserProfileViewModel : ViewModel() {
     private fun updateData(profile: UserProfile) {
         id = profile.id
         profile.idVK?.let { idVK = it }
-        friendStatus = profile.friendStatus
+        _friendStatus.postValue(profile.friendStatus)
 
         val fullName = "${profile.firstName} ${profile.secondName}"
         _name.postValue(fullName)
