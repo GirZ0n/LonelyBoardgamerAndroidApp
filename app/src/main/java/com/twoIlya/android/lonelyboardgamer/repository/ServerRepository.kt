@@ -83,7 +83,7 @@ object ServerRepository {
 
         getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData) {
             val response: ServerRepositoryResponse = try {
-                Gson().fromJson(it.message.toString(), Profile::class.java)
+                Gson().fromJson(it.message.toString(), MyProfile::class.java)
             } catch (e: JsonSyntaxException) {
                 Log.d(TAG, e.toString())
                 ServerError(-2, "Error during deserialization: ${e.message} ")
