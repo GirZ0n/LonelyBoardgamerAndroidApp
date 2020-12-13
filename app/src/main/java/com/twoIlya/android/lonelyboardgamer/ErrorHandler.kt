@@ -97,14 +97,11 @@ object ErrorHandler {
 
     fun searchByIDErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2, 4, 5 -> {
+            -1, 2, 3, 4, 5 -> {
                 Event(EventType.Notification, error.message)
             }
             1, 401  -> {
                 Event(EventType.Move, "Login")
-            }
-            3 -> {
-                Event(EventType.Move, "Search")
             }
             else -> {
                 Event(EventType.Error, "${error.code}: ${error.message}")
