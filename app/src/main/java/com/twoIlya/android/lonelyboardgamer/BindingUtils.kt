@@ -42,6 +42,25 @@ fun updateDrawable(view: Button, isLoading: Boolean) {
     }
 }
 
+@BindingAdapter("bind:isLoading")
+fun updateDrawable(view: ImageView, isLoading: Boolean) {
+    when (isLoading) {
+        true -> {
+            val dots = ThreeBounce()
+            dots.setBounds(0, 0, 100, 100)
+            dots.start()
+            view.setImageDrawable(dots)
+        }
+        false -> {
+            val leftDrawable = view.drawable
+            if (leftDrawable is ThreeBounce) {
+                leftDrawable.stop()
+            }
+            view.setImageDrawable(null)
+        }
+    }
+}
+
 @BindingAdapter("bind:isVisible")
 fun setVisibility(view: View, isVisible: Boolean) {
     view.isVisible = isVisible
