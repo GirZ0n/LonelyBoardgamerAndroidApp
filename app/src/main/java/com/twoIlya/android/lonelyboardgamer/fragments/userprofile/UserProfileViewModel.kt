@@ -1,5 +1,6 @@
 package com.twoIlya.android.lonelyboardgamer.fragments.userprofile
 
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.*
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
@@ -82,7 +83,7 @@ class UserProfileViewModel : ViewModel() {
                 }
                 events.postValue(event)
             } else if (it is UserProfile) {
-                updateLiveData(it)
+                updateData(it)
 
                 state = when (it.friendStatus) {
                     3 -> {
@@ -98,7 +99,7 @@ class UserProfileViewModel : ViewModel() {
                         OutRequestState()
                     }
                     else -> {
-                        _stateCode.postValue(1)
+                        _stateCode.postValue(0)
                         ForeignUserState()
                     }
                 }
@@ -131,9 +132,15 @@ class UserProfileViewModel : ViewModel() {
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                idVK = it.value
-                state = FriendState()
-                _stateCode.postValue(0)
+                if (it.value.isDigitsOnly()) {
+                    idVK = it.value
+                    state = FriendState()
+                    _stateCode.postValue(0)
+                } else {
+                    state = InRequestState()
+                    _stateCode.postValue(2)
+                    events.postValue(Event(EventType.Notification, "Пользователь заблокирован"))
+                }
             }
 
             updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
@@ -155,7 +162,7 @@ class UserProfileViewModel : ViewModel() {
         state.bottomButtonClick(action)
     }
 
-    private fun updateLiveData(profile: UserProfile) {
+    private fun updateData(profile: UserProfile) {
         id = profile.id
         profile.idVK?.let { idVK = it }
         friendStatus = profile.friendStatus
