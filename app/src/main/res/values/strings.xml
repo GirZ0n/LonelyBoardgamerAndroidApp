@@ -35,4 +35,10 @@
     <!-- Search Fragment -->
     <string name="search_fragment_label">Поиск</string>
     <string name="retry">Повторить</string>
+
+    <!-- User Profile Fragment -->
+    <string name="send_friend_request_button">Добавить в друзья</string>
+    <string name="answer_request_button">Ответить на запрос</string>
+    <string name="withdraw_request_button">Отозвать запрос</string>
+    <string name="chat_button">Написать</string>
 </resources>
