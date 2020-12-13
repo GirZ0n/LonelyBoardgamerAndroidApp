@@ -100,7 +100,7 @@ object ErrorHandler {
             -1, 2, 3, 4, 5 -> {
                 Event(EventType.Notification, error.message)
             }
-            1  -> {
+            1, 401  -> {
                 Event(EventType.Move, "Login")
             }
             else -> {
@@ -114,7 +114,7 @@ object ErrorHandler {
             -1, 2, 3, 4, 5 -> {
                 Event(EventType.Notification, error.message)
             }
-            1  -> {
+            1, 401 -> {
                 Event(EventType.Move, "Login")
             }
             else -> {
@@ -128,7 +128,7 @@ object ErrorHandler {
             -1, 2, 3, 4, 5 -> {
                 Event(EventType.Notification, error.message)
             }
-            1  -> {
+            1, 401  -> {
                 Event(EventType.Move, "Login")
             }
             else -> {
