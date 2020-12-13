@@ -115,6 +115,9 @@ class UserProfileViewModel : ViewModel() {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
+            } else if (it is ServerMessage) {
+                state = OutRequestState()
+                _stateCode.postValue(1)
             }
 
             updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
@@ -129,6 +132,8 @@ class UserProfileViewModel : ViewModel() {
                 events.postValue(event)
             } else if (it is ServerMessage) {
                 idVK = it.value
+                state = FriendState()
+                _stateCode.postValue(0)
             }
 
             updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
@@ -195,7 +200,13 @@ class UserProfileViewModel : ViewModel() {
 
     inner class FriendState : State {
         override fun bottomButtonClick(action: String) {
-            events.postValue(Event(EventType.Move, idVK))
+            when (action) {
+                "chat" -> events.postValue(Event(EventType.Move, idVK))
+                else -> events.postValue(Event(
+                        EventType.Notification,
+                        "Что-то пошло не так во время обработки вашего запроса")
+                )
+            }
         }
 
         override fun upButtonCLick(action: String) {
