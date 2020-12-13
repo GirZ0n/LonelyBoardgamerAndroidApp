@@ -76,7 +76,7 @@ class UserProfileViewModel : ViewModel() {
     init {
         events.addSource(searchByIDServerResponse) {
             if (ErrorHandler.isError(it)) {
-                val event = Event(EventType.Notification, "") // TODO: ErrorHandler. ...
+                val event = ErrorHandler.searchByIDErrorHandler(it as ServerError)
                 if (event.type == EventType.Move || event.type == EventType.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
@@ -110,7 +110,11 @@ class UserProfileViewModel : ViewModel() {
 
         events.addSource(sendFriendRequestServerResponse) {
             if (ErrorHandler.isError(it)) {
-                // TODO: Error handling
+                val event = ErrorHandler.sendFriendRequestErrorHandler(it as ServerError)
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
+                }
+                events.postValue(event)
             }
 
             updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
@@ -118,7 +122,11 @@ class UserProfileViewModel : ViewModel() {
 
         events.addSource(answerOnRequestServerResponse) {
             if (ErrorHandler.isError(it)) {
-                // TODO: Error handling
+                val event = ErrorHandler.answerOnRequestErrorHandler(it as ServerError)
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
+                }
+                events.postValue(event)
             } else if (it is ServerMessage) {
                 idVK = it.value
             }

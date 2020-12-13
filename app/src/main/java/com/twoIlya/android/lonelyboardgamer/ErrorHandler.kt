@@ -94,4 +94,46 @@ object ErrorHandler {
             }
         }
     }
+
+    fun searchByIDErrorHandler(error: ServerError): Event {
+        return when (error.code) {
+            -1, 2, 3, 4, 5 -> {
+                Event(EventType.Notification, error.message)
+            }
+            1  -> {
+                Event(EventType.Move, "Login")
+            }
+            else -> {
+                Event(EventType.Error, "${error.code}: ${error.message}")
+            }
+        }
+    }
+
+    fun sendFriendRequestErrorHandler(error: ServerError): Event {
+        return when (error.code) {
+            -1, 2, 3, 4, 5 -> {
+                Event(EventType.Notification, error.message)
+            }
+            1  -> {
+                Event(EventType.Move, "Login")
+            }
+            else -> {
+                Event(EventType.Error, "${error.code}: ${error.message}")
+            }
+        }
+    }
+
+    fun answerOnRequestErrorHandler(error: ServerError): Event {
+        return when (error.code) {
+            -1, 2, 3, 4, 5 -> {
+                Event(EventType.Notification, error.message)
+            }
+            1  -> {
+                Event(EventType.Move, "Login")
+            }
+            else -> {
+                Event(EventType.Error, "${error.code}: ${error.message}")
+            }
+        }
+    }
 }
