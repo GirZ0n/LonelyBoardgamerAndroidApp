@@ -1,15 +1,21 @@
 package com.twoIlya.android.lonelyboardgamer.fragments.userprofile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.twoIlya.android.lonelyboardgamer.R
+import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
+import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
+import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentUserProfileBinding
+import com.twoIlya.android.lonelyboardgamer.fragments.myprofile.MyProfileFragment
 
 class UserProfileFragment : Fragment() {
 
@@ -36,6 +42,34 @@ class UserProfileFragment : Fragment() {
 
         val id = (arguments?.get("id") as? Int) ?: -1
         viewModel.updateProfile(id)
+
+        viewModel.events.observe(viewLifecycleOwner) {
+            Log.d(TAG, "Event: $it")
+
+            when (it.isHandle) {
+                true -> return@observe
+                false -> it.isHandle = true
+            }
+
+            when (it.type) {
+                EventType.Notification -> {
+                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
+                }
+                EventType.Error -> {
+                    val intent = ErrorActivity.newActivity(requireContext(), it.message)
+                    startActivity(intent)
+                    activity?.finish()
+                }
+                EventType.Move -> {
+                    val intent = when (it.message) {
+                        "Login" -> LoginActivity.newActivity(requireContext())
+                        else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                    }
+                    startActivity(intent)
+                    activity?.finish()
+                }
+            }
+        }
 
         viewModel.stateCode.observe(viewLifecycleOwner) {
             when (it) {
@@ -71,9 +105,16 @@ class UserProfileFragment : Fragment() {
                     binding.upButton.isVisible = false
                 }
                 else -> {
-                    // TODO: Error
+                    val intent = ErrorActivity.newActivity(requireContext(),
+                            "Something went wrong. UPF(statusCode: $it)")
+                    startActivity(intent)
+                    activity?.finish()
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "UserProfileFragment_TAG"
     }
 }
