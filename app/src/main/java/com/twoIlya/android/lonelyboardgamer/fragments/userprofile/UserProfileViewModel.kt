@@ -15,7 +15,7 @@ class UserProfileViewModel : ViewModel() {
 
     private var idVK: String = ""
 
-    private var _friendStatus = MutableLiveData(0)
+    private var _friendStatus = MutableLiveData(-1)
     val friendStatus: LiveData<Int> = _friendStatus
 
     private val _name = MutableLiveData<String>()
@@ -238,8 +238,19 @@ class UserProfileViewModel : ViewModel() {
         override fun bottomButtonClick(action: String) {
             updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
 
-            val serverToken = TokenRepository.getServerToken()
-            dataForSendFriendRequest.postValue(Pair(serverToken, id))
+            when (action) {
+                "add" -> {
+                    val serverToken = TokenRepository.getServerToken()
+                    dataForSendFriendRequest.postValue(Pair(serverToken, id))
+                }
+                else -> {
+                    events.postValue(Event(
+                            EventType.Notification,
+                            "Что-то пошло не так во время обработки вашего запроса")
+                    )
+                    updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
+                }
+            }
         }
     }
 }

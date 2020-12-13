@@ -15,7 +15,6 @@ import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
 import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentUserProfileBinding
-import com.twoIlya.android.lonelyboardgamer.fragments.myprofile.MyProfileFragment
 
 class UserProfileFragment : Fragment() {
 
@@ -67,6 +66,7 @@ class UserProfileFragment : Fragment() {
                 EventType.Move -> {
                     val intent = when (it.message) {
                         "Login" -> LoginActivity.newActivity(requireContext())
+                        // TODO: Если цифры в сообщении, то открываем ВК
                         else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
                     }
                     startActivity(intent)
@@ -77,6 +77,7 @@ class UserProfileFragment : Fragment() {
 
         viewModel.friendStatus.observe(viewLifecycleOwner) {
             when (it) {
+                // Friend
                 3 -> {
                     binding.bottomButtom.setText(R.string.chat_button)
                     binding.bottomButtom.setOnClickListener {
@@ -89,6 +90,7 @@ class UserProfileFragment : Fragment() {
                         viewModel.bottomButtonClick("unfriend")
                     }
                 }
+                // Out Request
                 2 -> {
                     binding.bottomButtom.setText(R.string.withdraw_request_button)
                     binding.bottomButtom.setOnClickListener {
@@ -96,6 +98,7 @@ class UserProfileFragment : Fragment() {
                     }
                     binding.upButton.isVisible = false
                 }
+                // In Request
                 1 -> {
                     binding.bottomButtom.setText(R.string.answer_request_button)
                     binding.bottomButtom.setOnClickListener {
@@ -104,7 +107,17 @@ class UserProfileFragment : Fragment() {
                     }
                     binding.upButton.isVisible = false
                 }
+                // Foreign user
                 0 -> {
+                    binding.bottomButtom.setText(R.string.send_friend_request_button)
+                    binding.bottomButtom.setOnClickListener {
+                        viewModel.bottomButtonClick("add")
+                    }
+
+                    binding.upButton.isVisible = false
+                }
+                // Loading state
+                -1 -> {
                     binding.bottomButtom.text = ""
                     binding.upButton.isVisible = false
                 }
