@@ -212,7 +212,9 @@ object ServerRepository {
     fun sendFriendRequest(serverToken: Token, id: Int): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        val sendFriendRequestRequest = serverAPI.sendFriendRequest("Bearer ${serverToken.value}", id)
+        val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val sendFriendRequestRequest = serverAPI.sendFriendRequest("Bearer ${serverToken.value}", idRequestBody)
 
         sendFriendRequestRequest.enqueue(MyCallback("sendFriendRequest", responseLiveData) {
             ServerMessage(it.message.toString())
@@ -220,6 +222,21 @@ object ServerRepository {
 
         return responseLiveData
     }
+
+    fun revokeRequest(serverToken: Token, id: Int): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val revokeRequestRequest = serverAPI.revokeRequest("Bearer ${serverToken.value}", idRequestBody)
+
+        revokeRequestRequest.enqueue(MyCallback("revokeRequest", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
 
     fun answerOnRequest(serverToken: Token, id: Int, isAccept: Boolean): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
