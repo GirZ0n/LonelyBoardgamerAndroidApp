@@ -10,7 +10,7 @@ import com.twoIlya.android.lonelyboardgamer.dataClasses.ListProfile
 import com.twoIlya.android.lonelyboardgamer.databinding.ProfileListViewItemBinding
 
 
-class ProfileListViewHolder(private val binding: ProfileListViewItemBinding) :
+class ListViewHolder(private val binding: ProfileListViewItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(profile: ListProfile?, clickListener: (Int) -> Unit) {
@@ -40,11 +40,11 @@ class ProfileListViewHolder(private val binding: ProfileListViewItemBinding) :
     }
 
     companion object {
-        fun create(parent: ViewGroup): ProfileListViewHolder {
+        fun create(parent: ViewGroup): ListViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding: ProfileListViewItemBinding =
                 DataBindingUtil.inflate(inflater, R.layout.profile_list_view_item, parent, false)
-            return ProfileListViewHolder(binding)
+            return ListViewHolder(binding)
         }
     }
 }
