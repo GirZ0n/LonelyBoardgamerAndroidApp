@@ -60,14 +60,19 @@ interface ServerAPI {
             @Query("id") id: Int
     ): Call<ServerResponse>
 
+    @Multipart
     @POST("friends/requests/send")
     fun sendFriendRequest(
             @Header("Authorization") serverToken: String,
-            @Query("targetId") id: Int
+            @Part("targetId") id: RequestBody
     ): Call<ServerResponse>
 
-    // TODO
-    fun withdrawRequest(): Call<ServerResponse>
+    @Multipart
+    @POST("/friends/requests/revoke")
+    fun revokeRequest(
+            @Header("Authorization") serverToken: String,
+            @Part("targetId") id: RequestBody
+    ): Call<ServerResponse>
 
     @GET("friends/requests/send")
     fun answerOnRequest(
