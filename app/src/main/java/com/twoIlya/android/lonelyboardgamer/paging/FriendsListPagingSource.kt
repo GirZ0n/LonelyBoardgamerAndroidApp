@@ -6,7 +6,6 @@ import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ListProfile
-import com.twoIlya.android.lonelyboardgamer.dataClasses.SearchProfile
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository
 import retrofit2.HttpException
@@ -21,7 +20,7 @@ class FriendsListPagingSource(
         val position = params.key ?: ServerRepository.Constants.SERVER_STARTING_PAGE_INDEX
         return try {
             val response =
-                api.friends(
+                api.getFriends(
                     "Bearer ${serverToken.value}",
                     ServerRepository.Constants.NETWORK_PAGE_SIZE, position
                 )
