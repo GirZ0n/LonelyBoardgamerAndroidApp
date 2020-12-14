@@ -6,17 +6,17 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ListProfile
 
-class ProfileListAdapter(private val itemClickListener: (Int) -> Unit) :
+class ListAdapter(private val itemClickListener: (Int) -> Unit) :
     PagingDataAdapter<ListProfile, RecyclerView.ViewHolder>(REPO_COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return ProfileListViewHolder.create(parent)
+        return ListViewHolder.create(parent)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val profile = getItem(position)
         profile?.let {
-            (holder as ProfileListViewHolder).bind(profile, itemClickListener)
+            (holder as ListViewHolder).bind(profile, itemClickListener)
         }
     }
 
