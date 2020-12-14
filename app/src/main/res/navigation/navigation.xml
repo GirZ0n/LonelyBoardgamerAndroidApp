@@ -64,4 +64,12 @@
             android:id="@+id/action_friendsListFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/banListFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.banlistfragment.BanListFragment"
+        android:label="BanListFragment" >
+        <action
+            android:id="@+id/action_banListFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
 </navigation>
