@@ -49,5 +49,14 @@
     <string name="answer_dialog_title">Принять запрос?</string>
 
     <!-- Friends List fragment -->
-    <string name="friends_list_fragment">Друзья</string>
+    <string name="friends_list_fragment_label">Друзья</string>
+
+    <!-- In Requests List fragment -->
+    <string name="in_requests_list_fragment_label">Полученные запросы</string>
+
+    <!-- Out Requests List fragment -->
+    <string name="out_requests_list_fragment_label">Отправленные запросы</string>
+
+    <!-- Ban List fragment -->
+    <string name="ban_list_fragment_label">Отклонённые запросы</string>
 </resources>
