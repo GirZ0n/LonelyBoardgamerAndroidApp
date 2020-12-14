@@ -90,4 +90,11 @@ interface ServerAPI {
             @Query("limit") limit: Int,
             @Query("offset") offset: Int
     ): ServerResponse
+
+    @GET("friends")
+    suspend fun getFriends(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
 }

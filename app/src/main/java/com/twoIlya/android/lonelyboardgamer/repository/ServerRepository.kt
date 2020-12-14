@@ -12,6 +12,7 @@ import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
+import com.twoIlya.android.lonelyboardgamer.paging.FriendsListPagingSource
 import com.twoIlya.android.lonelyboardgamer.paging.SearchPagingSource
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
@@ -184,6 +185,13 @@ object ServerRepository {
         return Pager(
                 config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
                 pagingSourceFactory = { SearchPagingSource(serverToken, serverAPI) }
+        ).liveData
+    }
+
+    fun getFriends(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { FriendsListPagingSource(serverToken, serverAPI) }
         ).liveData
     }
 
