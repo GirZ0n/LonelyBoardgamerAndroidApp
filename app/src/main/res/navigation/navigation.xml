@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_myProfileFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_friendsListFragment"
+            app:destination="@id/friendsListFragment" />
     </fragment>
 
     <fragment
@@ -51,4 +54,14 @@
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.userprofile.UserProfileFragment"
         android:label="@string/user_profile_fragment_label"
         tools:layout="@layout/fragment_user_profile" />
+
+    <fragment
+        android:id="@+id/friendsListFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.friendslist.FriendsListFragment"
+        tools:layout="@layout/fragment_friends_list"
+        android:label="@string/friends_list_fragment">
+        <action
+            android:id="@+id/action_friendsListFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
 </navigation>

@@ -47,4 +47,7 @@
     <string name="answer_agree_button">Принять</string>
     <string name="answer_disagree_button">Отклонить</string>
     <string name="answer_dialog_title">Принять запрос?</string>
+
+    <!-- Friends List fragment -->
+    <string name="friends_list_fragment">Друзья</string>
 </resources>
