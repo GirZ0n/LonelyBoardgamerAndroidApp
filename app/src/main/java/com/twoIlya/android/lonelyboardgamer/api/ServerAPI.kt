@@ -74,11 +74,12 @@ interface ServerAPI {
             @Part("targetId") id: RequestBody
     ): Call<ServerResponse>
 
-    @GET("friends/requests/send")
+    @Multipart
+    @POST("/friends/requests/answer")
     fun answerOnRequest(
             @Header("Authorization") serverToken: String,
-            @Query("with") code: Int,
-            @Query("targetId") id: Int
+            @Part("with") code: RequestBody,
+            @Part("targetId") id: RequestBody
     ): Call<ServerResponse>
 
     // TODO

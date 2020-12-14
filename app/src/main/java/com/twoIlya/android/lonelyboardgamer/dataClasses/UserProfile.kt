@@ -6,7 +6,7 @@ import com.twoIlya.android.lonelyboardgamer.repository.ServerRepositoryResponse
 data class UserProfile(
         var friendStatus: Int,
         val id: Int,
-        @SerializedName("VKid")
+        @SerializedName("vkid")
         var idVK: String?,
         val firstName: String,
         val secondName: String,

@@ -1,11 +1,14 @@
 package com.twoIlya.android.lonelyboardgamer.fragments.userprofile
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.text.isDigitsOnly
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -17,22 +20,23 @@ import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
 import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentUserProfileBinding
 
+
 class UserProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentUserProfileBinding
     private val viewModel: UserProfileViewModel by lazy {
         ViewModelProvider(this).get(
-                UserProfileViewModel::class.java
+            UserProfileViewModel::class.java
         )
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_user_profile, container, false
+            inflater,
+            R.layout.fragment_user_profile, container, false
         )
         return binding.root
     }
@@ -68,13 +72,25 @@ class UserProfileFragment : Fragment() {
                     activity?.finish()
                 }
                 EventType.Move -> {
-                    val intent = when (it.message) {
-                        "Login" -> LoginActivity.newActivity(requireContext())
-                        // TODO: Если цифры в сообщении, то открываем ВК
-                        else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                    when {
+                        it.message == "Login" -> {
+                            val intent = LoginActivity.newActivity(requireContext())
+                            startActivity(intent)
+                            activity?.finish()
+                        }
+                        it.message.isDigitsOnly() -> {
+                            Log.d(TAG, "it.message: ${it}")
+                            val implicit =
+                                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.vk.com/id${it.message}"))
+                            startActivity(implicit)
+                        }
+                        else -> {
+                            val intent =
+                                ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                            startActivity(intent)
+                            activity?.finish()
+                        }
                     }
-                    startActivity(intent)
-                    activity?.finish()
                 }
             }
         }
@@ -101,12 +117,10 @@ class UserProfileFragment : Fragment() {
                         MaterialDialog(requireContext()).show {
                             title(R.string.answer_dialog_title)
                             positiveButton(R.string.answer_agree_button) {
-                                // TODO
-                                Toast.makeText(requireContext(), "A", Toast.LENGTH_SHORT).show()
+                                viewModel.bottomButtonClick("accept")
                             }
                             negativeButton(R.string.answer_disagree_button) {
-                                // TODO
-                                Toast.makeText(requireContext(), "D", Toast.LENGTH_SHORT).show()
+                                viewModel.bottomButtonClick("decline")
                             }
                         }
                     }
@@ -137,8 +151,10 @@ class UserProfileFragment : Fragment() {
                     binding.upButton.isVisible = false
                 }
                 else -> {
-                    val intent = ErrorActivity.newActivity(requireContext(),
-                            "Something went wrong. UPF(statusCode: $it)")
+                    val intent = ErrorActivity.newActivity(
+                        requireContext(),
+                        "Something went wrong. UPF(statusCode: $it)"
+                    )
                     startActivity(intent)
                     activity?.finish()
                 }

@@ -1,5 +1,6 @@
 package com.twoIlya.android.lonelyboardgamer.fragments.userprofile
 
+import android.util.Log
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.*
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
@@ -58,9 +59,10 @@ class UserProfileViewModel : ViewModel() {
 
     // Data: token and id
     private val dataForSendFriendRequest = MutableLiveData<Pair<Token, Int>>()
-    private val sendFriendRequestServerResponse = Transformations.switchMap(dataForSendFriendRequest) {
-        ServerRepository.sendFriendRequest(it.first, it.second)
-    }
+    private val sendFriendRequestServerResponse =
+        Transformations.switchMap(dataForSendFriendRequest) {
+            ServerRepository.sendFriendRequest(it.first, it.second)
+        }
 
     // Data: token and id
     private val dataForRevokeRequest = MutableLiveData<Pair<Token, Int>>()
@@ -98,7 +100,11 @@ class UserProfileViewModel : ViewModel() {
             }
 
             _isLayoutRefreshing.postValue(false)
-            updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
+            updateForm(
+                isFormEnabled = true,
+                isBottomButtonLoading = false,
+                isUpButtonLoading = false
+            )
         }
 
         events.addSource(sendFriendRequestServerResponse) {
@@ -113,7 +119,11 @@ class UserProfileViewModel : ViewModel() {
                 _friendStatus.postValue(1)
             }
 
-            updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
+            updateForm(
+                isFormEnabled = true,
+                isBottomButtonLoading = false,
+                isUpButtonLoading = false
+            )
         }
 
         events.addSource(answerOnRequestServerResponse) {
@@ -124,8 +134,8 @@ class UserProfileViewModel : ViewModel() {
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                if (it.value.isDigitsOnly()) {
-                    idVK = it.value
+                if (it.value.trim { char -> char == '\"' }.isDigitsOnly()) {
+                    idVK = it.value.trim { char -> char == '\"' }
                     state = FriendState()
                     _friendStatus.postValue(3)
                 } else {
@@ -135,7 +145,11 @@ class UserProfileViewModel : ViewModel() {
                 }
             }
 
-            updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
+            updateForm(
+                isFormEnabled = true,
+                isBottomButtonLoading = false,
+                isUpButtonLoading = false
+            )
         }
 
         events.addSource(revokeRequestServerResponse) {
@@ -145,13 +159,16 @@ class UserProfileViewModel : ViewModel() {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
-            }
-            else if (it is ServerMessage) {
+            } else if (it is ServerMessage) {
                 state = ForeignUserState()
                 _friendStatus.postValue(0)
             }
 
-            updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
+            updateForm(
+                isFormEnabled = true,
+                isBottomButtonLoading = false,
+                isUpButtonLoading = false
+            )
         }
     }
 
@@ -171,6 +188,8 @@ class UserProfileViewModel : ViewModel() {
     }
 
     private fun updateData(profile: UserProfile) {
+        Log.d("UPVM", "profile: $profile")
+
         id = profile.id
         profile.idVK?.let { idVK = it }
         _friendStatus.postValue(profile.friendStatus)
@@ -182,17 +201,21 @@ class UserProfileViewModel : ViewModel() {
         _description.postValue(profile.description)
 
         _imageUrl.postValue(
-                "https://eu.ui-avatars.com/api/" +
-                        "?name=${profile.firstName}+${profile.secondName}" +
-                        "&bold=true" +
-                        "&size=512" +
-                        "&rounded=true" +
-                        "&color=fff" +
-                        "&background=000"
+            "https://eu.ui-avatars.com/api/" +
+                    "?name=${profile.firstName}+${profile.secondName}" +
+                    "&bold=true" +
+                    "&size=512" +
+                    "&rounded=true" +
+                    "&color=fff" +
+                    "&background=000"
         )
     }
 
-    private fun updateForm(isFormEnabled: Boolean, isBottomButtonLoading: Boolean, isUpButtonLoading: Boolean) {
+    private fun updateForm(
+        isFormEnabled: Boolean,
+        isBottomButtonLoading: Boolean,
+        isUpButtonLoading: Boolean
+    ) {
         _isFormEnabled.postValue(isFormEnabled)
         _isBottomButtonLoading.postValue(isBottomButtonLoading)
         _isUpButtonLoading.postValue(isUpButtonLoading)
@@ -215,17 +238,25 @@ class UserProfileViewModel : ViewModel() {
 
     inner class FriendState : State {
         override fun bottomButtonClick(action: String) {
+            Log.d("UPVM", "id: $idVK")
+
             when (action) {
                 "chat" -> events.postValue(Event(EventType.Move, idVK))
-                else -> events.postValue(Event(
+                else -> events.postValue(
+                    Event(
                         EventType.Notification,
-                        "Что-то пошло не так во время обработки вашего запроса")
+                        "Что-то пошло не так во время обработки вашего запроса"
+                    )
                 )
             }
         }
 
         override fun upButtonCLick(action: String) {
-            updateForm(isFormEnabled = false, isBottomButtonLoading = false, isUpButtonLoading = true)
+            updateForm(
+                isFormEnabled = false,
+                isBottomButtonLoading = false,
+                isUpButtonLoading = true
+            )
             // TODO: убрать из друзей
         }
     }
@@ -235,14 +266,20 @@ class UserProfileViewModel : ViewModel() {
 
             when (action) {
                 "revoke" -> {
-                    updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
+                    updateForm(
+                        isFormEnabled = false,
+                        isBottomButtonLoading = true,
+                        isUpButtonLoading = false
+                    )
                     val serverToken = TokenRepository.getServerToken()
                     dataForRevokeRequest.postValue(Pair(serverToken, id))
                 }
                 else -> {
-                    events.postValue(Event(
+                    events.postValue(
+                        Event(
                             EventType.Notification,
-                            "Что-то пошло не так во время обработки вашего запроса")
+                            "Что-то пошло не так во время обработки вашего запроса"
+                        )
                     )
                 }
             }
@@ -255,17 +292,27 @@ class UserProfileViewModel : ViewModel() {
             val serverToken = TokenRepository.getServerToken()
             when (action) {
                 "accept" -> {
-                    updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
+                    updateForm(
+                        isFormEnabled = false,
+                        isBottomButtonLoading = true,
+                        isUpButtonLoading = false
+                    )
                     dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, true)))
                 }
                 "decline" -> {
-                    updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
+                    updateForm(
+                        isFormEnabled = false,
+                        isBottomButtonLoading = true,
+                        isUpButtonLoading = false
+                    )
                     dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, false)))
                 }
                 else -> {
-                    events.postValue(Event(
+                    events.postValue(
+                        Event(
                             EventType.Notification,
-                            "Что-то пошло не так во время обработки вашего запроса")
+                            "Что-то пошло не так во время обработки вашего запроса"
+                        )
                     )
                 }
             }
@@ -276,14 +323,20 @@ class UserProfileViewModel : ViewModel() {
         override fun bottomButtonClick(action: String) {
             when (action) {
                 "add" -> {
-                    updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
+                    updateForm(
+                        isFormEnabled = false,
+                        isBottomButtonLoading = true,
+                        isUpButtonLoading = false
+                    )
                     val serverToken = TokenRepository.getServerToken()
                     dataForSendFriendRequest.postValue(Pair(serverToken, id))
                 }
                 else -> {
-                    events.postValue(Event(
+                    events.postValue(
+                        Event(
                             EventType.Notification,
-                            "Что-то пошло не так во время обработки вашего запроса")
+                            "Что-то пошло не так во время обработки вашего запроса"
+                        )
                     )
                 }
             }
