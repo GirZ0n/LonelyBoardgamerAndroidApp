@@ -12,8 +12,7 @@ import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
-import com.twoIlya.android.lonelyboardgamer.paging.pagingsource.FriendsListPagingSource
-import com.twoIlya.android.lonelyboardgamer.paging.pagingsource.SearchPagingSource
+import com.twoIlya.android.lonelyboardgamer.paging.pagingsource.*
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -192,6 +191,27 @@ object ServerRepository {
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = { FriendsListPagingSource(serverToken, serverAPI) }
+        ).liveData
+    }
+
+    fun getInRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { InRequestsListPagingSource(serverToken, serverAPI) }
+        ).liveData
+    }
+
+    fun getOutRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { OutRequestsListPagingSource(serverToken, serverAPI) }
+        ).liveData
+    }
+
+    fun getBanList(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { BanListPagingSource(serverToken, serverAPI) }
         ).liveData
     }
 
