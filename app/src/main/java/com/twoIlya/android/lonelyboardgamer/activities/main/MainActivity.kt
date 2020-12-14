@@ -63,7 +63,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun appBarConfigurationSetup() {
         val topLevelDestinations =
-            setOf(R.id.myProfileFragment, R.id.searchFragment, R.id.friendsListFragment)
+            setOf(
+                R.id.myProfileFragment,
+                R.id.searchFragment,
+                R.id.friendsListFragment,
+                R.id.banListFragment,
+                R.id.outRequestsFragment,
+                R.id.inRequestsFragment,
+                R.id.friendsListFragment
+            )
         appBarConfiguration = AppBarConfiguration(topLevelDestinations, binding.drawerLayout)
     }
 
