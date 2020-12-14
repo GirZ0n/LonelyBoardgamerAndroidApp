@@ -17,7 +17,7 @@ import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
 import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentFriendsListBinding
 import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
-import com.twoIlya.android.lonelyboardgamer.paging.ProfileListAdapter
+import com.twoIlya.android.lonelyboardgamer.paging.ListAdapter
 import kotlinx.coroutines.launch
 
 class FriendsListFragment : Fragment() {
@@ -28,7 +28,7 @@ class FriendsListFragment : Fragment() {
             FriendsListViewModel::class.java
         )
     }
-    private lateinit var adapter: ProfileListAdapter
+    private lateinit var adapter: ListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,7 +83,7 @@ class FriendsListFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        adapter = ProfileListAdapter { id ->
+        adapter = ListAdapter { id ->
             val bundle = Bundle()
             bundle.putInt("id", id)
             findNavController().navigate(
