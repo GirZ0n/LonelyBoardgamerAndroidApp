@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.afollestad.materialdialogs.MaterialDialog
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
@@ -97,8 +98,17 @@ class UserProfileFragment : Fragment() {
                 2 -> {
                     binding.bottomButtom.setText(R.string.answer_request_button)
                     binding.bottomButtom.setOnClickListener {
-                        // TODO: диалог
-                        // viewModel.bottomButtonClick()
+                        MaterialDialog(requireContext()).show {
+                            title(R.string.answer_dialog_title)
+                            positiveButton(R.string.answer_agree_button) {
+                                // TODO
+                                Toast.makeText(requireContext(), "A", Toast.LENGTH_SHORT).show()
+                            }
+                            negativeButton(R.string.answer_disagree_button) {
+                                // TODO
+                                Toast.makeText(requireContext(), "D", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
 
                     binding.upButton.isVisible = false
