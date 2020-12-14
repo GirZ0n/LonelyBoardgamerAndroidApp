@@ -62,6 +62,12 @@ class UserProfileViewModel : ViewModel() {
         ServerRepository.sendFriendRequest(it.first, it.second)
     }
 
+    // Data: token and id
+    private val dataForRevokeRequest = MutableLiveData<Pair<Token, Int>>()
+    private val revokeRequestServerResponse = Transformations.switchMap(dataForRevokeRequest) {
+        ServerRepository.revokeRequest(it.first, it.second)
+    }
+
     // Data: token, id and isAccept
     private val dataForAnswerOnRequest = MutableLiveData<Pair<Token, Pair<Int, Boolean>>>()
     private val answerOnRequestServerResponse = Transformations.switchMap(dataForAnswerOnRequest) {
@@ -127,6 +133,22 @@ class UserProfileViewModel : ViewModel() {
                     _friendStatus.postValue(2)
                     events.postValue(Event(EventType.Notification, "Пользователь заблокирован"))
                 }
+            }
+
+            updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
+        }
+
+        events.addSource(revokeRequestServerResponse) {
+            if (ErrorHandler.isError(it)) {
+                val event = ErrorHandler.revokeRequestErrorHandler(it as ServerError)
+                if (event.type == EventType.Move || event.type == EventType.Error) {
+                    CacheRepository.setIsLoggedIn(false)
+                }
+                events.postValue(event)
+            }
+            else if (it is ServerMessage) {
+                state = ForeignUserState()
+                _friendStatus.postValue(0)
             }
 
             updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
@@ -210,25 +232,41 @@ class UserProfileViewModel : ViewModel() {
 
     inner class OutRequestState : State {
         override fun bottomButtonClick(action: String) {
-            updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
-            // TODO: отозвать запрос
-        }
-    }
 
-    inner class InRequestState : State {
-        override fun bottomButtonClick(action: String) {
-            updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
-
-            val serverToken = TokenRepository.getServerToken()
             when (action) {
-                "accept" -> dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, true)))
-                "decline" -> dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, false)))
+                "revoke" -> {
+                    updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
+                    val serverToken = TokenRepository.getServerToken()
+                    dataForRevokeRequest.postValue(Pair(serverToken, id))
+                }
                 else -> {
                     events.postValue(Event(
                             EventType.Notification,
                             "Что-то пошло не так во время обработки вашего запроса")
                     )
-                    updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
+                }
+            }
+        }
+    }
+
+    inner class InRequestState : State {
+        override fun bottomButtonClick(action: String) {
+
+            val serverToken = TokenRepository.getServerToken()
+            when (action) {
+                "accept" -> {
+                    updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
+                    dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, true)))
+                }
+                "decline" -> {
+                    updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
+                    dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, false)))
+                }
+                else -> {
+                    events.postValue(Event(
+                            EventType.Notification,
+                            "Что-то пошло не так во время обработки вашего запроса")
+                    )
                 }
             }
         }
@@ -236,10 +274,9 @@ class UserProfileViewModel : ViewModel() {
 
     inner class ForeignUserState : State {
         override fun bottomButtonClick(action: String) {
-            updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
-
             when (action) {
                 "add" -> {
+                    updateForm(isFormEnabled = false, isBottomButtonLoading = true, isUpButtonLoading = false)
                     val serverToken = TokenRepository.getServerToken()
                     dataForSendFriendRequest.postValue(Pair(serverToken, id))
                 }
@@ -248,7 +285,6 @@ class UserProfileViewModel : ViewModel() {
                             EventType.Notification,
                             "Что-то пошло не так во время обработки вашего запроса")
                     )
-                    updateForm(isFormEnabled = true, isBottomButtonLoading = false, isUpButtonLoading = false)
                 }
             }
         }
