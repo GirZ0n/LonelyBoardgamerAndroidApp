@@ -80,4 +80,12 @@
             android:id="@+id/action_inRequestsFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/outRequestsFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.outrequests.OutRequestsFragment"
+        android:label="OutRequestsFragment" >
+        <action
+            android:id="@+id/action_outRequestsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
 </navigation>
