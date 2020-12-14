@@ -83,6 +83,9 @@ dependencies {
     // Loading animations
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
+    // Material dialogs
+    implementation 'com.afollestad.material-dialogs:core:3.3.0'
+
     // Tests
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
