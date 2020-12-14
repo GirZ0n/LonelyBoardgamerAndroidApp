@@ -39,6 +39,9 @@ class UserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+
         viewModel.id = (arguments?.get("id") as? Int) ?: -1
         viewModel.updateProfile()
 
@@ -90,21 +93,21 @@ class UserProfileFragment : Fragment() {
                         viewModel.upButtonClick("unfriend")
                     }
                 }
-                // Out Request
-                2 -> {
-                    binding.bottomButtom.setText(R.string.withdraw_request_button)
-                    binding.bottomButtom.setOnClickListener {
-                        viewModel.bottomButtonClick("withdraw")
-                    }
-
-                    binding.upButton.isVisible = false
-                }
                 // In Request
-                1 -> {
+                2 -> {
                     binding.bottomButtom.setText(R.string.answer_request_button)
                     binding.bottomButtom.setOnClickListener {
                         // TODO: диалог
                         // viewModel.bottomButtonClick()
+                    }
+
+                    binding.upButton.isVisible = false
+                }
+                // Out Request
+                1 -> {
+                    binding.bottomButtom.setText(R.string.withdraw_request_button)
+                    binding.bottomButtom.setOnClickListener {
+                        viewModel.bottomButtonClick("revoke")
                     }
 
                     binding.upButton.isVisible = false
