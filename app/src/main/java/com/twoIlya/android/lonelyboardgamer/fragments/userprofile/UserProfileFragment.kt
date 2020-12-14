@@ -81,7 +81,7 @@ class UserProfileFragment : Fragment() {
                         it.message.isDigitsOnly() -> {
                             Log.d(TAG, "it.message: ${it}")
                             val implicit =
-                                Intent(Intent.ACTION_VIEW, Uri.parse("https://www.vk.com/id${it.message}"))
+                                Intent(Intent.ACTION_VIEW, Uri.parse("vk://www.vk.com/id${it.message}"))
                             startActivity(implicit)
                         }
                         else -> {
