@@ -97,4 +97,25 @@ interface ServerAPI {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
     ): ServerResponse
+
+    @GET("friends/requests/toMe")
+    suspend fun getInRequests(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
+
+    @GET("friends/requests/fromMe")
+    suspend fun getOutRequests(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
+
+    @GET("friends/requests/hidden")
+    suspend fun getBanList(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
 }
