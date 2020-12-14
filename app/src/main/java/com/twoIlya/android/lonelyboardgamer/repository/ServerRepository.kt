@@ -12,8 +12,8 @@ import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
-import com.twoIlya.android.lonelyboardgamer.paging.FriendsListPagingSource
-import com.twoIlya.android.lonelyboardgamer.paging.SearchPagingSource
+import com.twoIlya.android.lonelyboardgamer.paging.pagingsource.FriendsListPagingSource
+import com.twoIlya.android.lonelyboardgamer.paging.pagingsource.SearchPagingSource
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
