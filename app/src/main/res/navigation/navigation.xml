@@ -72,4 +72,12 @@
             android:id="@+id/action_banListFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/inRequestsFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.inrequests.InRequestsFragment"
+        android:label="InRequestsFragment" >
+        <action
+            android:id="@+id/action_inRequestsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
 </navigation>
