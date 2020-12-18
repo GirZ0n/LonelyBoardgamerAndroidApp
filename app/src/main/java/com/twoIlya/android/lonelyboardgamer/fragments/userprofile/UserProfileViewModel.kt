@@ -95,7 +95,7 @@ class UserProfileViewModel : ViewModel() {
                     3 -> FriendState()
                     2 -> InRequestState()
                     1 -> OutRequestState()
-                    else -> ForeignUserState()
+                    else -> NoneState()
                 }
             }
 
@@ -160,7 +160,7 @@ class UserProfileViewModel : ViewModel() {
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                currentState = ForeignUserState()
+                currentState = NoneState()
                 _friendStatus.postValue(FriendStatus.None)
             }
 
@@ -321,7 +321,7 @@ class UserProfileViewModel : ViewModel() {
         }
     }
 
-    inner class ForeignUserState : State {
+    inner class NoneState : State {
         override fun bottomButtonClick(action: UserProfileAction) {
             when (action) {
                 UserProfileAction.ADD -> {
