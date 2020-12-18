@@ -1,4 +1,4 @@
-package com.twoIlya.android.lonelyboardgamer.fragments.friendslist
+package com.twoIlya.android.lonelyboardgamer.fragments.friends
 
 import android.os.Bundle
 import android.util.Log
@@ -14,18 +14,18 @@ import androidx.navigation.fragment.findNavController
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentFriendsListBinding
 import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
 import com.twoIlya.android.lonelyboardgamer.paging.ListAdapter
 import kotlinx.coroutines.launch
 
-class FriendsListFragment : Fragment() {
+class FriendsFragment : Fragment() {
 
     private lateinit var binding: FragmentFriendsListBinding
-    private val viewModel: FriendsListViewModel by lazy {
+    private val viewModel: FriendsViewModel by lazy {
         ViewModelProvider(this).get(
-            FriendsListViewModel::class.java
+            FriendsViewModel::class.java
         )
     }
     private lateinit var adapter: ListAdapter
@@ -60,15 +60,15 @@ class FriendsListFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Notification -> {
+                Event.Type.Notification -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
-                EventType.Error -> {
+                Event.Type.Error -> {
                     val intent = ErrorActivity.newActivity(requireContext(), it.message)
                     startActivity(intent)
                     activity?.finish()
                 }
-                EventType.Move -> {
+                Event.Type.Move -> {
                     val intent = when (it.message) {
                         "Login" -> LoginActivity.newActivity(requireContext())
                         else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
