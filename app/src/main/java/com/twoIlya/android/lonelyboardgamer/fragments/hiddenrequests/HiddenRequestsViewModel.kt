@@ -28,7 +28,7 @@ class HiddenRequestsViewModel: ViewModel() {
     private val serverToken = MutableLiveData<Token>()
     val banListLiveData: LiveData<PagingData<ListProfile>> =
         Transformations.switchMap(serverToken) {
-            repo.getBanList(it).cachedIn(viewModelScope)
+            repo.getHiddenRequests(it).cachedIn(viewModelScope)
         }
 
     private val _events = MutableLiveData<Event>()

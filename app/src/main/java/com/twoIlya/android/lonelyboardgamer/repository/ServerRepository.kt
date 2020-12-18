@@ -224,9 +224,9 @@ object ServerRepository {
         ).liveData
     }
 
-    fun getBanList(serverToken: Token): LiveData<PagingData<ListProfile>> {
+    fun getHiddenRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
         val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
-            serverAPI.getBanList("Bearer ${serverToken.value}", limit, offset)
+            serverAPI.getHiddenRequests("Bearer ${serverToken.value}", limit, offset)
         }
 
         return Pager(
