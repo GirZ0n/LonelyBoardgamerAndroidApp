@@ -23,6 +23,8 @@ import com.twoIlya.android.lonelyboardgamer.databinding.FragmentUserProfileBindi
 
 class UserProfileFragment : Fragment() {
 
+    private var state: State = LoadingState()
+
     private lateinit var binding: FragmentUserProfileBinding
     private val viewModel: UserProfileViewModel by lazy {
         ViewModelProvider(this).get(
@@ -54,6 +56,14 @@ class UserProfileFragment : Fragment() {
             viewModel.updateProfile()
         }
 
+        binding.upButton.setOnClickListener {
+            state.upButtonSetOnClickListener()
+        }
+
+        binding.bottomButtom.setOnClickListener {
+            state.bottomButtonSetOnCLickListener()
+        }
+
         viewModel.events.observe(viewLifecycleOwner) {
             Log.d(TAG, "Event: $it")
 
@@ -81,7 +91,10 @@ class UserProfileFragment : Fragment() {
                         it.message.isDigitsOnly() -> {
                             Log.d(TAG, "it.message: ${it}")
                             val implicit =
-                                Intent(Intent.ACTION_VIEW, Uri.parse("vk://www.vk.com/id${it.message}"))
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("vk://www.vk.com/id${it.message}")
+                                )
                             startActivity(implicit)
                         }
                         else -> {
@@ -97,59 +110,11 @@ class UserProfileFragment : Fragment() {
 
         viewModel.friendStatus.observe(viewLifecycleOwner) {
             when (it) {
-                // Friend
-                3 -> {
-                    binding.bottomButtom.setText(R.string.chat_button)
-                    binding.bottomButtom.setOnClickListener {
-                        viewModel.bottomButtonClick("chat")
-                    }
-
-                    binding.upButton.setImageResource(R.drawable.ic_baseline_delete_24)
-                    binding.upButton.isVisible = true
-                    binding.upButton.setOnClickListener {
-                        viewModel.upButtonClick("unfriend")
-                    }
-                }
-                // In Request
-                2 -> {
-                    binding.bottomButtom.setText(R.string.answer_request_button)
-                    binding.bottomButtom.setOnClickListener {
-                        MaterialDialog(requireContext()).show {
-                            title(R.string.answer_dialog_title)
-                            positiveButton(R.string.answer_agree_button) {
-                                viewModel.bottomButtonClick("accept")
-                            }
-                            negativeButton(R.string.answer_disagree_button) {
-                                viewModel.bottomButtonClick("decline")
-                            }
-                        }
-                    }
-
-                    binding.upButton.isVisible = false
-                }
-                // Out Request
-                1 -> {
-                    binding.bottomButtom.setText(R.string.withdraw_request_button)
-                    binding.bottomButtom.setOnClickListener {
-                        viewModel.bottomButtonClick("revoke")
-                    }
-
-                    binding.upButton.isVisible = false
-                }
-                // Foreign user
-                0 -> {
-                    binding.bottomButtom.setText(R.string.send_friend_request_button)
-                    binding.bottomButtom.setOnClickListener {
-                        viewModel.bottomButtonClick("add")
-                    }
-
-                    binding.upButton.isVisible = false
-                }
-                // Loading state
-                -1 -> {
-                    binding.bottomButtom.text = ""
-                    binding.upButton.isVisible = false
-                }
+                FriendStatus.Loading -> state = LoadingState()
+                FriendStatus.None -> state = NoneState()
+                FriendStatus.OutRequest -> state = OutRequestState()
+                FriendStatus.InRequest -> state = InRequestState()
+                FriendStatus.Friend -> state = FriendState()
                 else -> {
                     val intent = ErrorActivity.newActivity(
                         requireContext(),
@@ -159,8 +124,115 @@ class UserProfileFragment : Fragment() {
                     activity?.finish()
                 }
             }
+            state.changeLayout()
         }
     }
+
+    // region State Pattern
+
+    private interface State {
+        fun upButtonSetOnClickListener()
+        fun bottomButtonSetOnCLickListener()
+        fun changeLayout()
+    }
+
+    private inner class LoadingState : State {
+        override fun upButtonSetOnClickListener() {
+            binding.upButton.setOnClickListener(null)
+        }
+
+        override fun bottomButtonSetOnCLickListener() {
+            binding.bottomButtom.setOnClickListener(null)
+        }
+
+        override fun changeLayout() {
+            binding.bottomButtom.text = ""
+            binding.upButton.isVisible = false
+        }
+    }
+
+    private inner class FriendState : State {
+        override fun upButtonSetOnClickListener() {
+            binding.upButton.setOnClickListener {
+                viewModel.upButtonClick(UserProfileAction.UNFRIEND)
+            }
+        }
+
+        override fun bottomButtonSetOnCLickListener() {
+            binding.bottomButtom.setOnClickListener {
+                viewModel.bottomButtonClick(UserProfileAction.CHAT)
+            }
+        }
+
+        override fun changeLayout() {
+            binding.bottomButtom.setText(R.string.chat_button)
+
+            binding.upButton.isVisible = true
+            binding.upButton.setImageResource(R.drawable.ic_baseline_delete_24)
+        }
+    }
+
+    private inner class InRequestState : State {
+        override fun upButtonSetOnClickListener() {
+            binding.upButton.setOnClickListener(null)
+        }
+
+        override fun bottomButtonSetOnCLickListener() {
+            binding.bottomButtom.setOnClickListener {
+                MaterialDialog(requireContext()).show {
+                    title(R.string.answer_dialog_title)
+                    positiveButton(R.string.answer_agree_button) {
+                        viewModel.bottomButtonClick(UserProfileAction.ACCEPT)
+                    }
+                    negativeButton(R.string.answer_disagree_button) {
+                        viewModel.bottomButtonClick(UserProfileAction.DECLINE)
+                    }
+                }
+            }
+        }
+
+        override fun changeLayout() {
+            binding.bottomButtom.setText(R.string.answer_request_button)
+            binding.upButton.isVisible = false
+        }
+    }
+
+    private inner class OutRequestState : State {
+        override fun upButtonSetOnClickListener() {
+            binding.upButton.setOnClickListener(null)
+        }
+
+        override fun bottomButtonSetOnCLickListener() {
+            binding.bottomButtom.setOnClickListener {
+                viewModel.bottomButtonClick(UserProfileAction.REVOKE)
+            }
+        }
+
+        override fun changeLayout() {
+            binding.bottomButtom.setText(R.string.withdraw_request_button)
+            binding.upButton.isVisible = false
+        }
+    }
+
+    private inner class NoneState : State {
+        override fun upButtonSetOnClickListener() {
+            binding.upButton.setOnClickListener(null)
+        }
+
+        override fun bottomButtonSetOnCLickListener() {
+            binding.bottomButtom.setOnClickListener {
+                viewModel.bottomButtonClick(UserProfileAction.ADD)
+            }
+        }
+
+        override fun changeLayout() {
+            binding.bottomButtom.setText(R.string.send_friend_request_button)
+            binding.upButton.isVisible = false
+        }
+
+    }
+
+    // endregion
 
     companion object {
         private const val TAG = "UserProfileFragment_TAG"
