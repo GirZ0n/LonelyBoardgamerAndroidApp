@@ -57,11 +57,31 @@ class UserProfileFragment : Fragment() {
         }
 
         binding.upButton.setOnClickListener {
-            state.upButtonSetOnClickListener()
+            state.upButtonClickAction()
         }
 
         binding.bottomButtom.setOnClickListener {
-            state.bottomButtonSetOnCLickListener()
+            state.bottomButtonClickAction()
+        }
+
+        viewModel.friendStatus.observe(viewLifecycleOwner) {
+            when (it) {
+                FriendStatus.Loading -> state = LoadingState()
+                FriendStatus.None -> state = NoneState()
+                FriendStatus.OutRequest -> state = OutRequestState()
+                FriendStatus.InRequest -> state = InRequestState()
+                FriendStatus.Friend -> state = FriendState()
+                else -> {
+                    val intent = ErrorActivity.newActivity(
+                        requireContext(),
+                        "Something went wrong. UPF(statusCode: $it)"
+                    )
+                    startActivity(intent)
+                    activity?.finish()
+                }
+            }
+
+            state.updateLayout()
         }
 
         viewModel.events.observe(viewLifecycleOwner) {
@@ -107,64 +127,39 @@ class UserProfileFragment : Fragment() {
                 }
             }
         }
-
-        viewModel.friendStatus.observe(viewLifecycleOwner) {
-            when (it) {
-                FriendStatus.Loading -> state = LoadingState()
-                FriendStatus.None -> state = NoneState()
-                FriendStatus.OutRequest -> state = OutRequestState()
-                FriendStatus.InRequest -> state = InRequestState()
-                FriendStatus.Friend -> state = FriendState()
-                else -> {
-                    val intent = ErrorActivity.newActivity(
-                        requireContext(),
-                        "Something went wrong. UPF(statusCode: $it)"
-                    )
-                    startActivity(intent)
-                    activity?.finish()
-                }
-            }
-            state.changeLayout()
-        }
     }
 
     // region State Pattern
 
     private interface State {
-        fun upButtonSetOnClickListener()
-        fun bottomButtonSetOnCLickListener()
-        fun changeLayout()
+        fun upButtonClickAction()
+        fun bottomButtonClickAction()
+        fun updateLayout()
     }
 
     private inner class LoadingState : State {
-        override fun upButtonSetOnClickListener() {
-            binding.upButton.setOnClickListener(null)
-        }
+        // Do nothing
+        override fun upButtonClickAction() {}
 
-        override fun bottomButtonSetOnCLickListener() {
-            binding.bottomButtom.setOnClickListener(null)
-        }
+        // Do nothing
+        override fun bottomButtonClickAction() {}
 
-        override fun changeLayout() {
+        override fun updateLayout() {
             binding.bottomButtom.text = ""
             binding.upButton.isVisible = false
         }
     }
 
     private inner class FriendState : State {
-        override fun upButtonSetOnClickListener() {
-            binding.upButton.setOnClickListener {
-                viewModel.upButtonClick(UserProfileAction.UNFRIEND)
-            }
+        override fun upButtonClickAction() {
+            viewModel.upButtonClick(UserProfileAction.UNFRIEND)
         }
 
-        override fun bottomButtonSetOnCLickListener() {
-            binding.bottomButtom.setOnClickListener {
-                viewModel.bottomButtonClick(UserProfileAction.CHAT)
-            }
+        override fun bottomButtonClickAction() {
+            viewModel.bottomButtonClick(UserProfileAction.CHAT)
         }
 
-        override fun changeLayout() {
+        override fun updateLayout() {
             binding.bottomButtom.setText(R.string.chat_button)
 
             binding.upButton.isVisible = true
@@ -173,59 +168,50 @@ class UserProfileFragment : Fragment() {
     }
 
     private inner class InRequestState : State {
-        override fun upButtonSetOnClickListener() {
-            binding.upButton.setOnClickListener(null)
-        }
+        // Do nothing
+        override fun upButtonClickAction() {}
 
-        override fun bottomButtonSetOnCLickListener() {
-            binding.bottomButtom.setOnClickListener {
-                MaterialDialog(requireContext()).show {
-                    title(R.string.answer_dialog_title)
-                    positiveButton(R.string.answer_agree_button) {
-                        viewModel.bottomButtonClick(UserProfileAction.ACCEPT)
-                    }
-                    negativeButton(R.string.answer_disagree_button) {
-                        viewModel.bottomButtonClick(UserProfileAction.DECLINE)
-                    }
+        override fun bottomButtonClickAction() {
+            MaterialDialog(requireContext()).show {
+                title(R.string.answer_dialog_title)
+                positiveButton(R.string.answer_agree_button) {
+                    viewModel.bottomButtonClick(UserProfileAction.ACCEPT)
+                }
+                negativeButton(R.string.answer_disagree_button) {
+                    viewModel.bottomButtonClick(UserProfileAction.DECLINE)
                 }
             }
         }
 
-        override fun changeLayout() {
+        override fun updateLayout() {
             binding.bottomButtom.setText(R.string.answer_request_button)
             binding.upButton.isVisible = false
         }
     }
 
     private inner class OutRequestState : State {
-        override fun upButtonSetOnClickListener() {
-            binding.upButton.setOnClickListener(null)
+        // Do nothing
+        override fun upButtonClickAction() {}
+
+        override fun bottomButtonClickAction() {
+            viewModel.bottomButtonClick(UserProfileAction.REVOKE)
         }
 
-        override fun bottomButtonSetOnCLickListener() {
-            binding.bottomButtom.setOnClickListener {
-                viewModel.bottomButtonClick(UserProfileAction.REVOKE)
-            }
-        }
-
-        override fun changeLayout() {
+        override fun updateLayout() {
             binding.bottomButtom.setText(R.string.withdraw_request_button)
             binding.upButton.isVisible = false
         }
     }
 
     private inner class NoneState : State {
-        override fun upButtonSetOnClickListener() {
-            binding.upButton.setOnClickListener(null)
+        // Do nothing
+        override fun upButtonClickAction() {}
+
+        override fun bottomButtonClickAction() {
+            viewModel.bottomButtonClick(UserProfileAction.ADD)
         }
 
-        override fun bottomButtonSetOnCLickListener() {
-            binding.bottomButtom.setOnClickListener {
-                viewModel.bottomButtonClick(UserProfileAction.ADD)
-            }
-        }
-
-        override fun changeLayout() {
+        override fun updateLayout() {
             binding.bottomButtom.setText(R.string.send_friend_request_button)
             binding.upButton.isVisible = false
         }
