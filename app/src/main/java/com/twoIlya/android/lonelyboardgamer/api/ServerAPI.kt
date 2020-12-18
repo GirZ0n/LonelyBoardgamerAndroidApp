@@ -114,7 +114,7 @@ interface ServerAPI {
     ): ServerResponse
 
     @GET("friends/requests/hidden")
-    suspend fun getBanList(
+    suspend fun getHiddenRequests(
         @Header("Authorization") serverToken: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int

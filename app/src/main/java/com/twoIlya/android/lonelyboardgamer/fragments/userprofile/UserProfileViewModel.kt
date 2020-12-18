@@ -10,14 +10,14 @@ import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository
 import com.twoIlya.android.lonelyboardgamer.repository.TokenRepository
 
 class UserProfileViewModel : ViewModel() {
-    private var state: State = LoadingState()
+    private var currentState: State = LoadingState()
 
     var id: Int = 0
 
     private var idVK: String = ""
 
-    private var _friendStatus = MutableLiveData(-1)
-    val friendStatus: LiveData<Int> = _friendStatus
+    private var _friendStatus = MutableLiveData(FriendStatus.Loading)
+    val friendStatus: LiveData<FriendStatus> = _friendStatus
 
     private val _name = MutableLiveData<String>()
     val name: LiveData<String> = _name
@@ -84,18 +84,18 @@ class UserProfileViewModel : ViewModel() {
         events.addSource(searchByIDServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.searchByIDErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
             } else if (it is UserProfile) {
                 updateData(it)
 
-                state = when (it.friendStatus) {
+                currentState = when (it.friendStatus) {
                     3 -> FriendState()
                     2 -> InRequestState()
                     1 -> OutRequestState()
-                    else -> ForeignUserState()
+                    else -> NoneState()
                 }
             }
 
@@ -110,13 +110,13 @@ class UserProfileViewModel : ViewModel() {
         events.addSource(sendFriendRequestServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.sendFriendRequestErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                state = OutRequestState()
-                _friendStatus.postValue(1)
+                currentState = OutRequestState()
+                _friendStatus.postValue(FriendStatus.OutRequest)
             }
 
             updateForm(
@@ -129,19 +129,19 @@ class UserProfileViewModel : ViewModel() {
         events.addSource(answerOnRequestServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.answerOnRequestErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
                 if (it.value.trim { char -> char == '\"' }.isDigitsOnly()) {
                     idVK = it.value.trim { char -> char == '\"' }
-                    state = FriendState()
-                    _friendStatus.postValue(3)
+                    currentState = FriendState()
+                    _friendStatus.postValue(FriendStatus.Friend)
                 } else {
-                    state = InRequestState()
-                    _friendStatus.postValue(2)
-                    events.postValue(Event(EventType.Notification, "Пользователь заблокирован"))
+                    currentState = InRequestState()
+                    _friendStatus.postValue(FriendStatus.InRequest)
+                    events.postValue(Event(Event.Type.Notification, "Пользователь скрыт"))
                 }
             }
 
@@ -155,13 +155,13 @@ class UserProfileViewModel : ViewModel() {
         events.addSource(revokeRequestServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.revokeRequestErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                state = ForeignUserState()
-                _friendStatus.postValue(0)
+                currentState = NoneState()
+                _friendStatus.postValue(FriendStatus.None)
             }
 
             updateForm(
@@ -179,12 +179,12 @@ class UserProfileViewModel : ViewModel() {
         dataForSearchByID.postValue(Pair(serverToken, id))
     }
 
-    fun bottomButtonClick(action: String) {
-        state.bottomButtonClick(action)
+    fun bottomButtonClick(action: UserProfileAction) {
+        currentState.bottomButtonClick(action)
     }
 
-    fun upButtonClick(action: String) {
-        state.bottomButtonClick(action)
+    fun upButtonClick(action: UserProfileAction) {
+        currentState.bottomButtonClick(action)
     }
 
     private fun updateData(profile: UserProfile) {
@@ -192,7 +192,9 @@ class UserProfileViewModel : ViewModel() {
 
         id = profile.id
         profile.idVK?.let { idVK = it }
-        _friendStatus.postValue(profile.friendStatus)
+
+        val friendStatus = FriendStatus.values()[profile.friendStatus + 1]
+        _friendStatus.postValue(friendStatus)
 
         val fullName = "${profile.firstName} ${profile.secondName}"
         _name.postValue(fullName)
@@ -224,11 +226,11 @@ class UserProfileViewModel : ViewModel() {
     // -----------------------------------------------------
 
     private interface State {
-        fun bottomButtonClick(action: String) {
+        fun bottomButtonClick(action: UserProfileAction) {
             return
         }
 
-        fun upButtonCLick(action: String) {
+        fun upButtonCLick(action: UserProfileAction) {
             return
         }
     }
@@ -237,21 +239,21 @@ class UserProfileViewModel : ViewModel() {
     inner class LoadingState : State
 
     inner class FriendState : State {
-        override fun bottomButtonClick(action: String) {
+        override fun bottomButtonClick(action: UserProfileAction) {
             Log.d("UPVM", "id: $idVK")
 
             when (action) {
-                "chat" -> events.postValue(Event(EventType.Move, idVK))
+                UserProfileAction.CHAT -> events.postValue(Event(Event.Type.Move, idVK))
                 else -> events.postValue(
                     Event(
-                        EventType.Notification,
+                        Event.Type.Notification,
                         "Что-то пошло не так во время обработки вашего запроса"
                     )
                 )
             }
         }
 
-        override fun upButtonCLick(action: String) {
+        override fun upButtonCLick(action: UserProfileAction) {
             updateForm(
                 isFormEnabled = false,
                 isBottomButtonLoading = false,
@@ -262,10 +264,10 @@ class UserProfileViewModel : ViewModel() {
     }
 
     inner class OutRequestState : State {
-        override fun bottomButtonClick(action: String) {
+        override fun bottomButtonClick(action: UserProfileAction) {
 
             when (action) {
-                "revoke" -> {
+                UserProfileAction.REVOKE -> {
                     updateForm(
                         isFormEnabled = false,
                         isBottomButtonLoading = true,
@@ -277,7 +279,7 @@ class UserProfileViewModel : ViewModel() {
                 else -> {
                     events.postValue(
                         Event(
-                            EventType.Notification,
+                            Event.Type.Notification,
                             "Что-то пошло не так во время обработки вашего запроса"
                         )
                     )
@@ -287,11 +289,11 @@ class UserProfileViewModel : ViewModel() {
     }
 
     inner class InRequestState : State {
-        override fun bottomButtonClick(action: String) {
+        override fun bottomButtonClick(action: UserProfileAction) {
 
             val serverToken = TokenRepository.getServerToken()
             when (action) {
-                "accept" -> {
+                UserProfileAction.ACCEPT -> {
                     updateForm(
                         isFormEnabled = false,
                         isBottomButtonLoading = true,
@@ -299,7 +301,7 @@ class UserProfileViewModel : ViewModel() {
                     )
                     dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, true)))
                 }
-                "decline" -> {
+                UserProfileAction.DECLINE -> {
                     updateForm(
                         isFormEnabled = false,
                         isBottomButtonLoading = true,
@@ -310,7 +312,7 @@ class UserProfileViewModel : ViewModel() {
                 else -> {
                     events.postValue(
                         Event(
-                            EventType.Notification,
+                            Event.Type.Notification,
                             "Что-то пошло не так во время обработки вашего запроса"
                         )
                     )
@@ -319,10 +321,10 @@ class UserProfileViewModel : ViewModel() {
         }
     }
 
-    inner class ForeignUserState : State {
-        override fun bottomButtonClick(action: String) {
+    inner class NoneState : State {
+        override fun bottomButtonClick(action: UserProfileAction) {
             when (action) {
-                "add" -> {
+                UserProfileAction.ADD -> {
                     updateForm(
                         isFormEnabled = false,
                         isBottomButtonLoading = true,
@@ -334,7 +336,7 @@ class UserProfileViewModel : ViewModel() {
                 else -> {
                     events.postValue(
                         Event(
-                            EventType.Notification,
+                            Event.Type.Notification,
                             "Что-то пошло не так во время обработки вашего запроса"
                         )
                     )

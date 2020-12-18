@@ -1,32 +1,26 @@
-package com.twoIlya.android.lonelyboardgamer.paging.pagingsource
+package com.twoIlya.android.lonelyboardgamer.paging
 
 import androidx.paging.PagingSource
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
-import com.twoIlya.android.lonelyboardgamer.dataClasses.ListProfile
-import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
+import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository
 import retrofit2.HttpException
 import java.io.IOException
 
-class BanListPagingSource(
-    private val serverToken: Token,
-    private val api: ServerAPI
+class ListPagingSource<T : Any>(
+    private val classType: Class<T>,
+    private val apiMethod: suspend (limit: Int, offset: Int) -> ServerResponse,
 ) :
-    PagingSource<Int, ListProfile>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListProfile> {
+    PagingSource<Int, T>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
         val position = params.key ?: ServerRepository.Constants.SERVER_STARTING_PAGE_INDEX
         return try {
-            val response =
-                api.getBanList(
-                    "Bearer ${serverToken.value}",
-                    ServerRepository.Constants.NETWORK_PAGE_SIZE, position
-                )
-            val profileType = object : TypeToken<List<ListProfile>>() {}.type
+            val response = apiMethod(ServerRepository.Constants.NETWORK_PAGE_SIZE, position)
+            val profileType = TypeToken.getParameterized(List::class.java, classType).type
             val profiles =
-                Gson().fromJson<List<ListProfile>>(
+                Gson().fromJson<List<T>>(
                     response.message.toString(),
                     profileType
                 )

@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import com.androidbuts.multispinnerfilter.KeyPairBoolData
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import com.twoIlya.android.lonelyboardgamer.repository.CacheRepository
@@ -44,14 +43,14 @@ class RegistrationViewModel : ViewModel() {
         events.addSource(registrationServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.registrationErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
-                events.postValue(Event(EventType.Move, "MyProfile"))
+                events.postValue(Event(Event.Type.Move, "MyProfile"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -94,14 +93,14 @@ class RegistrationViewModel : ViewModel() {
 
     private fun checkFields(address: String, description: String): Boolean {
         if (address.isBlank()) {
-            events.postValue(Event(EventType.Notification, "Укажите местоположение"))
+            events.postValue(Event(Event.Type.Notification, "Укажите местоположение"))
             return false
         }
 
         if (description.length > MAX_LENGTH_OF_DESCRIPTION) {
             events.postValue(
                 Event(
-                    EventType.Notification,
+                    Event.Type.Notification,
                     "Описание должно содержать не более 250 символов"
                 )
             )

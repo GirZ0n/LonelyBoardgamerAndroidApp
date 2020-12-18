@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.twoIlya.android.lonelyboardgamer.fragments.friendslist.FriendsListViewModel" />
+            type="com.twoIlya.android.lonelyboardgamer.fragments.friends.FriendsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

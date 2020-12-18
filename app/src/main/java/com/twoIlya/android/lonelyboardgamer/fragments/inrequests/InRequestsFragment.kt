@@ -14,10 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
-import com.twoIlya.android.lonelyboardgamer.databinding.FragmentFriendsListBinding
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentInRequestsBinding
-import com.twoIlya.android.lonelyboardgamer.fragments.friendslist.FriendsListViewModel
 import com.twoIlya.android.lonelyboardgamer.paging.ListAdapter
 import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
 import kotlinx.coroutines.launch
@@ -61,15 +59,15 @@ class InRequestsFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Notification -> {
+                Event.Type.Notification -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
-                EventType.Error -> {
+                Event.Type.Error -> {
                     val intent = ErrorActivity.newActivity(requireContext(), it.message)
                     startActivity(intent)
                     activity?.finish()
                 }
-                EventType.Move -> {
+                Event.Type.Move -> {
                     val intent = when (it.message) {
                         "Login" -> LoginActivity.newActivity(requireContext())
                         else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")

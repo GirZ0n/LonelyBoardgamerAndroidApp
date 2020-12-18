@@ -1,4 +1,4 @@
-package com.twoIlya.android.lonelyboardgamer.fragments.friendslist
+package com.twoIlya.android.lonelyboardgamer.fragments.hiddenrequests
 
 import android.os.Bundle
 import android.util.Log
@@ -14,18 +14,17 @@ import androidx.navigation.fragment.findNavController
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
-import com.twoIlya.android.lonelyboardgamer.databinding.FragmentFriendsListBinding
-import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
+import com.twoIlya.android.lonelyboardgamer.databinding.FragmentBanListBinding
 import com.twoIlya.android.lonelyboardgamer.paging.ListAdapter
+import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
 import kotlinx.coroutines.launch
 
-class FriendsListFragment : Fragment() {
-
-    private lateinit var binding: FragmentFriendsListBinding
-    private val viewModel: FriendsListViewModel by lazy {
+class HiddenRequestsFragment : Fragment() {
+    private lateinit var binding: FragmentBanListBinding
+    private val viewModel: HiddenRequestsViewModel by lazy {
         ViewModelProvider(this).get(
-            FriendsListViewModel::class.java
+            HiddenRequestsViewModel::class.java
         )
     }
     private lateinit var adapter: ListAdapter
@@ -36,7 +35,7 @@ class FriendsListFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_friends_list, container, false
+            R.layout.fragment_ban_list, container, false
         )
         return binding.root
     }
@@ -60,15 +59,15 @@ class FriendsListFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Notification -> {
+                Event.Type.Notification -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
-                EventType.Error -> {
+                Event.Type.Error -> {
                     val intent = ErrorActivity.newActivity(requireContext(), it.message)
                     startActivity(intent)
                     activity?.finish()
                 }
-                EventType.Move -> {
+                Event.Type.Move -> {
                     val intent = when (it.message) {
                         "Login" -> LoginActivity.newActivity(requireContext())
                         else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
@@ -79,7 +78,7 @@ class FriendsListFragment : Fragment() {
             }
         }
 
-        viewModel.getFriends()
+        viewModel.getBanList()
     }
 
     private fun initAdapter() {
@@ -87,7 +86,7 @@ class FriendsListFragment : Fragment() {
             val bundle = Bundle()
             bundle.putInt("id", id)
             findNavController().navigate(
-                R.id.action_friendsListFragment_to_userProfileFragment,
+                R.id.action_banListFragment_to_userProfileFragment,
                 bundle
             )
         }
@@ -99,7 +98,7 @@ class FriendsListFragment : Fragment() {
 
         adapter.addLoadStateListener(viewModel::loadStateListener)
 
-        viewModel.friendsLiveData.observe(viewLifecycleOwner) {
+        viewModel.banListLiveData.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 adapter.submitData(it)
             }
@@ -107,6 +106,6 @@ class FriendsListFragment : Fragment() {
     }
 
     companion object {
-        private const val TAG = "FriendsListFragment_TAG"
+        private const val TAG = "BanListFragment_TAG"
     }
 }

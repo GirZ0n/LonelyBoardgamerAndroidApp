@@ -1,7 +1,6 @@
 package com.twoIlya.android.lonelyboardgamer
 
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepositoryResponse
 import retrofit2.HttpException
@@ -14,13 +13,13 @@ object ErrorHandler {
     fun loginErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 1, 2 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             3 -> {
-                Event(EventType.Move, "Registration")
+                Event(Event.Type.Move, "Registration")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }
@@ -28,13 +27,13 @@ object ErrorHandler {
     fun registrationErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2, 3 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             1 -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }
@@ -42,13 +41,13 @@ object ErrorHandler {
     fun getProfileErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             1, 3, 401 -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }
@@ -56,13 +55,13 @@ object ErrorHandler {
     fun logoutErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             1, 3, 401 -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }
@@ -70,13 +69,13 @@ object ErrorHandler {
     fun changeProfileErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2, 3 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             1, 401 -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }
@@ -84,13 +83,13 @@ object ErrorHandler {
     fun searchErrorHandler(exception: Throwable): Event {
         return when (exception) {
             is HttpException -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             is IOException -> {
-                Event(EventType.Notification, exception.localizedMessage ?: "")
+                Event(Event.Type.Notification, exception.localizedMessage ?: "")
             }
             else -> {
-                Event(EventType.Error, exception.toString())
+                Event(Event.Type.Error, exception.toString())
             }
         }
     }
@@ -98,13 +97,13 @@ object ErrorHandler {
     fun searchByIDErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2, 3, 4, 5 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             1, 401  -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }
@@ -112,13 +111,13 @@ object ErrorHandler {
     fun sendFriendRequestErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2, 3, 4, 5 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             1, 401 -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }
@@ -126,13 +125,13 @@ object ErrorHandler {
     fun answerOnRequestErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2, 3, 4, 5 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             1, 401  -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }
@@ -140,13 +139,13 @@ object ErrorHandler {
     fun revokeRequestErrorHandler(error: ServerError): Event {
         return when (error.code) {
             -1, 2, 3, 4, 5 -> {
-                Event(EventType.Notification, error.message)
+                Event(Event.Type.Notification, error.message)
             }
             1, 401  -> {
-                Event(EventType.Move, "Login")
+                Event(Event.Type.Move, "Login")
             }
             else -> {
-                Event(EventType.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
         }
     }

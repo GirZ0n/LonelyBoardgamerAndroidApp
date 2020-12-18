@@ -12,7 +12,7 @@ import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
-import com.twoIlya.android.lonelyboardgamer.paging.pagingsource.*
+import com.twoIlya.android.lonelyboardgamer.paging.ListPagingSource
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -181,37 +181,57 @@ object ServerRepository {
     }
 
     fun search(serverToken: Token): LiveData<PagingData<SearchProfile>> {
+        val pagingSourceFactory = ListPagingSource(SearchProfile::class.java) { limit, offset ->
+            serverAPI.search("Bearer ${serverToken.value}", limit, offset)
+        }
+
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { SearchPagingSource(serverToken, serverAPI) }
+            pagingSourceFactory = { pagingSourceFactory }
         ).liveData
     }
 
     fun getFriends(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
+            serverAPI.getFriends("Bearer ${serverToken.value}", limit, offset)
+        }
+
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { FriendsListPagingSource(serverToken, serverAPI) }
+            pagingSourceFactory = { pagingSourceFactory }
         ).liveData
     }
 
     fun getInRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
+            serverAPI.getInRequests("Bearer ${serverToken.value}", limit, offset)
+        }
+
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { InRequestsListPagingSource(serverToken, serverAPI) }
+            pagingSourceFactory = { pagingSourceFactory }
         ).liveData
     }
 
     fun getOutRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
+            serverAPI.getOutRequests("Bearer ${serverToken.value}", limit, offset)
+        }
+
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { OutRequestsListPagingSource(serverToken, serverAPI) }
+            pagingSourceFactory = { pagingSourceFactory }
         ).liveData
     }
 
-    fun getBanList(serverToken: Token): LiveData<PagingData<ListProfile>> {
+    fun getHiddenRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
+            serverAPI.getHiddenRequests("Bearer ${serverToken.value}", limit, offset)
+        }
+
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { BanListPagingSource(serverToken, serverAPI) }
+            pagingSourceFactory = { pagingSourceFactory }
         ).liveData
     }
 
