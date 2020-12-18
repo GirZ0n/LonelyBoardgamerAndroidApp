@@ -1,4 +1,4 @@
-package com.twoIlya.android.lonelyboardgamer.fragments.banlistfragment
+package com.twoIlya.android.lonelyboardgamer.fragments.hiddenrequests
 
 import android.os.Bundle
 import android.util.Log
@@ -14,19 +14,17 @@ import androidx.navigation.fragment.findNavController
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentBanListBinding
-import com.twoIlya.android.lonelyboardgamer.databinding.FragmentFriendsListBinding
-import com.twoIlya.android.lonelyboardgamer.fragments.friendslist.FriendsListViewModel
 import com.twoIlya.android.lonelyboardgamer.paging.ListAdapter
 import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
 import kotlinx.coroutines.launch
 
-class BanListFragment : Fragment() {
+class HiddenRequestsFragment : Fragment() {
     private lateinit var binding: FragmentBanListBinding
-    private val viewModel: BanListViewModel by lazy {
+    private val viewModel: HiddenRequestsViewModel by lazy {
         ViewModelProvider(this).get(
-            BanListViewModel::class.java
+            HiddenRequestsViewModel::class.java
         )
     }
     private lateinit var adapter: ListAdapter
@@ -61,15 +59,15 @@ class BanListFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Notification -> {
+                Event.Type.Notification -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
-                EventType.Error -> {
+                Event.Type.Error -> {
                     val intent = ErrorActivity.newActivity(requireContext(), it.message)
                     startActivity(intent)
                     activity?.finish()
                 }
-                EventType.Move -> {
+                Event.Type.Move -> {
                     val intent = when (it.message) {
                         "Login" -> LoginActivity.newActivity(requireContext())
                         else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
