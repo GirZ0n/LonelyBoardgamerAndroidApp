@@ -1,4 +1,4 @@
-package com.twoIlya.android.lonelyboardgamer.fragments.friendslist
+package com.twoIlya.android.lonelyboardgamer.fragments.friends
 
 import androidx.lifecycle.*
 import androidx.paging.CombinedLoadStates
@@ -11,7 +11,7 @@ import com.twoIlya.android.lonelyboardgamer.repository.CacheRepository
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository
 import com.twoIlya.android.lonelyboardgamer.repository.TokenRepository
 
-class FriendsListViewModel : ViewModel() {
+class FriendsViewModel : ViewModel() {
     private val repo = ServerRepository
 
     private val _isListVisible = MutableLiveData(false)
@@ -48,7 +48,7 @@ class FriendsListViewModel : ViewModel() {
 
         if (loadStateRefresh is LoadState.Error) {
             val event = ErrorHandler.searchErrorHandler(loadStateRefresh.error)
-            if (event.type == EventType.Move || event.type == EventType.Error) {
+            if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                 CacheRepository.setIsLoggedIn(false)
             }
             _events.postValue(event)
@@ -61,7 +61,7 @@ class FriendsListViewModel : ViewModel() {
             ?: loadState.prepend as? LoadState.Error
         errorState?.let {
             val event = ErrorHandler.searchErrorHandler(it.error)
-            if (event.type == EventType.Move || event.type == EventType.Error) {
+            if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                 CacheRepository.setIsLoggedIn(false)
             }
             _events.postValue(event)
