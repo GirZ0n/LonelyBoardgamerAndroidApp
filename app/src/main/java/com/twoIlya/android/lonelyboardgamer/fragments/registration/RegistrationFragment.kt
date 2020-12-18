@@ -17,7 +17,7 @@ import com.schibstedspain.leku.LocationPickerActivity
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
 import com.twoIlya.android.lonelyboardgamer.databinding.FragmentRegistrationBinding
 import com.twoIlya.android.lonelyboardgamer.repository.PreferencesRepository
 
@@ -34,7 +34,7 @@ class RegistrationFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_registration, container, false
@@ -65,15 +65,15 @@ class RegistrationFragment : Fragment() {
             }
 
             when (it.type) {
-                EventType.Notification -> {
+                Event.Type.Notification -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
-                EventType.Error -> {
+                Event.Type.Error -> {
                     val intent = ErrorActivity.newActivity(requireContext(), it.message)
                     startActivity(intent)
                     activity?.finish()
                 }
-                EventType.Move -> {
+                Event.Type.Move -> {
                     when (it.message) {
                         "MyProfile" -> {
                             findNavController().navigate(R.id.action_registrationFragment_to_myProfile)

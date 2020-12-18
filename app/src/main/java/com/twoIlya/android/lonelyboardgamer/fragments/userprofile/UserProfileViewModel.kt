@@ -84,7 +84,7 @@ class UserProfileViewModel : ViewModel() {
         events.addSource(searchByIDServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.searchByIDErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -110,7 +110,7 @@ class UserProfileViewModel : ViewModel() {
         events.addSource(sendFriendRequestServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.sendFriendRequestErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -129,7 +129,7 @@ class UserProfileViewModel : ViewModel() {
         events.addSource(answerOnRequestServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.answerOnRequestErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -141,7 +141,7 @@ class UserProfileViewModel : ViewModel() {
                 } else {
                     currentState = InRequestState()
                     _friendStatus.postValue(FriendStatus.InRequest)
-                    events.postValue(Event(EventType.Notification, "Пользователь скрыт"))
+                    events.postValue(Event(Event.Type.Notification, "Пользователь скрыт"))
                 }
             }
 
@@ -155,7 +155,7 @@ class UserProfileViewModel : ViewModel() {
         events.addSource(revokeRequestServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.revokeRequestErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -243,10 +243,10 @@ class UserProfileViewModel : ViewModel() {
             Log.d("UPVM", "id: $idVK")
 
             when (action) {
-                UserProfileAction.CHAT -> events.postValue(Event(EventType.Move, idVK))
+                UserProfileAction.CHAT -> events.postValue(Event(Event.Type.Move, idVK))
                 else -> events.postValue(
                     Event(
-                        EventType.Notification,
+                        Event.Type.Notification,
                         "Что-то пошло не так во время обработки вашего запроса"
                     )
                 )
@@ -279,7 +279,7 @@ class UserProfileViewModel : ViewModel() {
                 else -> {
                     events.postValue(
                         Event(
-                            EventType.Notification,
+                            Event.Type.Notification,
                             "Что-то пошло не так во время обработки вашего запроса"
                         )
                     )
@@ -312,7 +312,7 @@ class UserProfileViewModel : ViewModel() {
                 else -> {
                     events.postValue(
                         Event(
-                            EventType.Notification,
+                            Event.Type.Notification,
                             "Что-то пошло не так во время обработки вашего запроса"
                         )
                     )
@@ -336,7 +336,7 @@ class UserProfileViewModel : ViewModel() {
                 else -> {
                     events.postValue(
                         Event(
-                            EventType.Notification,
+                            Event.Type.Notification,
                             "Что-то пошло не так во время обработки вашего запроса"
                         )
                     )

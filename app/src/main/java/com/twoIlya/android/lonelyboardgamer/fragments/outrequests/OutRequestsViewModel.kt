@@ -7,7 +7,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ListProfile
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import com.twoIlya.android.lonelyboardgamer.repository.CacheRepository
@@ -51,7 +50,7 @@ class OutRequestsViewModel : ViewModel() {
 
         if (loadStateRefresh is LoadState.Error) {
             val event = ErrorHandler.searchErrorHandler(loadStateRefresh.error)
-            if (event.type == EventType.Move || event.type == EventType.Error) {
+            if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                 CacheRepository.setIsLoggedIn(false)
             }
             _events.postValue(event)
@@ -64,7 +63,7 @@ class OutRequestsViewModel : ViewModel() {
             ?: loadState.prepend as? LoadState.Error
         errorState?.let {
             val event = ErrorHandler.searchErrorHandler(it.error)
-            if (event.type == EventType.Move || event.type == EventType.Error) {
+            if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                 CacheRepository.setIsLoggedIn(false)
             }
             _events.postValue(event)
