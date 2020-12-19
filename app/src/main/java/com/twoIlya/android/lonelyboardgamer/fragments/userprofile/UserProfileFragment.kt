@@ -1,6 +1,7 @@
 package com.twoIlya.android.lonelyboardgamer.fragments.userprofile
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -109,13 +110,10 @@ class UserProfileFragment : Fragment() {
                             activity?.finish()
                         }
                         it.message.isDigitsOnly() -> {
-                            Log.d(TAG, "it.message: ${it}")
-                            val implicit =
-                                Intent(
-                                    Intent.ACTION_VIEW,
-                                    Uri.parse("vk://www.vk.com/id${it.message}")
-                                )
-                            startActivity(implicit)
+                            Log.d(TAG, "it.message: $it")
+                            val intent =
+                                getOpenVKIntent(it.message, requireContext().packageManager)
+                            startActivity(intent)
                         }
                         else -> {
                             val intent =
@@ -126,6 +124,28 @@ class UserProfileFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun getOpenVKIntent(
+        id: String,
+        packageManager: PackageManager
+    ): Intent {
+        val url = if (isPackageInstalled(VK_APP_PACKAGE_NAME, packageManager)) {
+            "vk://$VK_APP_USER_PAGE_URL$id"
+        } else {
+            "https://$VK_APP_USER_PAGE_URL$id"
+        }
+
+        return Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    }
+
+    private fun isPackageInstalled(packageName: String, packageManager: PackageManager): Boolean {
+        return try {
+            packageManager.getPackageInfo(packageName, 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
         }
     }
 
@@ -222,5 +242,7 @@ class UserProfileFragment : Fragment() {
 
     companion object {
         private const val TAG = "UserProfileFragment_TAG"
+        private const val VK_APP_PACKAGE_NAME = "com.vkontakte.android"
+        private const val VK_APP_USER_PAGE_URL = "www.vk.com/id"
     }
 }
