@@ -15,13 +15,13 @@ import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
-import com.twoIlya.android.lonelyboardgamer.databinding.FragmentBanListBinding
+import com.twoIlya.android.lonelyboardgamer.databinding.FragmentHiddenRequestsBinding
 import com.twoIlya.android.lonelyboardgamer.paging.ListAdapter
 import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
 import kotlinx.coroutines.launch
 
 class HiddenRequestsFragment : Fragment() {
-    private lateinit var binding: FragmentBanListBinding
+    private lateinit var binding: FragmentHiddenRequestsBinding
     private val viewModel: HiddenRequestsViewModel by lazy {
         ViewModelProvider(this).get(
             HiddenRequestsViewModel::class.java
@@ -35,7 +35,7 @@ class HiddenRequestsFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_ban_list, container, false
+            R.layout.fragment_hidden_requests, container, false
         )
         return binding.root
     }

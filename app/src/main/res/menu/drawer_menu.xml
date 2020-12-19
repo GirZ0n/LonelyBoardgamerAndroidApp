@@ -13,7 +13,7 @@
             android:title="@string/search_fragment_label" />
 
         <item
-            android:id="@id/friendsListFragment"
+            android:id="@id/friendsFragment"
             android:icon="@drawable/ic_baseline_person_24"
             android:title="@string/friends_list_fragment_label" />
 
@@ -28,7 +28,7 @@
             android:title="@string/out_requests_list_fragment_label" />
 
         <item
-            android:id="@id/banListFragment"
+            android:id="@id/hiddenRequestsFragment"
             android:icon="@drawable/ic_baseline_block_24"
             android:title="@string/ban_list_fragment_label" />
     </group>

@@ -66,11 +66,10 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.myProfileFragment,
                 R.id.searchFragment,
-                R.id.friendsListFragment,
-                R.id.banListFragment,
+                R.id.friendsFragment,
+                R.id.hiddenRequestsFragment,
                 R.id.outRequestsFragment,
                 R.id.inRequestsFragment,
-                R.id.friendsListFragment
             )
         appBarConfiguration = AppBarConfiguration(topLevelDestinations, binding.drawerLayout)
     }

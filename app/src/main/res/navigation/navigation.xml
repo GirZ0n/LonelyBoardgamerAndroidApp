@@ -30,7 +30,7 @@
             app:destination="@id/searchFragment" />
         <action
             android:id="@+id/action_myProfileFragment_to_friendsListFragment"
-            app:destination="@id/friendsListFragment" />
+            app:destination="@id/friendsFragment" />
         <action
             android:id="@+id/action_myProfileFragment_to_inRequestsFragment"
             app:destination="@id/inRequestsFragment" />
@@ -39,7 +39,7 @@
             app:destination="@id/outRequestsFragment" />
         <action
             android:id="@+id/action_myProfileFragment_to_banListFragment"
-            app:destination="@id/banListFragment" />
+            app:destination="@id/hiddenRequestsFragment" />
     </fragment>
 
     <fragment
@@ -65,20 +65,20 @@
         tools:layout="@layout/fragment_user_profile" />
 
     <fragment
-        android:id="@+id/friendsListFragment"
+        android:id="@+id/friendsFragment"
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.friends.FriendsFragment"
         android:label="@string/friends_list_fragment_label"
-        tools:layout="@layout/fragment_friends_list">
+        tools:layout="@layout/fragment_friends">
         <action
             android:id="@+id/action_friendsListFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/banListFragment"
+        android:id="@+id/hiddenRequestsFragment"
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.hiddenrequests.HiddenRequestsFragment"
         android:label="@string/ban_list_fragment_label"
-        tools:layout="@layout/fragment_ban_list">
+        tools:layout="@layout/fragment_hidden_requests">
         <action
             android:id="@+id/action_banListFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />

@@ -15,14 +15,14 @@ import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
-import com.twoIlya.android.lonelyboardgamer.databinding.FragmentFriendsListBinding
+import com.twoIlya.android.lonelyboardgamer.databinding.FragmentFriendsBinding
 import com.twoIlya.android.lonelyboardgamer.paging.LoadStateAdapter
 import com.twoIlya.android.lonelyboardgamer.paging.ListAdapter
 import kotlinx.coroutines.launch
 
 class FriendsFragment : Fragment() {
 
-    private lateinit var binding: FragmentFriendsListBinding
+    private lateinit var binding: FragmentFriendsBinding
     private val viewModel: FriendsViewModel by lazy {
         ViewModelProvider(this).get(
             FriendsViewModel::class.java
@@ -36,7 +36,7 @@ class FriendsFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_friends_list, container, false
+            R.layout.fragment_friends, container, false
         )
         return binding.root
     }
