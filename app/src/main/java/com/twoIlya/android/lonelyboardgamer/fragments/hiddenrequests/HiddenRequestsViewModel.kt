@@ -26,7 +26,7 @@ class HiddenRequestsViewModel: ViewModel() {
     val isRetryButtonVisible: LiveData<Boolean> = _isRetryButtonVisible
 
     private val serverToken = MutableLiveData<Token>()
-    val banListLiveData: LiveData<PagingData<ListProfile>> =
+    val hiddenRequestsLiveData: LiveData<PagingData<ListProfile>> =
         Transformations.switchMap(serverToken) {
             repo.getHiddenRequests(it).cachedIn(viewModelScope)
         }

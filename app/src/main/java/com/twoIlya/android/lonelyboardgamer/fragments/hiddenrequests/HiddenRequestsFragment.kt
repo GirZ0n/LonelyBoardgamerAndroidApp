@@ -98,7 +98,7 @@ class HiddenRequestsFragment : Fragment() {
 
         adapter.addLoadStateListener(viewModel::loadStateListener)
 
-        viewModel.banListLiveData.observe(viewLifecycleOwner) {
+        viewModel.hiddenRequestsLiveData.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 adapter.submitData(it)
             }
