@@ -40,14 +40,11 @@ class UserProfileViewModel : ViewModel() {
     private val _isLayoutRefreshing = MutableLiveData(false)
     val isLayoutRefreshing: LiveData<Boolean> = _isLayoutRefreshing
 
-    private val _isFormEnabled = MutableLiveData(true)
-    val isFormEnabled: LiveData<Boolean> = _isFormEnabled
+    private val _isLayoutEnabled = MutableLiveData(true)
+    val isLayoutEnabled: LiveData<Boolean> = _isLayoutEnabled
 
     private val _isBottomButtonLoading = MutableLiveData(false)
     val isBottomButtonLoading: LiveData<Boolean> = _isBottomButtonLoading
-
-    private val _isUpButtonLoading = MutableLiveData(false)
-    val isUpButtonLoading: LiveData<Boolean> = _isUpButtonLoading
 
     // -----------------------------------------------------
 
@@ -76,6 +73,12 @@ class UserProfileViewModel : ViewModel() {
         ServerRepository.answerOnRequest(it.first, it.second.first, it.second.second)
     }
 
+    // Data: token and id
+    private val dataForDeleteFriend = MutableLiveData<Pair<Token, Int>>()
+    private val deleteFriendServerResponse = Transformations.switchMap(dataForDeleteFriend) {
+        ServerRepository.deleteFriend(it.first, it.second)
+    }
+
     // -----------------------------------------------------
 
     val events = MediatorLiveData<Event>()
@@ -99,11 +102,10 @@ class UserProfileViewModel : ViewModel() {
                 }
             }
 
-            _isLayoutRefreshing.postValue(false)
-            updateForm(
-                isFormEnabled = true,
+            updateLayout(
+                isLayoutEnabled = true,
                 isBottomButtonLoading = false,
-                isUpButtonLoading = false
+                isLayoutRefreshing = false
             )
         }
 
@@ -119,11 +121,7 @@ class UserProfileViewModel : ViewModel() {
                 _friendStatus.postValue(FriendStatus.OutRequest)
             }
 
-            updateForm(
-                isFormEnabled = true,
-                isBottomButtonLoading = false,
-                isUpButtonLoading = false
-            )
+            updateLayout(isLayoutEnabled = true, isBottomButtonLoading = false)
         }
 
         events.addSource(answerOnRequestServerResponse) {
@@ -145,11 +143,7 @@ class UserProfileViewModel : ViewModel() {
                 }
             }
 
-            updateForm(
-                isFormEnabled = true,
-                isBottomButtonLoading = false,
-                isUpButtonLoading = false
-            )
+            updateLayout(isLayoutEnabled = true, isBottomButtonLoading = false)
         }
 
         events.addSource(revokeRequestServerResponse) {
@@ -160,21 +154,35 @@ class UserProfileViewModel : ViewModel() {
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                currentState = NoneState()
-                _friendStatus.postValue(FriendStatus.None)
+                currentState = InRequestState()
+                _friendStatus.postValue(FriendStatus.InRequest)
             }
 
-            updateForm(
-                isFormEnabled = true,
-                isBottomButtonLoading = false,
-                isUpButtonLoading = false
-            )
+            updateLayout(isLayoutEnabled = true, isBottomButtonLoading = false)
+        }
+
+        events.addSource(deleteFriendServerResponse) {
+            if (ErrorHandler.isError(it)) {
+                val event = ErrorHandler.deleteFriendErrorHandler(it as ServerError)
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+                    CacheRepository.setIsLoggedIn(false)
+                }
+                events.postValue(event)
+            } else if (it is ServerMessage) {
+                currentState = InRequestState()
+                _friendStatus.postValue(FriendStatus.InRequest)
+            }
+
+            updateLayout(isLayoutEnabled = true, isBottomButtonLoading = false, isLayoutRefreshing = false)
         }
     }
 
     fun updateProfile() {
-        _isLayoutRefreshing.postValue(true)
-        updateForm(isFormEnabled = false, isBottomButtonLoading = false, isUpButtonLoading = false)
+        updateLayout(
+            isLayoutEnabled = false,
+            isBottomButtonLoading = false,
+            isLayoutRefreshing = true
+        )
         val serverToken = TokenRepository.getServerToken()
         dataForSearchByID.postValue(Pair(serverToken, id))
     }
@@ -184,7 +192,7 @@ class UserProfileViewModel : ViewModel() {
     }
 
     fun upButtonClick(action: UserProfileAction) {
-        currentState.bottomButtonClick(action)
+        currentState.upButtonClick(action)
     }
 
     private fun updateData(profile: UserProfile) {
@@ -213,14 +221,14 @@ class UserProfileViewModel : ViewModel() {
         )
     }
 
-    private fun updateForm(
-        isFormEnabled: Boolean,
+    private fun updateLayout(
+        isLayoutEnabled: Boolean,
         isBottomButtonLoading: Boolean,
-        isUpButtonLoading: Boolean
+        isLayoutRefreshing: Boolean = false,
     ) {
-        _isFormEnabled.postValue(isFormEnabled)
+        _isLayoutEnabled.postValue(isLayoutEnabled)
         _isBottomButtonLoading.postValue(isBottomButtonLoading)
-        _isUpButtonLoading.postValue(isUpButtonLoading)
+        _isLayoutRefreshing.postValue(isLayoutRefreshing)
     }
 
     // -----------------------------------------------------
@@ -230,7 +238,7 @@ class UserProfileViewModel : ViewModel() {
             return
         }
 
-        fun upButtonCLick(action: UserProfileAction) {
+        fun upButtonClick(action: UserProfileAction) {
             return
         }
     }
@@ -253,13 +261,26 @@ class UserProfileViewModel : ViewModel() {
             }
         }
 
-        override fun upButtonCLick(action: UserProfileAction) {
-            updateForm(
-                isFormEnabled = false,
-                isBottomButtonLoading = false,
-                isUpButtonLoading = true
-            )
-            // TODO: убрать из друзей
+        override fun upButtonClick(action: UserProfileAction) {
+            when (action) {
+                UserProfileAction.UNFRIEND -> {
+                    updateLayout(
+                        isLayoutEnabled = false,
+                        isBottomButtonLoading = false,
+                        isLayoutRefreshing = true
+                    )
+                    val serverToken = TokenRepository.getServerToken()
+                    dataForDeleteFriend.postValue(Pair(serverToken, id))
+                }
+                else -> {
+                    events.postValue(
+                        Event(
+                            Event.Type.Notification,
+                            "Что-то пошло не так во время обработки вашего запроса"
+                        )
+                    )
+                }
+            }
         }
     }
 
@@ -268,11 +289,7 @@ class UserProfileViewModel : ViewModel() {
 
             when (action) {
                 UserProfileAction.REVOKE -> {
-                    updateForm(
-                        isFormEnabled = false,
-                        isBottomButtonLoading = true,
-                        isUpButtonLoading = false
-                    )
+                    updateLayout(isLayoutEnabled = false, isBottomButtonLoading = true)
                     val serverToken = TokenRepository.getServerToken()
                     dataForRevokeRequest.postValue(Pair(serverToken, id))
                 }
@@ -294,19 +311,11 @@ class UserProfileViewModel : ViewModel() {
             val serverToken = TokenRepository.getServerToken()
             when (action) {
                 UserProfileAction.ACCEPT -> {
-                    updateForm(
-                        isFormEnabled = false,
-                        isBottomButtonLoading = true,
-                        isUpButtonLoading = false
-                    )
+                    updateLayout(isLayoutEnabled = false, isBottomButtonLoading = true)
                     dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, true)))
                 }
                 UserProfileAction.DECLINE -> {
-                    updateForm(
-                        isFormEnabled = false,
-                        isBottomButtonLoading = true,
-                        isUpButtonLoading = false
-                    )
+                    updateLayout(isLayoutEnabled = false, isBottomButtonLoading = true)
                     dataForAnswerOnRequest.postValue(Pair(serverToken, Pair(id, false)))
                 }
                 else -> {
@@ -325,11 +334,7 @@ class UserProfileViewModel : ViewModel() {
         override fun bottomButtonClick(action: UserProfileAction) {
             when (action) {
                 UserProfileAction.ADD -> {
-                    updateForm(
-                        isFormEnabled = false,
-                        isBottomButtonLoading = true,
-                        isUpButtonLoading = false
-                    )
+                    updateLayout(isLayoutEnabled = false, isBottomButtonLoading = true)
                     val serverToken = TokenRepository.getServerToken()
                     dataForSendFriendRequest.postValue(Pair(serverToken, id))
                 }
