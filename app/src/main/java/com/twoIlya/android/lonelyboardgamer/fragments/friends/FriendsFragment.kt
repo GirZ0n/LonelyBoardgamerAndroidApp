@@ -87,7 +87,7 @@ class FriendsFragment : Fragment() {
             val bundle = Bundle()
             bundle.putInt("id", id)
             findNavController().navigate(
-                R.id.action_friendsListFragment_to_userProfileFragment,
+                R.id.action_friendsFragment_to_userProfileFragment,
                 bundle
             )
         }

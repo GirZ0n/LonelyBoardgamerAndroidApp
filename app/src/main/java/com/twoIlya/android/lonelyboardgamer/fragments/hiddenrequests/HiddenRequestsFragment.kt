@@ -86,7 +86,7 @@ class HiddenRequestsFragment : Fragment() {
             val bundle = Bundle()
             bundle.putInt("id", id)
             findNavController().navigate(
-                R.id.action_banListFragment_to_userProfileFragment,
+                R.id.action_hiddenRequestsFragment_to_userProfileFragment,
                 bundle
             )
         }

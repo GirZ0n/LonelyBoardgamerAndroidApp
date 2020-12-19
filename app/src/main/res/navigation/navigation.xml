@@ -29,7 +29,7 @@
             android:id="@+id/action_myProfileFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
         <action
-            android:id="@+id/action_myProfileFragment_to_friendsListFragment"
+            android:id="@+id/action_myProfileFragment_to_friendsFragment"
             app:destination="@id/friendsFragment" />
         <action
             android:id="@+id/action_myProfileFragment_to_inRequestsFragment"
@@ -38,7 +38,7 @@
             android:id="@+id/action_myProfileFragment_to_outRequestsFragment"
             app:destination="@id/outRequestsFragment" />
         <action
-            android:id="@+id/action_myProfileFragment_to_banListFragment"
+            android:id="@+id/action_myProfileFragment_to_hiddenRequestsFragment"
             app:destination="@id/hiddenRequestsFragment" />
     </fragment>
 
@@ -70,7 +70,7 @@
         android:label="@string/friends_list_fragment_label"
         tools:layout="@layout/fragment_friends">
         <action
-            android:id="@+id/action_friendsListFragment_to_userProfileFragment"
+            android:id="@+id/action_friendsFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
 
@@ -80,7 +80,7 @@
         android:label="@string/ban_list_fragment_label"
         tools:layout="@layout/fragment_hidden_requests">
         <action
-            android:id="@+id/action_banListFragment_to_userProfileFragment"
+            android:id="@+id/action_hiddenRequestsFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
     </fragment>
 
