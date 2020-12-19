@@ -34,7 +34,7 @@ class HiddenRequestsViewModel: ViewModel() {
     private val _events = MutableLiveData<Event>()
     val events: LiveData<Event> = _events
 
-    fun getBanList() {
+    fun getHiddenRequests() {
         serverToken.postValue(TokenRepository.getServerToken())
     }
 

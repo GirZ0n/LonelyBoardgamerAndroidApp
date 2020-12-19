@@ -78,7 +78,7 @@ class HiddenRequestsFragment : Fragment() {
             }
         }
 
-        viewModel.getBanList()
+        viewModel.getHiddenRequests()
     }
 
     private fun initAdapter() {
