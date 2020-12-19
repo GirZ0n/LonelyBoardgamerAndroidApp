@@ -154,8 +154,8 @@ class UserProfileViewModel : ViewModel() {
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                currentState = InRequestState()
-                _friendStatus.postValue(FriendStatus.InRequest)
+                currentState = NoneState()
+                _friendStatus.postValue(FriendStatus.None)
             }
 
             updateLayout(isLayoutEnabled = true, isBottomButtonLoading = false)
