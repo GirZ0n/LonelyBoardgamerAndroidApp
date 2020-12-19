@@ -93,13 +93,6 @@ class UserProfileViewModel : ViewModel() {
                 events.postValue(event)
             } else if (it is UserProfile) {
                 updateData(it)
-
-                currentState = when (it.friendStatus) {
-                    3 -> FriendState()
-                    2 -> InRequestState()
-                    1 -> OutRequestState()
-                    else -> NoneState()
-                }
             }
 
             updateLayout(
@@ -200,6 +193,13 @@ class UserProfileViewModel : ViewModel() {
 
         id = profile.id
         profile.idVK?.let { idVK = it }
+
+        currentState = when (profile.friendStatus) {
+            3 -> FriendState()
+            2 -> InRequestState()
+            1 -> OutRequestState()
+            else -> NoneState()
+        }
 
         val friendStatus = FriendStatus.values()[profile.friendStatus + 1]
         _friendStatus.postValue(friendStatus)
