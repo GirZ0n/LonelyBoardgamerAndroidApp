@@ -1,4 +1,4 @@
-package com.twoIlya.android.lonelyboardgamer.fragments.search
+package com.twoIlya.android.lonelyboardgamer.fragments.inrequests
 
 import androidx.lifecycle.*
 import androidx.paging.CombinedLoadStates
@@ -7,13 +7,13 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
-import com.twoIlya.android.lonelyboardgamer.dataClasses.SearchProfile
+import com.twoIlya.android.lonelyboardgamer.dataClasses.ListProfile
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import com.twoIlya.android.lonelyboardgamer.repository.CacheRepository
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository
 import com.twoIlya.android.lonelyboardgamer.repository.TokenRepository
 
-class SearchViewModel : ViewModel() {
+class InRequestsViewModel : ViewModel() {
     private val repo = ServerRepository
 
     private val _isListVisible = MutableLiveData(false)
@@ -26,19 +26,15 @@ class SearchViewModel : ViewModel() {
     val isRetryButtonVisible: LiveData<Boolean> = _isRetryButtonVisible
 
     private val serverToken = MutableLiveData<Token>()
-    val searchLiveData: LiveData<PagingData<SearchProfile>> =
+    val inRequestsLiveData: LiveData<PagingData<ListProfile>> =
         Transformations.switchMap(serverToken) {
-            repo.search(it).cachedIn(viewModelScope)
+            repo.getInRequests(it).cachedIn(viewModelScope)
         }
 
     private val _events = MutableLiveData<Event>()
     val events: LiveData<Event> = _events
 
-    init {
-        search()
-    }
-
-    fun search() {
+    fun getInRequests() {
         serverToken.postValue(TokenRepository.getServerToken())
     }
 

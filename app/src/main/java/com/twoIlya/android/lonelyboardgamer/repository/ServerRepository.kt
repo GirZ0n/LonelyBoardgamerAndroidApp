@@ -12,7 +12,7 @@ import com.google.gson.JsonSyntaxException
 import com.twoIlya.android.lonelyboardgamer.api.ServerAPI
 import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
-import com.twoIlya.android.lonelyboardgamer.paging.SearchPagingSource
+import com.twoIlya.android.lonelyboardgamer.paging.ListPagingSource
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -30,9 +30,9 @@ object ServerRepository {
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl("https://immense-dusk-70422.herokuapp.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl("https://immense-dusk-70422.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
 
         serverAPI = retrofit.create(ServerAPI::class.java)
     }
@@ -83,7 +83,7 @@ object ServerRepository {
 
         getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData) {
             val response: ServerRepositoryResponse = try {
-                Gson().fromJson(it.message.toString(), Profile::class.java)
+                Gson().fromJson(it.message.toString(), MyProfile::class.java)
             } catch (e: JsonSyntaxException) {
                 Log.d(TAG, e.toString())
                 ServerError(-2, "Error during deserialization: ${e.message} ")
@@ -181,10 +181,152 @@ object ServerRepository {
     }
 
     fun search(serverToken: Token): LiveData<PagingData<SearchProfile>> {
+        val pagingSourceFactory = ListPagingSource(SearchProfile::class.java) { limit, offset ->
+            serverAPI.search("Bearer ${serverToken.value}", limit, offset)
+        }
+
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { SearchPagingSource(serverToken, serverAPI) }
+            pagingSourceFactory = { pagingSourceFactory }
         ).liveData
+    }
+
+    fun getFriends(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
+            serverAPI.getFriends("Bearer ${serverToken.value}", limit, offset)
+        }
+
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { pagingSourceFactory }
+        ).liveData
+    }
+
+    fun getInRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
+            serverAPI.getInRequests("Bearer ${serverToken.value}", limit, offset)
+        }
+
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { pagingSourceFactory }
+        ).liveData
+    }
+
+    fun getOutRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
+            serverAPI.getOutRequests("Bearer ${serverToken.value}", limit, offset)
+        }
+
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { pagingSourceFactory }
+        ).liveData
+    }
+
+    fun getHiddenRequests(serverToken: Token): LiveData<PagingData<ListProfile>> {
+        val pagingSourceFactory = ListPagingSource(ListProfile::class.java) { limit, offset ->
+            serverAPI.getHiddenRequests("Bearer ${serverToken.value}", limit, offset)
+        }
+
+        return Pager(
+            config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { pagingSourceFactory }
+        ).liveData
+    }
+
+    fun searchByID(serverToken: Token, id: Int): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val searchByIDRequest =
+            serverAPI.searchByID("Bearer ${serverToken.value}", id)
+
+        searchByIDRequest.enqueue(MyCallback("searchByID", responseLiveData) {
+            val response: ServerRepositoryResponse = try {
+                Gson().fromJson(it.message.toString(), UserProfile::class.java)
+            } catch (e: JsonSyntaxException) {
+                Log.d(TAG, e.toString())
+                ServerError(-2, "Error during deserialization: ${e.message} ")
+            } catch (e: NullPointerException) {
+                Log.d(TAG, e.toString())
+                ServerError(-2, "Error during deserialization: ${e.message} ")
+            }
+            response
+        })
+
+        return responseLiveData
+    }
+
+    fun sendFriendRequest(serverToken: Token, id: Int): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val sendFriendRequestRequest =
+            serverAPI.sendFriendRequest("Bearer ${serverToken.value}", idRequestBody)
+
+        sendFriendRequestRequest.enqueue(MyCallback("sendFriendRequest", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
+    fun revokeRequest(serverToken: Token, id: Int): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val revokeRequestRequest =
+            serverAPI.revokeRequest("Bearer ${serverToken.value}", idRequestBody)
+
+        revokeRequestRequest.enqueue(MyCallback("revokeRequest", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
+
+    fun answerOnRequest(
+        serverToken: Token,
+        id: Int,
+        isAccept: Boolean
+    ): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val code = when (isAccept) {
+            true -> 1
+            false -> 0
+        }
+
+        val codeRequestBody = code.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val answerOnRequest =
+            serverAPI.answerOnRequest("Bearer ${serverToken.value}", codeRequestBody, idRequestBody)
+
+        answerOnRequest.enqueue(MyCallback("answerOnRequest", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
+    fun deleteFriend(serverToken: Token, id: Int): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val deleteFriendCall =
+            serverAPI.deleteFriend("Bearer ${serverToken.value}", idRequestBody)
+
+        deleteFriendCall.enqueue(MyCallback("deleteFriend", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
     }
 
     private fun onFailureHandling(t: Throwable): ServerError {

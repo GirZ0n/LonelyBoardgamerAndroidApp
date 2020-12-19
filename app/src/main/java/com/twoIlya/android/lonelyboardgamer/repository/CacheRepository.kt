@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import com.twoIlya.android.lonelyboardgamer.dataClasses.Profile
+import com.twoIlya.android.lonelyboardgamer.dataClasses.MyProfile
 
 object CacheRepository {
 
@@ -25,14 +25,14 @@ object CacheRepository {
 
     private const val PROFILE_KEY = "PROFILE"
 
-    fun setProfile(profile: Profile) {
+    fun setProfile(profile: MyProfile) {
         sharedPreferences.edit().putString(PROFILE_KEY, Gson().toJson(profile)).apply()
     }
 
-    fun getProfile(): Profile? {
+    fun getProfile(): MyProfile? {
         val json = sharedPreferences.getString(PROFILE_KEY, "")
         return try {
-            Gson().fromJson(json, Profile::class.java)
+            Gson().fromJson(json, MyProfile::class.java)
         } catch (e: JsonSyntaxException) {
             null
         }
@@ -41,7 +41,7 @@ object CacheRepository {
     fun setAddress(address: String) {
         getProfile()?.let {
             setProfile(
-                Profile(
+                MyProfile(
                     it.id,
                     it.firstName,
                     it.secondName,
@@ -57,7 +57,7 @@ object CacheRepository {
     fun setDescription(description: String) {
         getProfile()?.let {
             setProfile(
-                Profile(
+                MyProfile(
                     it.id,
                     it.firstName,
                     it.secondName,
@@ -73,7 +73,7 @@ object CacheRepository {
     fun setCategories(categories: List<String>) {
         getProfile()?.let {
             setProfile(
-                Profile(
+                MyProfile(
                     it.id,
                     it.firstName,
                     it.secondName,
@@ -89,7 +89,7 @@ object CacheRepository {
     fun setMechanics(mechanics: List<String>) {
         getProfile()?.let {
             setProfile(
-                Profile(
+                MyProfile(
                     it.id,
                     it.firstName,
                     it.secondName,

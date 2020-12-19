@@ -3,7 +3,6 @@ package com.twoIlya.android.lonelyboardgamer.activities.login
 import androidx.lifecycle.*
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import com.twoIlya.android.lonelyboardgamer.repository.CacheRepository
@@ -34,7 +33,7 @@ class LoginViewModel : ViewModel() {
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
-                events.postValue(Event(EventType.Move, "MyProfile"))
+                events.postValue(Event(Event.Type.Move, "MyProfile"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }

@@ -28,6 +28,18 @@
         <action
             android:id="@+id/action_myProfileFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_friendsFragment"
+            app:destination="@id/friendsFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_inRequestsFragment"
+            app:destination="@id/inRequestsFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_outRequestsFragment"
+            app:destination="@id/outRequestsFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_hiddenRequestsFragment"
+            app:destination="@id/hiddenRequestsFragment" />
     </fragment>
 
     <fragment
@@ -40,7 +52,7 @@
         android:id="@+id/searchFragment"
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.search.SearchFragment"
         android:label="@string/search_fragment_label"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_userProfileFragment"
             app:destination="@id/userProfileFragment" />
@@ -49,6 +61,46 @@
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.twoIlya.android.lonelyboardgamer.fragments.userprofile.UserProfileFragment"
-        android:label="fragment_user_profile"
+        android:label="@string/user_profile_fragment_label"
         tools:layout="@layout/fragment_user_profile" />
+
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.friends.FriendsFragment"
+        android:label="@string/friends_list_fragment_label"
+        tools:layout="@layout/fragment_friends">
+        <action
+            android:id="@+id/action_friendsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hiddenRequestsFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.hiddenrequests.HiddenRequestsFragment"
+        android:label="@string/ban_list_fragment_label"
+        tools:layout="@layout/fragment_hidden_requests">
+        <action
+            android:id="@+id/action_hiddenRequestsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/inRequestsFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.inrequests.InRequestsFragment"
+        android:label="@string/in_requests_list_fragment_label"
+        tools:layout="@layout/fragment_in_requests">
+        <action
+            android:id="@+id/action_inRequestsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/outRequestsFragment"
+        android:name="com.twoIlya.android.lonelyboardgamer.fragments.outrequests.OutRequestsFragment"
+        android:label="@string/out_requests_list_fragment_label"
+        tools:layout="@layout/fragment_out_requests">
+        <action
+            android:id="@+id/action_outRequestsFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
 </navigation>

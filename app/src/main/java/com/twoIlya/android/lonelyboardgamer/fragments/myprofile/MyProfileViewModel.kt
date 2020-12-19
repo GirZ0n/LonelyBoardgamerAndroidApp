@@ -51,11 +51,11 @@ class MyProfileViewModel : ViewModel() {
         events.addSource(getProfileServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.getProfileErrorHandler(it as ServerError)
-                if (event.type == EventType.Move || event.type == EventType.Error) {
+                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
-            } else if (it is Profile) {
+            } else if (it is MyProfile) {
                 CacheRepository.setProfile(it)
                 updateLiveData(it)
             }
@@ -70,7 +70,7 @@ class MyProfileViewModel : ViewModel() {
                 val event = ErrorHandler.logoutErrorHandler(it as ServerError)
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                events.postValue(Event(EventType.Move, "Login"))
+                events.postValue(Event(Event.Type.Move, "Login"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -96,7 +96,7 @@ class MyProfileViewModel : ViewModel() {
         serverTokenForLogout.postValue(TokenRepository.getServerToken())
     }
 
-    private fun updateLiveData(profile: Profile) {
+    private fun updateLiveData(profile: MyProfile) {
         val fullName = "${profile.firstName} ${profile.secondName}"
         _name.postValue(fullName)
         _address.postValue(profile.address)
@@ -105,13 +105,13 @@ class MyProfileViewModel : ViewModel() {
         _description.postValue(profile.description)
         _isLayoutRefreshing.postValue(false)
         _imageUrl.postValue(
-            "https://eu.ui-avatars.com/api/" +
-                    "?name=${profile.firstName}+${profile.secondName}" +
-                    "&bold=true" +
-                    "&size=512" +
-                    "&rounded=true" +
-                    "&color=fff" +
-                    "&background=000"
+                "https://eu.ui-avatars.com/api/" +
+                        "?name=${profile.firstName}+${profile.secondName}" +
+                        "&bold=true" +
+                        "&size=512" +
+                        "&rounded=true" +
+                        "&color=fff" +
+                        "&background=000"
         )
     }
 

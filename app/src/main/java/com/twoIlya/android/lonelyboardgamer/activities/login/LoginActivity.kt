@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.main.MainActivity
-import com.twoIlya.android.lonelyboardgamer.dataClasses.EventType
+import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
 import com.twoIlya.android.lonelyboardgamer.databinding.ActivityLoginBinding
 import com.vk.api.sdk.VK
 import com.vk.api.sdk.auth.VKAccessToken
@@ -50,10 +50,10 @@ class LoginActivity : AppCompatActivity() {
             }
 
             when (it.type) {
-                EventType.Notification -> {
+                Event.Type.Notification -> {
                     Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
                 }
-                EventType.Move -> {
+                Event.Type.Move -> {
                     val intent = when (it.message) {
                         "Registration" -> MainActivity.newActivity(this, true)
                         "MyProfile" -> MainActivity.newActivity(this, false)
@@ -62,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }
-                EventType.Error -> {
+                Event.Type.Error -> {
                     val intent = ErrorActivity.newActivity(this, it.message)
                     startActivity(intent)
                     finish()

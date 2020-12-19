@@ -54,8 +54,71 @@ interface ServerAPI {
         @Part("new") newMechanics: RequestBody
     ): Call<ServerResponse>
 
+    @GET("search/byId")
+    fun searchByID(
+        @Header("Authorization") serverToken: String,
+        @Query("id") id: Int
+    ): Call<ServerResponse>
+
+    @Multipart
+    @POST("friends/requests/send")
+    fun sendFriendRequest(
+        @Header("Authorization") serverToken: String,
+        @Part("targetId") id: RequestBody
+    ): Call<ServerResponse>
+
+    @Multipart
+    @POST("friends/requests/revoke")
+    fun revokeRequest(
+        @Header("Authorization") serverToken: String,
+        @Part("targetId") id: RequestBody
+    ): Call<ServerResponse>
+
+    @Multipart
+    @POST("friends/requests/answer")
+    fun answerOnRequest(
+        @Header("Authorization") serverToken: String,
+        @Part("with") code: RequestBody,
+        @Part("targetId") id: RequestBody
+    ): Call<ServerResponse>
+
+    @Multipart
+    @POST("friends/delete")
+    fun deleteFriend(
+        @Header("Authorization") serverToken: String,
+        @Part("targetId") id: RequestBody,
+    ): Call<ServerResponse>
+
     @GET("search")
     suspend fun search(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
+
+    @GET("friends")
+    suspend fun getFriends(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
+
+    @GET("friends/requests/toMe")
+    suspend fun getInRequests(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
+
+    @GET("friends/requests/fromMe")
+    suspend fun getOutRequests(
+        @Header("Authorization") serverToken: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int
+    ): ServerResponse
+
+    @GET("friends/requests/hidden")
+    suspend fun getHiddenRequests(
         @Header("Authorization") serverToken: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int
