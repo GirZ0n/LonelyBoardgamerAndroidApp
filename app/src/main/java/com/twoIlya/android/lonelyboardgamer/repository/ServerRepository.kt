@@ -314,6 +314,21 @@ object ServerRepository {
         return responseLiveData
     }
 
+    fun deleteFriend(serverToken: Token, id: Int): LiveData<ServerRepositoryResponse> {
+        val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
+
+        val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+
+        val deleteFriendCall =
+            serverAPI.deleteFriend("Bearer ${serverToken.value}", idRequestBody)
+
+        deleteFriendCall.enqueue(MyCallback("deleteFriend", responseLiveData) {
+            ServerMessage(it.message.toString())
+        })
+
+        return responseLiveData
+    }
+
     private fun onFailureHandling(t: Throwable): ServerError {
         return when (t) {
             // Server fell asleep
