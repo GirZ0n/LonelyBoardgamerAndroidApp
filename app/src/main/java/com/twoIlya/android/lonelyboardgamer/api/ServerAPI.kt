@@ -68,14 +68,14 @@ interface ServerAPI {
     ): Call<ServerResponse>
 
     @Multipart
-    @POST("/friends/requests/revoke")
+    @POST("friends/requests/revoke")
     fun revokeRequest(
         @Header("Authorization") serverToken: String,
         @Part("targetId") id: RequestBody
     ): Call<ServerResponse>
 
     @Multipart
-    @POST("/friends/requests/answer")
+    @POST("friends/requests/answer")
     fun answerOnRequest(
         @Header("Authorization") serverToken: String,
         @Part("with") code: RequestBody,
@@ -83,7 +83,7 @@ interface ServerAPI {
     ): Call<ServerResponse>
 
     @Multipart
-    @POST("/friends/delete")
+    @POST("friends/delete")
     fun deleteFriend(
         @Header("Authorization") serverToken: String,
         @Part("targetId") id: RequestBody,
