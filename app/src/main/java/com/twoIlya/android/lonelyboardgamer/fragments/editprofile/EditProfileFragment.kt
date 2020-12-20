@@ -61,7 +61,7 @@ class EditProfileFragment : Fragment() {
 
         binding.aboutMe.setOnClickListener {
             MaterialDialog(requireContext()).show {
-                title(R.string.edit_about_me_dialog_title)
+                title(R.string.edit_profile_fragment_about_me_dialog_title)
                 positiveButton()
 
                 input(
@@ -69,7 +69,7 @@ class EditProfileFragment : Fragment() {
                     inputType = InputType.TYPE_CLASS_TEXT,
                     maxLength = EditProfileViewModel.MAX_LENGTH_OF_DESCRIPTION,
                     allowEmpty = true,
-                    hintRes = R.string.edit_about_me_dialog_hint
+                    hintRes = R.string.edit_profile_fragment_about_me_dialog_hint
                 ) { _, description ->
                     viewModel.updateAboutMe(description.toString())
                 }
@@ -135,7 +135,7 @@ class EditProfileFragment : Fragment() {
 
         binding.categories.setOnClickListener {
             MaterialDialog(requireContext()).show {
-                title(R.string.edit_categories_dialog_title)
+                title(R.string.edit_profile_fragment_categories_dialog_title)
                 positiveButton()
 
                 listItemsMultiChoice(
@@ -155,7 +155,7 @@ class EditProfileFragment : Fragment() {
 
         binding.mechanics.setOnClickListener {
             MaterialDialog(requireContext()).show {
-                title(R.string.edit_mechanics_dialog_title)
+                title(R.string.edit_profile_fragment_mechanics_dialog_title)
                 positiveButton()
 
                 listItemsMultiChoice(
