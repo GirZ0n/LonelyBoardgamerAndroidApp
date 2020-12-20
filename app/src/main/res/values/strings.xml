@@ -49,6 +49,10 @@
     <string name="withdraw_request_button">Отозвать запрос</string>
     <string name="chat_button">Написать</string>
 
+    <string name="user_profile_dialog_unfriend_title">Вы действительно хотите удалить пользователя из друзей?</string>
+    <string name="user_profile_dialog_unfriend_positive">Удалить</string>
+    <string name="user_profile_dialog_unfriend_negative">Отменить</string>
+
     <!-- Answer Dialog -->
     <string name="answer_agree_button">Принять</string>
     <string name="answer_disagree_button">Отклонить</string>

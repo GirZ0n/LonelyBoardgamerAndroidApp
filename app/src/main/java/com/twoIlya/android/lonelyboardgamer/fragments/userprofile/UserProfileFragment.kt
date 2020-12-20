@@ -172,7 +172,14 @@ class UserProfileFragment : Fragment() {
 
     private inner class FriendState : State {
         override fun upButtonClickAction() {
-            viewModel.upButtonClick(UserProfileAction.UNFRIEND)
+            MaterialDialog(requireContext()).show {
+                title(R.string.user_profile_dialog_unfriend_title)
+
+                positiveButton(R.string.user_profile_dialog_unfriend_positive) {
+                    viewModel.upButtonClick(UserProfileAction.UNFRIEND)
+                }
+                negativeButton(R.string.user_profile_dialog_unfriend_negative)
+            }
         }
 
         override fun bottomButtonClickAction() {
@@ -181,9 +188,7 @@ class UserProfileFragment : Fragment() {
 
         override fun updateLayout() {
             binding.bottomButtom.setText(R.string.chat_button)
-
             binding.upButton.isVisible = true
-            binding.upButton.setImageResource(R.drawable.ic_baseline_delete_24)
         }
     }
 
