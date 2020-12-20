@@ -3,6 +3,7 @@ package com.twoIlya.android.lonelyboardgamer.fragments.registration
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.schibstedspain.leku.LOCATION_ADDRESS
 import com.schibstedspain.leku.LocationPickerActivity
 import com.twoIlya.android.lonelyboardgamer.R
@@ -48,13 +52,38 @@ class RegistrationFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        binding.locationButton.setOnClickListener {
-            val locationPickerIntent = locationPickerSetup()
+        val locationPickerIntent = locationPickerSetup()
+        binding.address.setOnClickListener {
             startActivityForResult(locationPickerIntent, 1)
         }
 
         categoriesSpinnerSetup()
         mechanicsSpinnerSetup()
+
+        viewModel.categories.observe(viewLifecycleOwner) {
+            categoriesSpinnerSetup(it)
+        }
+
+        viewModel.mechanics.observe(viewLifecycleOwner) {
+            mechanicsSpinnerSetup(it)
+        }
+
+        binding.aboutMe.setOnClickListener {
+            MaterialDialog(requireContext()).show {
+                title(R.string.edit_about_me_dialog_title)
+                positiveButton()
+
+                input(
+                    prefill = viewModel.aboutMe.value,
+                    inputType = InputType.TYPE_CLASS_TEXT,
+                    maxLength = 250,
+                    allowEmpty = true,
+                    hintRes = R.string.edit_about_me_dialog_hint
+                ) { _, description ->
+                    viewModel.updateAboutMe(description.toString())
+                }
+            }
+        }
 
         viewModel.events.observe(viewLifecycleOwner) {
             Log.d(TAG, "Event: $it")
@@ -105,23 +134,43 @@ class RegistrationFragment : Fragment() {
         }
     }
 
-    private fun categoriesSpinnerSetup() {
-        val categoryMultiSpinner = binding.categoryMultiSpinner
-        categoryMultiSpinner.isSearchEnabled = false
-        categoryMultiSpinner.setClearText("Clear")
-        categoryMultiSpinner.setItems(PreferencesRepository.getCategories()) { items ->
-            viewModel.updateCategories(items)
-            Log.d(TAG, "Categories: $items")
+    private fun categoriesSpinnerSetup(categories: List<String> = emptyList()) {
+        val items = PreferencesRepository.categories
+        val initialSelection = PreferencesRepository.getIndicesOfSelectedCategories(categories)
+
+        binding.categories.setOnClickListener {
+            MaterialDialog(requireContext()).show {
+                title(R.string.edit_categories_dialog_title)
+                positiveButton()
+
+                listItemsMultiChoice(
+                    items = items,
+                    initialSelection = initialSelection,
+                    allowEmptySelection = true
+                ) { _, indices, _ ->
+                    viewModel.updateCategories(indices)
+                }
+            }
         }
     }
 
-    private fun mechanicsSpinnerSetup() {
-        val mechanicsMultiSpinner = binding.mechanicsMultiSpinner
-        mechanicsMultiSpinner.isSearchEnabled = false
-        mechanicsMultiSpinner.setClearText("Clear")
-        mechanicsMultiSpinner.setItems(PreferencesRepository.getMechanics()) { items ->
-            viewModel.updateMechanics(items)
-            Log.d(TAG, "Mechanics: $items")
+    private fun mechanicsSpinnerSetup(mechanics: List<String> = emptyList()) {
+        val items = PreferencesRepository.mechanics
+        val initialSelection = PreferencesRepository.getIndicesOfSelectedMechanics(mechanics)
+
+        binding.mechanics.setOnClickListener {
+            MaterialDialog(requireContext()).show {
+                title(R.string.edit_mechanics_dialog_title)
+                positiveButton()
+
+                listItemsMultiChoice(
+                    items = items,
+                    initialSelection = initialSelection,
+                    allowEmptySelection = true
+                ) { _, indices, _ ->
+                    viewModel.updateMechanics(indices)
+                }
+            }
         }
     }
 

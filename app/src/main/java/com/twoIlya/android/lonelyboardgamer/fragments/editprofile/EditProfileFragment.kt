@@ -3,6 +3,7 @@ package com.twoIlya.android.lonelyboardgamer.fragments.editprofile
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,9 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.input
+import com.afollestad.materialdialogs.list.listItemsMultiChoice
 import com.schibstedspain.leku.LOCATION_ADDRESS
 import com.schibstedspain.leku.LocationPickerActivity
 import com.twoIlya.android.lonelyboardgamer.R
@@ -47,13 +51,30 @@ class EditProfileFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        binding.locationButton.setOnClickListener {
-            val locationPickerIntent = locationPickerSetup()
+        val locationPickerIntent = locationPickerSetup()
+        binding.address.setOnClickListener {
             startActivityForResult(locationPickerIntent, 1)
         }
 
         categoriesSpinnerSetup()
         mechanicsSpinnerSetup()
+
+        binding.aboutMe.setOnClickListener {
+            MaterialDialog(requireContext()).show {
+                title(R.string.edit_about_me_dialog_title)
+                positiveButton()
+
+                input(
+                    prefill = viewModel.aboutMe.value,
+                    inputType = InputType.TYPE_CLASS_TEXT,
+                    maxLength = 250,
+                    allowEmpty = true,
+                    hintRes = R.string.edit_about_me_dialog_hint
+                ) { _, description ->
+                    viewModel.updateAboutMe(description.toString())
+                }
+            }
+        }
 
         viewModel.categories.observe(viewLifecycleOwner) {
             categoriesSpinnerSetup(it)
@@ -109,22 +130,42 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun categoriesSpinnerSetup(categories: List<String> = emptyList()) {
-        val categoryMultiSpinner = binding.categoryMultiSpinner
-        categoryMultiSpinner.isSearchEnabled = false
-        categoryMultiSpinner.setClearText("Clear")
-        categoryMultiSpinner.setItems(PreferencesRepository.getCategories(categories)) { items ->
-            viewModel.updateCategories(items)
-            Log.d(TAG, "Categories: $items")
+        val items = PreferencesRepository.categories
+        val initialSelection = PreferencesRepository.getIndicesOfSelectedCategories(categories)
+
+        binding.categories.setOnClickListener {
+            MaterialDialog(requireContext()).show {
+                title(R.string.edit_categories_dialog_title)
+                positiveButton()
+
+                listItemsMultiChoice(
+                    items = items,
+                    initialSelection = initialSelection,
+                    allowEmptySelection = true
+                ) { _, indices, _ ->
+                    viewModel.updateCategories(indices)
+                }
+            }
         }
     }
 
     private fun mechanicsSpinnerSetup(mechanics: List<String> = emptyList()) {
-        val mechanicsMultiSpinner = binding.mechanicsMultiSpinner
-        mechanicsMultiSpinner.isSearchEnabled = false
-        mechanicsMultiSpinner.setClearText("Clear")
-        mechanicsMultiSpinner.setItems(PreferencesRepository.getMechanics(mechanics)) { items ->
-            viewModel.updateMechanics(items)
-            Log.d(TAG, "Mechanics: $items")
+        val items = PreferencesRepository.mechanics
+        val initialSelection = PreferencesRepository.getIndicesOfSelectedMechanics(mechanics)
+
+        binding.mechanics.setOnClickListener {
+            MaterialDialog(requireContext()).show {
+                title(R.string.edit_mechanics_dialog_title)
+                positiveButton()
+
+                listItemsMultiChoice(
+                    items = items,
+                    initialSelection = initialSelection,
+                    allowEmptySelection = true
+                ) { _, indices, _ ->
+                    viewModel.updateMechanics(indices)
+                }
+            }
         }
     }
 
