@@ -65,11 +65,9 @@
     <string name="edit_profile_fragment_about_me_dialog_title">Расскажите о себе</string>
     <string name="edit_profile_fragment_about_me_dialog_hint">Пишите здесь</string>
 
-    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
     <!-- Search Fragment -->
     <string name="search_fragment_label">Поиск</string>
-    <string name="retry">Повторить</string>
+    <string name="search_fragment_retry_button">Повторить</string>
 
     <!-- User Profile Fragment -->
     <string name="user_profile_fragment_label">Профиль</string>
@@ -82,10 +80,11 @@
     <string name="user_profile_dialog_unfriend_positive">Удалить</string>
     <string name="user_profile_dialog_unfriend_negative">Отменить</string>
 
-    <!-- Answer Dialog -->
     <string name="answer_agree_button">Принять</string>
     <string name="answer_disagree_button">Отклонить</string>
     <string name="answer_dialog_title">Принять запрос?</string>
+
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
     <!-- Friends List fragment -->
     <string name="friends_list_fragment_label">Друзья</string>
@@ -106,4 +105,5 @@
     <string name="avatar_contentDescription" />
     <string name="empty_text_hint" />
     <string name="edit_ContentDescription" />
+    <string name="retry">\\</string>
 </resources>
