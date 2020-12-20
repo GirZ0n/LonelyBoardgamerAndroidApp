@@ -50,6 +50,9 @@
     <string name="my_profile_fragment_avatar_content_description">Аватар пользователя</string>
     <string name="my_profile_fragment_edit_button_content_description">Редактировать</string>
 
+    <string name="my_profile_fragment_logout_dialog_title">Вы действительно хотите выйти?</string>
+    <string name="my_profile_fragment_logout_dialog_positive_button">Да</string>
+    <string name="my_profile_fragment_logout_dialog_negative_button">Нет</string>
 
     <!-- Edit Profile Fragment -->
     <string name="edit_profile_fragment_label">Редактирование</string>
@@ -105,6 +108,10 @@
     <!-- Hidden Requests Fragment -->
     <string name="hidden_requests_fragment_label">Отклонённые запросы</string>
     <string name="hidden_requests_fragment_retry_button">Повторить</string>
+
+    <!-- ################################################################################### -->
+
+    <!-- View Item -->
 
     <!-- Load State Footer View Item -->
     <string name="load_state_footer_view_item_retry_button">Повторить</string>

@@ -159,7 +159,6 @@
                     android:layout_marginBottom="32dp"
                     android:drawablePadding="10dp"
                     android:enabled="@{viewModel.isFormEnabled}"
-                    android:onClick="@{() -> viewModel.logout()}"
                     android:text="@string/my_profile_fragment_logout_button"
                     app:isLoading="@{viewModel.isButtonLoading}"
                     app:layout_constraintBottom_toBottomOf="parent"

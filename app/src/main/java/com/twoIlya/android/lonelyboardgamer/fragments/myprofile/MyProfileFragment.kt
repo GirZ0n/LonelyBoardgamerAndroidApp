@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.afollestad.materialdialogs.MaterialDialog
 import com.twoIlya.android.lonelyboardgamer.R
 import com.twoIlya.android.lonelyboardgamer.activities.error.ErrorActivity
 import com.twoIlya.android.lonelyboardgamer.activities.login.LoginActivity
@@ -72,6 +73,16 @@ class MyProfileFragment : Fragment() {
 
         binding.editButton.setOnClickListener {
             findNavController().navigate(R.id.action_myProfileFragment_to_editProfileFragment)
+        }
+
+        binding.logoutButton.setOnClickListener {
+            MaterialDialog(requireContext()).show {
+                title(R.string.my_profile_fragment_logout_dialog_title)
+                positiveButton(R.string.my_profile_fragment_logout_dialog_positive_button) {
+                    viewModel.logout()
+                }
+                negativeButton(R.string.my_profile_fragment_logout_dialog_negative_button)
+            }
         }
 
         viewModel.updateProfileFromCache()
