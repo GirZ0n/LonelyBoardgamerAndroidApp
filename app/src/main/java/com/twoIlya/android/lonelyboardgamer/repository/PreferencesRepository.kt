@@ -1,9 +1,7 @@
 package com.twoIlya.android.lonelyboardgamer.repository
 
-import com.androidbuts.multispinnerfilter.KeyPairBoolData
-
 object PreferencesRepository {
-    private val categories = arrayOf(
+    val categories = listOf(
         "Соревновательные",
         "Кооперативные",
         "Один против всех",
@@ -24,21 +22,21 @@ object PreferencesRepository {
         "Карточные",
     )
 
-    fun getCategories(selected: List<String> = emptyList()): List<KeyPairBoolData> {
-        val answer = mutableListOf<KeyPairBoolData>()
-        categories.forEachIndexed { index, it ->
-            val item = KeyPairBoolData()
-            item.name = it
-            item.isSelected = it in selected
-            item.id = index.toLong()
-            answer.add(item)
-        }
-        return answer
+
+    fun getIndicesOfSelectedCategories(selected: List<String>): IntArray {
+        return categories.mapIndexed { index, category ->
+            when (category in selected) {
+                true -> index
+                false -> null
+            }
+        }.filterNotNull().toIntArray()
     }
+
+    fun convertToCategoriesList(indices: IntArray) = indices.sorted().map { categories[it] }
 
     // ----------------------------------------
 
-    private val mechanics = arrayOf(
+    val mechanics = listOf(
         "Контроль над территориями",
         "Аукцион",
         "Блеф",
@@ -66,19 +64,14 @@ object PreferencesRepository {
         "Разнящиеся способности игроков",
     )
 
-    fun getMechanics(selected: List<String> = emptyList()): List<KeyPairBoolData> {
-        val answer = mutableListOf<KeyPairBoolData>()
-        mechanics.forEachIndexed { index, it ->
-            val item = KeyPairBoolData()
-            item.name = it
-            item.isSelected = it in selected
-            item.id = index.toLong()
-            answer.add(item)
-        }
-        return answer
+    fun getIndicesOfSelectedMechanics(selected: List<String>): IntArray {
+        return mechanics.mapIndexed { index, category ->
+            when (category in selected) {
+                true -> index
+                false -> null
+            }
+        }.filterNotNull().toIntArray()
     }
 
-    // ----------------------------------------
-
-    fun convertToList(items: List<KeyPairBoolData>) = items.map { it.name }.toList()
+    fun convertToMechanicsList(indices: IntArray) = indices.sorted().map { mechanics[it] }
 }
