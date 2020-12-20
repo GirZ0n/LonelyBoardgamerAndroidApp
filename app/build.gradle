@@ -68,9 +68,6 @@ dependencies {
     // GeoChooser
     implementation 'com.schibstedspain.android:leku:8.0.0'
 
-    // Spinner
-    implementation 'com.github.pratikbutani:MultiSelectSpinner:-SNAPSHOT'
-
     // Fragments
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.2'
@@ -85,6 +82,7 @@ dependencies {
 
     // Material dialogs
     implementation 'com.afollestad.material-dialogs:core:3.3.0'
+    implementation 'com.afollestad.material-dialogs:input:3.3.0'
 
     // Tests
     testImplementation 'junit:junit:4.12'
