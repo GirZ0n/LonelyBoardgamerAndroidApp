@@ -105,7 +105,14 @@
     <!-- Hidden Requests Fragment -->
     <string name="hidden_requests_fragment_label">Отклонённые запросы</string>
     <string name="hidden_requests_fragment_retry_button">Повторить</string>
-    <string name="retry" />
-    <string name="avatar_contentDescription" />
+
+    <!-- Load State Footer View Item -->
+    <string name="load_state_footer_view_item_retry_button">Повторить</string>
+
+    <!-- Profile List View Item -->
+    <string name="profile_list_view_item_avatar_content_description">Аватар пользователя</string>
+
+    <!-- Search Profile View Item -->
+    <string name="search_profile_view_item_avatar_content_description">Аватар пользователя</string>
 
 </resources>
