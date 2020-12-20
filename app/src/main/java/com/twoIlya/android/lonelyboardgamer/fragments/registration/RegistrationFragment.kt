@@ -70,7 +70,7 @@ class RegistrationFragment : Fragment() {
 
         binding.aboutMe.setOnClickListener {
             MaterialDialog(requireContext()).show {
-                title(R.string.edit_about_me_dialog_title)
+                title(R.string.registration_fragment_about_me_dialog_title)
                 positiveButton()
 
                 input(
@@ -78,7 +78,7 @@ class RegistrationFragment : Fragment() {
                     inputType = InputType.TYPE_CLASS_TEXT,
                     maxLength = RegistrationViewModel.MAX_LENGTH_OF_DESCRIPTION,
                     allowEmpty = true,
-                    hintRes = R.string.edit_about_me_dialog_hint
+                    hintRes = R.string.registration_fragment_about_me_dialog_hint
                 ) { _, description ->
                     viewModel.updateAboutMe(description.toString())
                 }
@@ -140,7 +140,7 @@ class RegistrationFragment : Fragment() {
 
         binding.categories.setOnClickListener {
             MaterialDialog(requireContext()).show {
-                title(R.string.edit_categories_dialog_title)
+                title(R.string.registration_fragment_categories_dialog_title)
                 positiveButton()
 
                 listItemsMultiChoice(
@@ -160,7 +160,7 @@ class RegistrationFragment : Fragment() {
 
         binding.mechanics.setOnClickListener {
             MaterialDialog(requireContext()).show {
-                title(R.string.edit_mechanics_dialog_title)
+                title(R.string.registration_fragment_mechanics_dialog_title)
                 positiveButton()
 
                 listItemsMultiChoice(

@@ -5,6 +5,10 @@
     <!-- VK SDK -->
     <integer name="com_vk_sdk_AppId">7647393</integer>
 
+    <!-- ################################################################################### -->
+
+    <!-- Activities -->
+
     <!-- Error Activity -->
     <string name="error_activity_error_title">Что-то поломалось :(</string>
     <string name="error_activity_error_contact_us">
@@ -15,19 +19,30 @@
     <!-- Login Activity -->
     <string name="login_activity_vk_login_button">Войти с ВКонтакте</string>
 
-    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- ################################################################################### -->
+
+    <!-- Fragments -->
 
     <!-- Registration Fragment -->
     <string name="registration_fragment_label">Регистрация</string>
-    <string name="your_location_title">Ваше местоположение</string>
-    <string name="your_location_hint">Нажмите на кнопку</string>
-    <string name="get_location_button">Указать местоположение</string>
-    <string name="categories_title">Любимые категории</string>
-    <string name="mechanics_title">Любимые особенности</string>
-    <string name="description_title">О себе</string>
-    <string name="register_button">Зарегистрироваться</string>
-    <string name="multispinner_hint">Нажмите для выбора</string>
-    <string name="description_hint">Нажмите сюда</string>
+    <string name="registration_fragment_address_title">Ваше местоположение</string>
+    <string name="registration_fragment_set_address_button">Указать местоположение</string>
+    <string name="registration_fragment_categories_title">Любимые категории</string>
+    <string name="registration_fragment_mechanics_title">Любимые особенности</string>
+    <string name="registration_fragment_about_me_title">О себе</string>
+    <string name="registration_fragment_register_button">Зарегистрироваться</string>
+    <string name="registration_fragment_text_view_hint">Нажмите для выбора</string>
+    <string name="registration_fragment_about_me_hint">Нажмите для ввода</string>
+
+    <string name="registration_fragment_categories_dialog_title">Укажите ваши любимые категории</string>
+
+    <string name="registration_fragment_mechanics_dialog_title">Укажите ваши любимые особенности</string>
+
+    <string name="registration_fragment_about_me_dialog_title">Расскажите о себе</string>
+    <string name="registration_fragment_about_me_dialog_hint">Пишите здесь</string>
+
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+
 
     <!-- My Profile Fragment -->
     <string name="my_profile_fragment_label">Профиль</string>
@@ -77,4 +92,9 @@
 
     <!-- Ban List fragment -->
     <string name="ban_list_fragment_label">Отклонённые запросы</string>
+
+    <string name="your_location_title" />
+    <string name="categories_title" />
+    <string name="mechanics_title" />
+    <string name="description_title" />
 </resources>
