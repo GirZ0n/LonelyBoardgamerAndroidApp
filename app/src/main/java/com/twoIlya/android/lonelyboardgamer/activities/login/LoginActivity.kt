@@ -79,13 +79,6 @@ class LoginActivity : AppCompatActivity() {
         val callback = object : VKAuthCallback {
             override fun onLogin(token: VKAccessToken) {
                 Log.d(TAG, "onActRes (onLogin): ${token.accessToken}")
-
-                // TODO: удалить
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip: ClipData = ClipData.newPlainText("token", token.accessToken)
-                clipboard.setPrimaryClip(clip)
-                // ---------------------------
-
                 viewModel.login(token.accessToken)
             }
 
