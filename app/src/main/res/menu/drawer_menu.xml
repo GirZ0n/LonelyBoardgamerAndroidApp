@@ -15,21 +15,21 @@
         <item
             android:id="@id/friendsFragment"
             android:icon="@drawable/ic_baseline_person_24"
-            android:title="@string/friends_list_fragment_label" />
+            android:title="@string/friends_fragment_label" />
 
         <item
             android:id="@id/inRequestsFragment"
             android:icon="@drawable/ic_baseline_assignment_ind_24"
-            android:title="@string/in_requests_list_fragment_label" />
+            android:title="@string/in_requests_fragment_label" />
 
         <item
             android:id="@id/outRequestsFragment"
             android:icon="@drawable/ic_baseline_call_made_24"
-            android:title="@string/out_requests_list_fragment_label" />
+            android:title="@string/out_requests_fragment_label" />
 
         <item
             android:id="@id/hiddenRequestsFragment"
             android:icon="@drawable/ic_baseline_block_24"
-            android:title="@string/ban_list_fragment_label" />
+            android:title="@string/hidden_requests_fragment_label" />
     </group>
 </menu>

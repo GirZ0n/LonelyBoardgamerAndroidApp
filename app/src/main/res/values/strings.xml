@@ -65,10 +65,6 @@
     <string name="edit_profile_fragment_about_me_dialog_title">Расскажите о себе</string>
     <string name="edit_profile_fragment_about_me_dialog_hint">Пишите здесь</string>
 
-    <!-- Search Fragment -->
-    <string name="search_fragment_label">Поиск</string>
-    <string name="search_fragment_retry_button">Повторить</string>
-
     <!-- User Profile Fragment -->
     <string name="user_profile_fragment_label">Профиль</string>
     <string name="user_profile_fragment_categories_title">Любимые категории</string>
@@ -90,26 +86,26 @@
     <string name="user_profile_fragment_dialog_unfriend_positive_button">Удалить</string>
     <string name="user_profile_fragment_dialog_unfriend_negative_button">Отменить</string>
 
-    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+    <!-- Search Fragment -->
+    <string name="search_fragment_label">Поиск</string>
+    <string name="search_fragment_retry_button">Повторить</string>
 
-    <!-- Friends List fragment -->
-    <string name="friends_list_fragment_label">Друзья</string>
+    <!-- Friends Fragment -->
+    <string name="friends_fragment_label">Друзья</string>
+    <string name="friends_fragment_retry_button">Повторить</string>
 
-    <!-- In Requests List fragment -->
-    <string name="in_requests_list_fragment_label">Полученные запросы</string>
+    <!-- In Requests Fragment -->
+    <string name="in_requests_fragment_label">Полученные запросы</string>
+    <string name="in_requests_fragment_retry_button">Повторить</string>
 
-    <!-- Out Requests List fragment -->
-    <string name="out_requests_list_fragment_label">Отправленные запросы</string>
+    <!-- Out Requests Fragment -->
+    <string name="out_requests_fragment_label">Отправленные запросы</string>
+    <string name="out_requests_fragment_retry_button">Повторить</string>
 
-    <!-- Ban List fragment -->
-    <string name="ban_list_fragment_label">Отклонённые запросы</string>
-
-    <string name="your_location_title" />
-    <string name="categories_title" />
-    <string name="mechanics_title" />
-    <string name="description_title" />
+    <!-- Hidden Requests Fragment -->
+    <string name="hidden_requests_fragment_label">Отклонённые запросы</string>
+    <string name="hidden_requests_fragment_retry_button">Повторить</string>
+    <string name="retry" />
     <string name="avatar_contentDescription" />
-    <string name="empty_text_hint" />
-    <string name="edit_ContentDescription" />
-    <string name="retry"/>
+
 </resources>
