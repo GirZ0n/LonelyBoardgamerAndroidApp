@@ -41,15 +41,17 @@
     <string name="registration_fragment_about_me_dialog_title">Расскажите о себе</string>
     <string name="registration_fragment_about_me_dialog_hint">Пишите здесь</string>
 
-    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-
-
     <!-- My Profile Fragment -->
     <string name="my_profile_fragment_label">Профиль</string>
-    <string name="logout_button">Logout</string>
-    <string name="avatar_contentDescription">Аватар пользователя</string>
-    <string name="edit_ContentDescription">Редактировать</string>
-    <string name="empty_text_hint">Не указано</string>
+    <string name="my_profile_fragment_categories_title">Любимые категории</string>
+    <string name="my_profile_fragment_mechanics_title">Любимые особенности</string>
+    <string name="my_profile_fragment_about_me_title">О себе</string>
+    <string name="my_profile_fragment_logout_button">Выйти</string>
+    <string name="my_profile_fragment_empty_text_view_hint">Не указано</string>
+    <string name="my_profile_fragment_avatar_content_description">Аватар пользователя</string>
+    <string name="my_profile_fragment_edit_button_content_description">Редактировать</string>
+
+    <!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 
     <!-- Edit Profile Fragment -->
     <string name="edit_profile_fragment_label">Редактирование</string>
@@ -97,4 +99,7 @@
     <string name="categories_title" />
     <string name="mechanics_title" />
     <string name="description_title" />
+    <string name="avatar_contentDescription" />
+    <string name="empty_text_hint" />
+    <string name="edit_ContentDescription" />
 </resources>

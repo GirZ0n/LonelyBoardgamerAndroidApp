@@ -28,13 +28,11 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/my_profile_fragment_avatar"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
-                    android:layout_marginEnd="16dp"
-                    android:contentDescription="@string/avatar_contentDescription"
+                    android:contentDescription="@string/my_profile_fragment_avatar_content_description"
                     app:imageUrl="@{viewModel.imageUrl}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -42,110 +40,106 @@
                     tools:srcCompat="@drawable/ic_user_placeholder" />
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/my_profile_fragment_name"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
                     android:text="@{viewModel.name}"
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    app:layout_constraintTop_toBottomOf="@+id/my_profile_fragment_avatar"
                     tools:text="Вася Пупкин" />
 
                 <TextView
-                    android:id="@+id/address_textfield"
+                    android:id="@+id/my_profile_fragment_address"
                     style="@style/Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@{viewModel.address}"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/my_profile_fragment_name"
                     tools:text="Улица Пушкина, дом Колотушкина" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/my_profile_fragment_categories_title"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/categories_title"
+                    android:text="@string/my_profile_fragment_categories_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/address_textfield" />
+                    app:layout_constraintTop_toBottomOf="@+id/my_profile_fragment_address" />
 
                 <TextView
-                    android:id="@+id/category_textfield"
+                    android:id="@+id/my_profile_fragment_categories"
                     style="@style/Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/empty_text_hint"
+                    android:hint="@string/my_profile_fragment_empty_text_view_hint"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@{viewModel.categories}"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2"
+                    app:layout_constraintTop_toBottomOf="@+id/my_profile_fragment_categories_title"
                     tools:text="Люблю монополию" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/my_profile_fragment_mechanics_title"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/mechanics_title"
+                    android:text="@string/my_profile_fragment_mechanics_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/category_textfield" />
+                    app:layout_constraintTop_toBottomOf="@+id/my_profile_fragment_categories" />
 
                 <TextView
-                    android:id="@+id/mechanics_textfield"
+                    android:id="@+id/my_profile_fragment_mechanics"
                     style="@style/Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/empty_text_hint"
+                    android:hint="@string/my_profile_fragment_empty_text_view_hint"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@{viewModel.mechanics}"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3"
+                    app:layout_constraintTop_toBottomOf="@+id/my_profile_fragment_mechanics_title"
                     tools:text="Люблю монополию" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/my_profile_fragment_about_me_title"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/description_title"
+                    android:text="@string/my_profile_fragment_about_me_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mechanics_textfield" />
+                    app:layout_constraintTop_toBottomOf="@+id/my_profile_fragment_mechanics" />
 
                 <TextView
-                    android:id="@+id/description_textfield"
+                    android:id="@+id/my_profile_fragment_about_me"
                     style="@style/Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="32dp"
-                    android:hint="@string/empty_text_hint"
+                    android:hint="@string/my_profile_fragment_empty_text_view_hint"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@{viewModel.description}"
@@ -153,7 +147,7 @@
                     app:layout_constraintBottom_toTopOf="@+id/logout_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    app:layout_constraintTop_toBottomOf="@+id/my_profile_fragment_about_me_title"
                     app:layout_constraintVertical_bias="0.0"
                     tools:text="Люблю монополию" />
 
@@ -166,7 +160,7 @@
                     android:drawablePadding="10dp"
                     android:enabled="@{viewModel.isFormEnabled}"
                     android:onClick="@{() -> viewModel.logout()}"
-                    android:text="@string/logout_button"
+                    android:text="@string/my_profile_fragment_logout_button"
                     app:isLoading="@{viewModel.isButtonLoading}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -179,7 +173,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:clickable="@{viewModel.isFormEnabled}"
-                    android:contentDescription="@string/edit_ContentDescription"
+                    android:contentDescription="@string/my_profile_fragment_edit_button_content_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_baseline_edit_30" />
