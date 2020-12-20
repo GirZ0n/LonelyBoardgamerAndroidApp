@@ -31,6 +31,12 @@
     <!-- Edit Profile Fragment -->
     <string name="edit_profile_fragment_label">Редактирование</string>
     <string name="edit_button">Изменить</string>
+    <string name="text_field_hint">Нажмите для изменения</string>
+
+    <string name="edit_categories_dialog_title">Укажите ваши любимые категории</string>
+    <string name="edit_mechanics_dialog_title">Укажите ваши любимые особенности</string>
+    <string name="edit_about_me_dialog_title">Расскажите о себе</string>
+    <string name="edit_about_me_dialog_hint">Нажмите сюда</string>
 
     <!-- Search Fragment -->
     <string name="search_fragment_label">Поиск</string>
