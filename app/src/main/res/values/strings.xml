@@ -1,13 +1,17 @@
 <resources>
+    <!-- VK SDK -->
+    <integer name="com_vk_sdk_AppId">7647393</integer>
+
+    <!-- Error Activity -->
+    <string name="error_activity_error_title">Что-то поломалось :(</string>
+    <string name="error_activity_error_contact_us">
+        Попробуйте перезапустить приложение.\n
+        Если это не поможет, то напишите нам на:\n
+        <b>ilyavlasov2011@gmail.com</b></string>
+
     <!-- Login Activity -->
     <string name="app_name">Lonely Boardgamer</string>
     <string name="vk_login_button">Войти с ВКонтакте</string>
-
-    <!-- Error Activity -->
-    <string name="error_title">Что-то поломалось :(</string>
-    <string name="error_contact">Попробуйте перезапустить приложение.\n Если это не поможет, то напишите нам на:\nplaceholder@placeholder.com</string>
-
-    <integer name="com_vk_sdk_AppId">7647393</integer>
 
     <!-- Registration Fragment -->
     <string name="registration_fragment_label">Регистрация</string>
