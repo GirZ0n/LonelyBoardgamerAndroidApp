@@ -76,7 +76,7 @@ class RegistrationFragment : Fragment() {
                 input(
                     prefill = viewModel.aboutMe.value,
                     inputType = InputType.TYPE_CLASS_TEXT,
-                    maxLength = 250,
+                    maxLength = RegistrationViewModel.MAX_LENGTH_OF_DESCRIPTION,
                     allowEmpty = true,
                     hintRes = R.string.edit_about_me_dialog_hint
                 ) { _, description ->
