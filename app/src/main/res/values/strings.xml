@@ -11,7 +11,7 @@
 
     <!-- Error Activity -->
     <string name="error_activity_error_title">Что-то поломалось :(</string>
-    <string name="error_activity_error_contact_us">
+    <string name="error_activity_contact_us">
         Попробуйте перезапустить приложение.\n
         Если это не поможет, то напишите нам на:\n
         <b>ilyavlasov2011@gmail.com</b></string>

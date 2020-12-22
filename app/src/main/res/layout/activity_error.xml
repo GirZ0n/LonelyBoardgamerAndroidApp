@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:padding="16dp"
-            android:text="@string/error_activity_error_contact_us"
+            android:text="@string/error_activity_contact_us"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
