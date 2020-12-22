@@ -85,9 +85,9 @@
     <string name="user_profile_fragment_answer_dialog_positive_button">Принять</string>
     <string name="user_profile_fragment_answer_dialog_negative_button">Отклонить</string>
 
-    <string name="user_profile_fragment_dialog_unfriend_title">Вы действительно хотите удалить пользователя из друзей?</string>
-    <string name="user_profile_fragment_dialog_unfriend_positive_button">Удалить</string>
-    <string name="user_profile_fragment_dialog_unfriend_negative_button">Отменить</string>
+    <string name="user_profile_fragment_unfriend_dialog_title">Вы действительно хотите удалить пользователя из друзей?</string>
+    <string name="user_profile_fragment_unfriend_dialog_positive_button">Удалить</string>
+    <string name="user_profile_fragment_unfriend_dialog_negative_button">Отменить</string>
 
     <!-- Search Fragment -->
     <string name="search_fragment_label">Поиск</string>
