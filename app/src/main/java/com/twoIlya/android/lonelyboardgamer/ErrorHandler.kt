@@ -12,12 +12,16 @@ object ErrorHandler {
 
     fun loginErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 1, 2 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.SOME_INFO_MISSING -> {
                 Event(Event.Type.Notification, error.message)
             }
-            3 -> {
+
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND -> {
                 Event(Event.Type.Move, "Registration")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -26,12 +30,16 @@ object ErrorHandler {
 
     fun registrationErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2, 3 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1 -> {
+
+            ServerError.Type.AUTHORIZATION -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -40,12 +48,17 @@ object ErrorHandler {
 
     fun getProfileErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1, 3, 401 -> {
+
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND,
+            ServerError.Type.HTTP_401 -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -54,12 +67,17 @@ object ErrorHandler {
 
     fun logoutErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1, 3, 401 -> {
+
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND,
+            ServerError.Type.HTTP_401 -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -68,12 +86,17 @@ object ErrorHandler {
 
     fun changeProfileErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2, 3 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1, 401 -> {
+
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.HTTP_401 -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -96,12 +119,19 @@ object ErrorHandler {
 
     fun searchByIDErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2, 3, 4, 5 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND,
+            ServerError.Type.WRONG_DATA_FORMAT,
+            ServerError.Type.BAD_DATA -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1, 401  -> {
+
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.HTTP_401 -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -110,12 +140,19 @@ object ErrorHandler {
 
     fun sendFriendRequestErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2, 3, 4, 5 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND,
+            ServerError.Type.WRONG_DATA_FORMAT,
+            ServerError.Type.BAD_DATA -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1, 401 -> {
+
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.HTTP_401 -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -124,12 +161,19 @@ object ErrorHandler {
 
     fun answerOnRequestErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2, 3, 4, 5 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND,
+            ServerError.Type.WRONG_DATA_FORMAT,
+            ServerError.Type.BAD_DATA -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1, 401  -> {
+
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.HTTP_401 -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -138,12 +182,19 @@ object ErrorHandler {
 
     fun revokeRequestErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2, 3, 4, 5 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND,
+            ServerError.Type.WRONG_DATA_FORMAT,
+            ServerError.Type.BAD_DATA -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1, 401  -> {
+
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.HTTP_401 -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }
@@ -152,12 +203,19 @@ object ErrorHandler {
 
     fun deleteFriendErrorHandler(error: ServerError): Event {
         return when (error.code) {
-            -1, 2, 3, 4, 5 -> {
+            ServerError.Type.NETWORK,
+            ServerError.Type.SOME_INFO_MISSING,
+            ServerError.Type.ELEMENT_WAS_NOT_FOUND,
+            ServerError.Type.WRONG_DATA_FORMAT,
+            ServerError.Type.BAD_DATA -> {
                 Event(Event.Type.Notification, error.message)
             }
-            1, 401  -> {
+
+            ServerError.Type.AUTHORIZATION,
+            ServerError.Type.HTTP_401 -> {
                 Event(Event.Type.Move, "Login")
             }
+
             else -> {
                 Event(Event.Type.Error, "${error.code}: ${error.message}")
             }

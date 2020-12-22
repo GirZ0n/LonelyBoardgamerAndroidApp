@@ -86,10 +86,16 @@ object ServerRepository {
                 Gson().fromJson(it.message.toString(), MyProfile::class.java)
             } catch (e: JsonSyntaxException) {
                 Log.d(TAG, e.toString())
-                ServerError(-2, "Error during deserialization: ${e.message} ")
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "Error during deserialization: ${e.message} "
+                )
             } catch (e: NullPointerException) {
                 Log.d(TAG, e.toString())
-                ServerError(-2, "Error during deserialization: ${e.message} ")
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "Error during deserialization: ${e.message} "
+                )
             }
             response
         })
@@ -246,10 +252,16 @@ object ServerRepository {
                 Gson().fromJson(it.message.toString(), UserProfile::class.java)
             } catch (e: JsonSyntaxException) {
                 Log.d(TAG, e.toString())
-                ServerError(-2, "Error during deserialization: ${e.message} ")
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "Error during deserialization: ${e.message} "
+                )
             } catch (e: NullPointerException) {
                 Log.d(TAG, e.toString())
-                ServerError(-2, "Error during deserialization: ${e.message} ")
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "Error during deserialization: ${e.message} "
+                )
             }
             response
         })
@@ -333,18 +345,18 @@ object ServerRepository {
         return when (t) {
             // Server fell asleep
             is SocketTimeoutException -> ServerError(
-                -1,
+                ServerError.Type.NETWORK,
                 "The server fell asleep. Repeat your action"
             )
             // Network problems
             is IOException -> ServerError(
-                -1,
+                ServerError.Type.NETWORK,
                 "There was a problem sending your request. Check your internet connection. " +
-                        "If the problem persists, please contact us at: placeholder@placeholder.com"
+                        "If the problem persists, please contact us at: ilyavlasov2011@gmail.com"
             )
             // Other problems
             else -> ServerError(
-                -3,
+                ServerError.Type.UNKNOWN,
                 "Something went wrong while sending or receiving your request: ${t.message}"
             )
         }
@@ -365,11 +377,26 @@ object ServerRepository {
                     if (it.status == 0) {
                         responseLiveData.value = parser(it)
                     } else {
-                        responseLiveData.value = ServerError(it.status, it.message.toString())
+                        val type = when (it.status) {
+                            1 -> ServerError.Type.AUTHORIZATION
+                            2 -> ServerError.Type.SOME_INFO_MISSING
+                            3 -> ServerError.Type.ELEMENT_WAS_NOT_FOUND
+                            4 -> ServerError.Type.WRONG_DATA_FORMAT
+                            5 -> ServerError.Type.BAD_DATA
+                            else -> ServerError.Type.UNKNOWN
+                        }
+                        responseLiveData.value = ServerError(type, it.message.toString())
                     }
-                } ?: run { responseLiveData.value = ServerError(-2, "Empty body") }
+                } ?: run {
+                    responseLiveData.value =
+                        ServerError(ServerError.Type.SERIALIZATION, "Empty body")
+                }
             } else {
-                responseLiveData.value = ServerError(response.code(), response.message())
+                val type = when (response.code()) {
+                    401 -> ServerError.Type.HTTP_401
+                    else -> ServerError.Type.UNKNOWN
+                }
+                responseLiveData.value = ServerError(type, response.message())
             }
             val message = "$functionName (onR): \n" +
                     "body - ${response.body()} \n" +
