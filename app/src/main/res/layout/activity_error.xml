@@ -33,14 +33,14 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:textAlignment="center"
-            app:layout_constraintBottom_toTopOf="@+id/error_activity_error_contact_us"
+            app:layout_constraintBottom_toTopOf="@+id/error_activity_contact_us"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/error_activity_error_title"
             tools:text="There will be some error message here" />
 
         <TextView
-            android:id="@+id/error_activity_error_contact_us"
+            android:id="@+id/error_activity_contact_us"
             style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
