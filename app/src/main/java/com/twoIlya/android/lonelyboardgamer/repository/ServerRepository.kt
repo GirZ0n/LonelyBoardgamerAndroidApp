@@ -88,13 +88,17 @@ object ServerRepository {
                 Log.d(TAG, e.toString())
                 ServerError(
                     ServerError.Type.SERIALIZATION,
-                    "Error during deserialization: ${e.message} "
+                    "getProfile: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
                 )
             } catch (e: NullPointerException) {
                 Log.d(TAG, e.toString())
                 ServerError(
                     ServerError.Type.SERIALIZATION,
-                    "Error during deserialization: ${e.message} "
+                    "getProfile: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
                 )
             }
             response
@@ -254,13 +258,17 @@ object ServerRepository {
                 Log.d(TAG, e.toString())
                 ServerError(
                     ServerError.Type.SERIALIZATION,
-                    "Error during deserialization: ${e.message} "
+                    "searchByID: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
                 )
             } catch (e: NullPointerException) {
                 Log.d(TAG, e.toString())
                 ServerError(
                     ServerError.Type.SERIALIZATION,
-                    "Error during deserialization: ${e.message} "
+                    "searchByID: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
                 )
             }
             response
@@ -341,23 +349,23 @@ object ServerRepository {
         return responseLiveData
     }
 
-    private fun onFailureHandling(t: Throwable): ServerError {
+    private fun onFailureHandling(functionName: String, t: Throwable): ServerError {
         return when (t) {
             // Server fell asleep
             is SocketTimeoutException -> ServerError(
                 ServerError.Type.NETWORK,
-                "The server fell asleep. Repeat your action"
+                "${ErrorMessages.SOCKET_TIMEOUT}. ($functionName)"
             )
             // Network problems
             is IOException -> ServerError(
                 ServerError.Type.NETWORK,
-                "There was a problem sending your request. Check your internet connection. " +
-                        "If the problem persists, please contact us at: ilyavlasov2011@gmail.com"
+                "${ErrorMessages.IO}. ($functionName)"
             )
             // Other problems
             else -> ServerError(
                 ServerError.Type.UNKNOWN,
-                "Something went wrong while sending or receiving your request: ${t.message}"
+                "$functionName: ${ErrorMessages.UNKNOWN}.\n" +
+                        "Exception: $t"
             )
         }
     }
@@ -385,19 +393,25 @@ object ServerRepository {
                             5 -> ServerError.Type.BAD_DATA
                             else -> ServerError.Type.UNKNOWN
                         }
-                        responseLiveData.value = ServerError(type, it.message.toString())
+                        responseLiveData.value =
+                            ServerError(type, "${it.message}. ($functionName)")
                     }
                 } ?: run {
                     responseLiveData.value =
-                        ServerError(ServerError.Type.SERIALIZATION, "Empty body")
+                        ServerError(
+                            ServerError.Type.SERIALIZATION,
+                            "$functionName: ${ErrorMessages.SERIALIZATION}.\n" +
+                                    "Response: $body"
+                        )
                 }
             } else {
                 val type = when (response.code()) {
                     401 -> ServerError.Type.HTTP_401
                     else -> ServerError.Type.UNKNOWN
                 }
-                responseLiveData.value = ServerError(type, response.message())
+                responseLiveData.value = ServerError(type, "$functionName: ${response.message()}")
             }
+
             val message = "$functionName (onR): \n" +
                     "body - ${response.body()} \n" +
                     "code - ${response.code()} \n" +
@@ -406,7 +420,7 @@ object ServerRepository {
         }
 
         override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
-            responseLiveData.value = onFailureHandling(t)
+            responseLiveData.value = onFailureHandling(functionName, t)
             Log.d(TAG, "$functionName (onF): $t")
         }
     }
@@ -418,5 +432,22 @@ object ServerRepository {
     object Constants {
         const val NETWORK_PAGE_SIZE = 50
         const val SERVER_STARTING_PAGE_INDEX = 0
+    }
+
+    private object ErrorMessages {
+        private const val EMAIL = "ilyavlasov2011@gmail.com"
+
+        const val SERIALIZATION = "Произошла ошибка во время сериализации"
+
+        const val SOCKET_TIMEOUT =
+            "К сожалению, сервер не доступен, попробуйте позднее. " +
+                    "Если ошибка повторяется, обратитесь сюда: $EMAIL"
+
+        const val IO =
+            "Произошла ошибка во время отправки вашего запроса. " +
+                    "Проверьте ваше интернет - соединение. " +
+                    "Если ошибка повторяется, обратитесь сюда: $EMAIL"
+
+        const val UNKNOWN = "Что-то пошло не так во время отправки или получения вашего запроса"
     }
 }
