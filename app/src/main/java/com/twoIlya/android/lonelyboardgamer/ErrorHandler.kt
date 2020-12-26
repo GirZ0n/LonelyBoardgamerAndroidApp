@@ -103,7 +103,7 @@ object ErrorHandler {
         }
     }
 
-    fun searchErrorHandler(exception: Throwable): Event {
+    fun getListErrorHandler(exception: Throwable): Event {
         return when (exception) {
             is HttpException -> {
                 Event(Event.Type.Move, "Login")

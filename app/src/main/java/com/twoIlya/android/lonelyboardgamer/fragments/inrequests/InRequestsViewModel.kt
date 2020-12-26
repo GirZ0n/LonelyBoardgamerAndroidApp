@@ -49,7 +49,7 @@ class InRequestsViewModel : ViewModel() {
         _isRetryButtonVisible.postValue(loadStateRefresh is LoadState.Error)
 
         if (loadStateRefresh is LoadState.Error) {
-            val event = ErrorHandler.searchErrorHandler(loadStateRefresh.error)
+            val event = ErrorHandler.getListErrorHandler(loadStateRefresh.error)
             if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                 CacheRepository.setIsLoggedIn(false)
             }
@@ -62,7 +62,7 @@ class InRequestsViewModel : ViewModel() {
             ?: loadState.append as? LoadState.Error
             ?: loadState.prepend as? LoadState.Error
         errorState?.let {
-            val event = ErrorHandler.searchErrorHandler(it.error)
+            val event = ErrorHandler.getListErrorHandler(it.error)
             if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
                 CacheRepository.setIsLoggedIn(false)
             }

@@ -39,24 +39,28 @@ class EditProfileViewModel : ViewModel() {
         ServerRepository.getProfile(it)
     }
 
+    // Data: token and new address
     private val dataForChangeAddress = MutableLiveData<Pair<Token, String>>()
     private val changeAddressServerResponse =
         Transformations.switchMap(dataForChangeAddress) {
             ServerRepository.changeAddress(it.first, it.second)
         }
 
+    // Data: token and new category list
     private val dataForChangeCategories = MutableLiveData<Pair<Token, List<String>>>()
     private val changeCategoriesServerResponse =
         Transformations.switchMap(dataForChangeCategories) {
             ServerRepository.changeCategories(it.first, it.second)
         }
 
+    // Data: token and new mechanics list
     private val dataForChangeMechanics = MutableLiveData<Pair<Token, List<String>>>()
     private val changeMechanicsServerResponse =
         Transformations.switchMap(dataForChangeMechanics) {
             ServerRepository.changeMechanics(it.first, it.second)
         }
 
+    // Data: token and new description
     private val dataForChangeDescription = MutableLiveData<Pair<Token, String>>()
     private val changeDescriptionServerResponse =
         Transformations.switchMap(dataForChangeDescription) {
