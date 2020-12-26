@@ -115,7 +115,10 @@ class RegistrationFragment : Fragment() {
                         }
                         else -> {
                             val intent =
-                                ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                                ErrorActivity.newActivity(
+                                    requireContext(),
+                                    "RegistrationFragment: unknown destination"
+                                )
                             startActivity(intent)
                             activity?.finish()
                         }

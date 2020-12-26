@@ -117,7 +117,10 @@ class UserProfileFragment : Fragment() {
                         }
                         else -> {
                             val intent =
-                                ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                                ErrorActivity.newActivity(
+                                    requireContext(),
+                                    "UserProfileFragment: unknown destination"
+                                )
                             startActivity(intent)
                             activity?.finish()
                         }

@@ -63,7 +63,10 @@ class MyProfileFragment : Fragment() {
                 Event.Type.Move -> {
                     val intent = when (it.message) {
                         "Login" -> LoginActivity.newActivity(requireContext())
-                        else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                        else -> ErrorActivity.newActivity(
+                            requireContext(),
+                            "MyProfileFragment: unknown destination"
+                        )
                     }
                     startActivity(intent)
                     activity?.finish()

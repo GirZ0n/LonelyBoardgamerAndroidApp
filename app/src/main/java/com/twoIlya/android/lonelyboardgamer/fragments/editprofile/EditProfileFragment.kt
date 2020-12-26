@@ -110,7 +110,10 @@ class EditProfileFragment : Fragment() {
                         }
                         else -> {
                             val intent =
-                                ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                                ErrorActivity.newActivity(
+                                    requireContext(),
+                                    "EditProfileFragment: unknown destination"
+                                )
                             startActivity(intent)
                             activity?.finish()
                         }
