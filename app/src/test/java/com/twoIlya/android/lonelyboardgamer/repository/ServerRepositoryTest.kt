@@ -853,6 +853,139 @@ class ServerRepositoryTest {
 
     //endregion
 
+    //region changeCategories tests
+
+    @Test
+    fun `changeCategories - Token received when the server returned status 0`() {
+        val body = getBodyFromJson("change_categories_0_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerMessage)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with AUTHORIZATION type received when the server returned status 1`() {
+        val body = getBodyFromJson("1_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.AUTHORIZATION)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with SOME_INFO_MISSING type received when the server returned status 2`() {
+        val body = getBodyFromJson("2_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.SOME_INFO_MISSING)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with ELEMENT_WAS_NOT_FOUND type received when the server returned status 3`() {
+        val body = getBodyFromJson("3_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.ELEMENT_WAS_NOT_FOUND)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with WRONG_DATA_FORMAT type received when the server returned status 4`() {
+        val body = getBodyFromJson("4_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.WRONG_DATA_FORMAT)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with BAD_DATA type received when the server returned status 5`() {
+        val body = getBodyFromJson("5_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.BAD_DATA)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with UNKNOWN type received when the server returned unknown status`() {
+        val body = getBodyFromJson("unknown_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with NETWORK type received when the server is not available`() {
+        // Retrofit ждёт ответ всего 1 секунду
+        server.enqueue(MockResponse().setBodyDelay(2, TimeUnit.SECONDS))
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.NETWORK)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with HTTP_401 type received when the server returned 401`() {
+        server.enqueue(MockResponse().setResponseCode(401))
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.HTTP_401)
+    }
+
+    @Test
+    fun `changeCategories - ServerError with UNKNOWN type received when the server returns an unsuccessful code`() {
+        server.enqueue(MockResponse().setResponseCode(404))
+
+        val liveData = repo.changeCategories(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
+    }
+
+    //endregion
+
     //region Utils
 
     private fun getBodyFromJson(fileName: String): String {
