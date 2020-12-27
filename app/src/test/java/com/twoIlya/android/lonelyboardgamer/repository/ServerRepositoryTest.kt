@@ -3,10 +3,7 @@ package com.twoIlya.android.lonelyboardgamer.repository
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.twoIlya.android.lonelyboardgamer.dataClasses.MyProfile
-import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
-import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerMessage
-import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
+import com.twoIlya.android.lonelyboardgamer.dataClasses.*
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -1112,6 +1109,150 @@ class ServerRepositoryTest {
         server.enqueue(MockResponse().setResponseCode(404))
 
         val liveData = repo.changeMechanics(Token(""), emptyList())
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
+    }
+
+    //endregion
+
+    //region searchByID tests
+
+    @Test
+    fun `searchByID - Token received when the server returned status 0`() {
+        val body = getBodyFromJson("search_by_id_0_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        val isCorrectProfile =
+            result is UserProfile &&
+                    result.friendStatus == 0 &&
+                    result.id == 1 &&
+                    result.idVK == "23456" &&
+                    result.firstName == "Иван" &&
+                    result.secondName == "Иванов" &&
+                    result.categories == listOf("Рандом", "Простые") &&
+                    result.mechanics == listOf("Блеф") &&
+                    result.description == "Lets play some munchkin!"
+
+        assert(isCorrectProfile)
+    }
+
+    @Test
+    fun `searchByID - ServerError with AUTHORIZATION type received when the server returned status 1`() {
+        val body = getBodyFromJson("1_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.AUTHORIZATION)
+    }
+
+    @Test
+    fun `searchByID - ServerError with SOME_INFO_MISSING type received when the server returned status 2`() {
+        val body = getBodyFromJson("2_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.SOME_INFO_MISSING)
+    }
+
+    @Test
+    fun `searchByID - ServerError with ELEMENT_WAS_NOT_FOUND type received when the server returned status 3`() {
+        val body = getBodyFromJson("3_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.ELEMENT_WAS_NOT_FOUND)
+    }
+
+    @Test
+    fun `searchByID - ServerError with WRONG_DATA_FORMAT type received when the server returned status 4`() {
+        val body = getBodyFromJson("4_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.WRONG_DATA_FORMAT)
+    }
+
+    @Test
+    fun `searchByID - ServerError with BAD_DATA type received when the server returned status 5`() {
+        val body = getBodyFromJson("5_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.BAD_DATA)
+    }
+
+    @Test
+    fun `searchByID - ServerError with UNKNOWN type received when the server returned unknown status`() {
+        val body = getBodyFromJson("unknown_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
+    }
+
+    @Test
+    fun `searchByID - ServerError with NETWORK type received when the server is not available`() {
+        // Retrofit ждёт ответ всего 1 секунду
+        server.enqueue(MockResponse().setBodyDelay(2, TimeUnit.SECONDS))
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.NETWORK)
+    }
+
+    @Test
+    fun `searchByID - ServerError with HTTP_401 type received when the server returned 401`() {
+        server.enqueue(MockResponse().setResponseCode(401))
+
+        val liveData = repo.searchByID(Token(""), 0)
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.HTTP_401)
+    }
+
+    @Test
+    fun `searchByID - ServerError with UNKNOWN type received when the server returns an unsuccessful code`() {
+        server.enqueue(MockResponse().setResponseCode(404))
+
+        val liveData = repo.searchByID(Token(""), 0)
         val result = liveData.getOrAwaitValue()
 
         assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
