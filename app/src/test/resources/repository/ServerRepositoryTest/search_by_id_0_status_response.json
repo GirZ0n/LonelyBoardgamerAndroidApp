@@ -1,0 +1,18 @@
+{
+  "status": 0,
+  "message": {
+    "friendStatus": 0,
+    "id": 1,
+    "vkid": "23456",
+    "firstName": "Иван",
+    "secondName": "Иванов",
+    "prefCategories": [
+      "Рандом",
+      "Простые"
+    ],
+    "prefMechanics": [
+      "Блеф"
+    ],
+    "description": "Lets play some munchkin!"
+  }
+}

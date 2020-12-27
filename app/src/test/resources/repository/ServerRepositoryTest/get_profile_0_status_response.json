@@ -1,0 +1,17 @@
+{
+  "status": 0,
+  "message": {
+    "firstName": "Иван",
+    "secondName": "Иванов",
+    "address": "ул. Садовая, 15, Елабуга, Татарстан Респ., Россия, 423602, Елабуга",
+    "prefCategories": [
+      "Евро",
+      "Абстрактные"
+    ],
+    "prefMechanics": [
+      "Удача",
+      "Блеф"
+    ],
+    "description": "I love D&D"
+  }
+}
