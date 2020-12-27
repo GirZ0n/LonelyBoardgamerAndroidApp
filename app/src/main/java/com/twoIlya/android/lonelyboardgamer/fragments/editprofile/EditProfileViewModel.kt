@@ -1,7 +1,6 @@
 package com.twoIlya.android.lonelyboardgamer.fragments.editprofile
 
 import androidx.lifecycle.*
-import com.androidbuts.multispinnerfilter.KeyPairBoolData
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
 import com.twoIlya.android.lonelyboardgamer.repository.CacheRepository
@@ -22,8 +21,9 @@ class EditProfileViewModel : ViewModel() {
     private val _mechanics = MutableLiveData<List<String>>()
     var mechanics: LiveData<List<String>> = _mechanics
 
-    private lateinit var oldDescription: String
-    val description = MutableLiveData<String>()
+    private lateinit var oldAboutMe: String
+    private val _aboutMe = MutableLiveData<String>()
+    val aboutMe: LiveData<String> = _aboutMe
 
     private val _isFormEnabled = MutableLiveData(true)
     val isFormEnabled: LiveData<Boolean> = _isFormEnabled
@@ -39,24 +39,28 @@ class EditProfileViewModel : ViewModel() {
         ServerRepository.getProfile(it)
     }
 
+    // Data: token and new address
     private val dataForChangeAddress = MutableLiveData<Pair<Token, String>>()
     private val changeAddressServerResponse =
         Transformations.switchMap(dataForChangeAddress) {
             ServerRepository.changeAddress(it.first, it.second)
         }
 
+    // Data: token and new category list
     private val dataForChangeCategories = MutableLiveData<Pair<Token, List<String>>>()
     private val changeCategoriesServerResponse =
         Transformations.switchMap(dataForChangeCategories) {
             ServerRepository.changeCategories(it.first, it.second)
         }
 
+    // Data: token and new mechanics list
     private val dataForChangeMechanics = MutableLiveData<Pair<Token, List<String>>>()
     private val changeMechanicsServerResponse =
         Transformations.switchMap(dataForChangeMechanics) {
             ServerRepository.changeMechanics(it.first, it.second)
         }
 
+    // Data: token and new description
     private val dataForChangeDescription = MutableLiveData<Pair<Token, String>>()
     private val changeDescriptionServerResponse =
         Transformations.switchMap(dataForChangeDescription) {
@@ -150,9 +154,9 @@ class EditProfileViewModel : ViewModel() {
                 }
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                description.value?.let { description ->
+                aboutMe.value?.let { description ->
                     CacheRepository.setDescription(description)
-                    oldDescription = description
+                    oldAboutMe = description
                 }
                 events.postValue(Event(Event.Type.Notification, "Описание изменено"))
             }
@@ -164,7 +168,7 @@ class EditProfileViewModel : ViewModel() {
         updateForm(isFormEnabled = false, isButtonLoading = true)
 
         val address = address.value ?: ""
-        val description = description.value ?: ""
+        val description = aboutMe.value ?: ""
         val categories = categories.value ?: emptyList()
         val mechanics = mechanics.value ?: emptyList()
 
@@ -187,7 +191,7 @@ class EditProfileViewModel : ViewModel() {
             dataForChangeMechanics.postValue(Pair(serverToken, mechanics))
         }
 
-        if (oldDescription != description) {
+        if (oldAboutMe != description) {
             dataForChangeDescription.postValue(Pair(serverToken, description))
         }
     }
@@ -196,12 +200,16 @@ class EditProfileViewModel : ViewModel() {
         _address.postValue(address)
     }
 
-    fun updateCategories(items: List<KeyPairBoolData>) {
-        _categories.postValue(PreferencesRepository.convertToList(items))
+    fun updateCategories(indices: IntArray) {
+        _categories.postValue(PreferencesRepository.convertToCategoriesList(indices))
     }
 
-    fun updateMechanics(items: List<KeyPairBoolData>) {
-        _mechanics.postValue(PreferencesRepository.convertToList(items))
+    fun updateMechanics(indices: IntArray) {
+        _mechanics.postValue(PreferencesRepository.convertToMechanicsList(indices))
+    }
+
+    fun updateAboutMe(description: String) {
+        _aboutMe.postValue(description)
     }
 
     fun updateProfile() {
@@ -245,7 +253,7 @@ class EditProfileViewModel : ViewModel() {
         description: String
     ): Boolean {
         return oldAddress != address || oldCategories != categories ||
-                oldMechanics != mechanics || oldDescription != description
+                oldMechanics != mechanics || oldAboutMe != description
     }
 
     private fun updateLiveData(profile: MyProfile) {
@@ -258,8 +266,8 @@ class EditProfileViewModel : ViewModel() {
         oldMechanics = profile.mechanics
         _mechanics.postValue(profile.mechanics)
 
-        oldDescription = profile.description
-        description.postValue(profile.description)
+        oldAboutMe = profile.description
+        _aboutMe.postValue(profile.description)
     }
 
     companion object {

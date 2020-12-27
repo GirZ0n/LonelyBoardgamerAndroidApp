@@ -117,7 +117,10 @@ class UserProfileFragment : Fragment() {
                         }
                         else -> {
                             val intent =
-                                ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                                ErrorActivity.newActivity(
+                                    requireContext(),
+                                    "UserProfileFragment: unknown destination"
+                                )
                             startActivity(intent)
                             activity?.finish()
                         }
@@ -172,7 +175,14 @@ class UserProfileFragment : Fragment() {
 
     private inner class FriendState : State {
         override fun upButtonClickAction() {
-            viewModel.upButtonClick(UserProfileAction.UNFRIEND)
+            MaterialDialog(requireContext()).show {
+                title(R.string.user_profile_fragment_unfriend_dialog_title)
+
+                positiveButton(R.string.user_profile_fragment_unfriend_dialog_positive_button) {
+                    viewModel.upButtonClick(UserProfileAction.UNFRIEND)
+                }
+                negativeButton(R.string.user_profile_fragment_unfriend_dialog_negative_button)
+            }
         }
 
         override fun bottomButtonClickAction() {
@@ -180,10 +190,8 @@ class UserProfileFragment : Fragment() {
         }
 
         override fun updateLayout() {
-            binding.bottomButtom.setText(R.string.chat_button)
-
+            binding.bottomButtom.setText(R.string.user_profile_fragment_chat_button)
             binding.upButton.isVisible = true
-            binding.upButton.setImageResource(R.drawable.ic_baseline_delete_24)
         }
     }
 
@@ -193,18 +201,18 @@ class UserProfileFragment : Fragment() {
 
         override fun bottomButtonClickAction() {
             MaterialDialog(requireContext()).show {
-                title(R.string.answer_dialog_title)
-                positiveButton(R.string.answer_agree_button) {
+                title(R.string.user_profile_fragment_answer_dialog_title)
+                positiveButton(R.string.user_profile_fragment_answer_dialog_positive_button) {
                     viewModel.bottomButtonClick(UserProfileAction.ACCEPT)
                 }
-                negativeButton(R.string.answer_disagree_button) {
+                negativeButton(R.string.user_profile_fragment_answer_dialog_negative_button) {
                     viewModel.bottomButtonClick(UserProfileAction.DECLINE)
                 }
             }
         }
 
         override fun updateLayout() {
-            binding.bottomButtom.setText(R.string.answer_request_button)
+            binding.bottomButtom.setText(R.string.user_profile_fragment_answer_button)
             binding.upButton.isVisible = false
         }
     }
@@ -218,7 +226,7 @@ class UserProfileFragment : Fragment() {
         }
 
         override fun updateLayout() {
-            binding.bottomButtom.setText(R.string.withdraw_request_button)
+            binding.bottomButtom.setText(R.string.user_profile_fragment_revoke_button)
             binding.upButton.isVisible = false
         }
     }
@@ -232,7 +240,7 @@ class UserProfileFragment : Fragment() {
         }
 
         override fun updateLayout() {
-            binding.bottomButtom.setText(R.string.send_friend_request_button)
+            binding.bottomButtom.setText(R.string.user_profile_fragment_send_button)
             binding.upButton.isVisible = false
         }
 

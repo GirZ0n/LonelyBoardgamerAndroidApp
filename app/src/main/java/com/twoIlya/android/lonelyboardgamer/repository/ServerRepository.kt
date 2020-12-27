@@ -41,9 +41,9 @@ object ServerRepository {
         val responseLiveData: MutableLiveData<ServerRepositoryResponse> = MutableLiveData()
 
         val tokenBody = vkToken.value.toRequestBody("text/plain".toMediaTypeOrNull())
-        val loginRequest = serverAPI.login(tokenBody)
+        val loginCall = serverAPI.login(tokenBody)
 
-        loginRequest.enqueue(MyCallback("Login", responseLiveData) { serverResponse ->
+        loginCall.enqueue(MyCallback("Login", responseLiveData) { serverResponse ->
             val jsonElementAsString = serverResponse.message.toString()
             Token(jsonElementAsString.trim { it == '"' })
         })
@@ -60,7 +60,7 @@ object ServerRepository {
     ): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        val getProfileRequest = serverAPI.register(
+        val getProfileCall = serverAPI.register(
             vkToken.value.toRequestBody("text/plain".toMediaTypeOrNull()),
             location.toRequestBody("text/plain".toMediaTypeOrNull()),
             description.toRequestBody("text/plain".toMediaTypeOrNull()),
@@ -68,7 +68,7 @@ object ServerRepository {
             mechanics.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull())
         )
 
-        getProfileRequest.enqueue(MyCallback("register", responseLiveData) { serverResponse ->
+        getProfileCall.enqueue(MyCallback("register", responseLiveData) { serverResponse ->
             val jsonElementAsString = serverResponse.message.toString()
             Token(jsonElementAsString.trim { it == '"' })
         })
@@ -79,17 +79,27 @@ object ServerRepository {
     fun getProfile(serverToken: Token): LiveData<ServerRepositoryResponse> {
         val responseLiveData: MutableLiveData<ServerRepositoryResponse> = MutableLiveData()
 
-        val getProfileRequest = serverAPI.getProfile("Bearer ${serverToken.value}")
+        val getProfileCall = serverAPI.getProfile("Bearer ${serverToken.value}")
 
-        getProfileRequest.enqueue(MyCallback("getProfile", responseLiveData) {
+        getProfileCall.enqueue(MyCallback("getProfile", responseLiveData) {
             val response: ServerRepositoryResponse = try {
                 Gson().fromJson(it.message.toString(), MyProfile::class.java)
             } catch (e: JsonSyntaxException) {
                 Log.d(TAG, e.toString())
-                ServerError(-2, "Error during deserialization: ${e.message} ")
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "getProfile: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
+                )
             } catch (e: NullPointerException) {
                 Log.d(TAG, e.toString())
-                ServerError(-2, "Error during deserialization: ${e.message} ")
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "getProfile: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
+                )
             }
             response
         })
@@ -100,9 +110,9 @@ object ServerRepository {
     fun logout(serverToken: Token): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        val logoutRequest = serverAPI.logout("Bearer ${serverToken.value}")
+        val logoutCall = serverAPI.logout("Bearer ${serverToken.value}")
 
-        logoutRequest.enqueue(MyCallback("logout", responseLiveData) {
+        logoutCall.enqueue(MyCallback("logout", responseLiveData) {
             ServerMessage(it.message.toString())
         })
 
@@ -114,10 +124,10 @@ object ServerRepository {
 
         val addressRequestBody = address.toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val changeAddressRequest =
+        val changeAddressCall =
             serverAPI.changeAddress("Bearer ${serverToken.value}", addressRequestBody)
 
-        changeAddressRequest.enqueue(MyCallback("changeAddress", responseLiveData) {
+        changeAddressCall.enqueue(MyCallback("changeAddress", responseLiveData) {
             ServerMessage(it.message.toString())
         })
 
@@ -132,10 +142,10 @@ object ServerRepository {
 
         val descriptionRequestBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val changeDescriptionRequest =
+        val changeDescriptionCall =
             serverAPI.changeDescription("Bearer ${serverToken.value}", descriptionRequestBody)
 
-        changeDescriptionRequest.enqueue(MyCallback("changeDescription", responseLiveData) {
+        changeDescriptionCall.enqueue(MyCallback("changeDescription", responseLiveData) {
             ServerMessage(it.message.toString())
         })
 
@@ -151,10 +161,10 @@ object ServerRepository {
         val categoriesRequestBody =
             categories.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val changeCategoriesRequest =
+        val changeCategoriesCall =
             serverAPI.changeCategories("Bearer ${serverToken.value}", categoriesRequestBody)
 
-        changeCategoriesRequest.enqueue(MyCallback("changeCategories", responseLiveData) {
+        changeCategoriesCall.enqueue(MyCallback("changeCategories", responseLiveData) {
             ServerMessage(it.message.toString())
         })
 
@@ -170,10 +180,10 @@ object ServerRepository {
         val mechanicsRequestBody =
             mechanics.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val changeMechanicsRequest =
+        val changeMechanicsCall =
             serverAPI.changeMechanics("Bearer ${serverToken.value}", mechanicsRequestBody)
 
-        changeMechanicsRequest.enqueue(MyCallback("changeMechanics", responseLiveData) {
+        changeMechanicsCall.enqueue(MyCallback("changeMechanics", responseLiveData) {
             ServerMessage(it.message.toString())
         })
 
@@ -238,18 +248,28 @@ object ServerRepository {
     fun searchByID(serverToken: Token, id: Int): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        val searchByIDRequest =
+        val searchByIDCall =
             serverAPI.searchByID("Bearer ${serverToken.value}", id)
 
-        searchByIDRequest.enqueue(MyCallback("searchByID", responseLiveData) {
+        searchByIDCall.enqueue(MyCallback("searchByID", responseLiveData) {
             val response: ServerRepositoryResponse = try {
                 Gson().fromJson(it.message.toString(), UserProfile::class.java)
             } catch (e: JsonSyntaxException) {
                 Log.d(TAG, e.toString())
-                ServerError(-2, "Error during deserialization: ${e.message} ")
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "searchByID: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
+                )
             } catch (e: NullPointerException) {
                 Log.d(TAG, e.toString())
-                ServerError(-2, "Error during deserialization: ${e.message} ")
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "searchByID: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
+                )
             }
             response
         })
@@ -262,10 +282,10 @@ object ServerRepository {
 
         val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val sendFriendRequestRequest =
+        val sendFriendRequestCall =
             serverAPI.sendFriendRequest("Bearer ${serverToken.value}", idRequestBody)
 
-        sendFriendRequestRequest.enqueue(MyCallback("sendFriendRequest", responseLiveData) {
+        sendFriendRequestCall.enqueue(MyCallback("sendFriendRequest", responseLiveData) {
             ServerMessage(it.message.toString())
         })
 
@@ -277,10 +297,10 @@ object ServerRepository {
 
         val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val revokeRequestRequest =
+        val revokeRequestCall =
             serverAPI.revokeRequest("Bearer ${serverToken.value}", idRequestBody)
 
-        revokeRequestRequest.enqueue(MyCallback("revokeRequest", responseLiveData) {
+        revokeRequestCall.enqueue(MyCallback("revokeRequest", responseLiveData) {
             ServerMessage(it.message.toString())
         })
 
@@ -304,10 +324,10 @@ object ServerRepository {
 
         val idRequestBody = id.toString().toRequestBody("text/plain".toMediaTypeOrNull())
 
-        val answerOnRequest =
+        val answerOnRequestCall =
             serverAPI.answerOnRequest("Bearer ${serverToken.value}", codeRequestBody, idRequestBody)
 
-        answerOnRequest.enqueue(MyCallback("answerOnRequest", responseLiveData) {
+        answerOnRequestCall.enqueue(MyCallback("answerOnRequest", responseLiveData) {
             ServerMessage(it.message.toString())
         })
 
@@ -329,23 +349,23 @@ object ServerRepository {
         return responseLiveData
     }
 
-    private fun onFailureHandling(t: Throwable): ServerError {
+    private fun onFailureHandling(functionName: String, t: Throwable): ServerError {
         return when (t) {
             // Server fell asleep
             is SocketTimeoutException -> ServerError(
-                -1,
-                "The server fell asleep. Repeat your action"
+                ServerError.Type.NETWORK,
+                "${ErrorMessages.SOCKET_TIMEOUT}. ($functionName)"
             )
             // Network problems
             is IOException -> ServerError(
-                -1,
-                "There was a problem sending your request. Check your internet connection. " +
-                        "If the problem persists, please contact us at: placeholder@placeholder.com"
+                ServerError.Type.NETWORK,
+                "${ErrorMessages.IO}. ($functionName)"
             )
             // Other problems
             else -> ServerError(
-                -3,
-                "Something went wrong while sending or receiving your request: ${t.message}"
+                ServerError.Type.UNKNOWN,
+                "$functionName: ${ErrorMessages.UNKNOWN}.\n" +
+                        "Exception: $t"
             )
         }
     }
@@ -365,12 +385,33 @@ object ServerRepository {
                     if (it.status == 0) {
                         responseLiveData.value = parser(it)
                     } else {
-                        responseLiveData.value = ServerError(it.status, it.message.toString())
+                        val type = when (it.status) {
+                            1 -> ServerError.Type.AUTHORIZATION
+                            2 -> ServerError.Type.SOME_INFO_MISSING
+                            3 -> ServerError.Type.ELEMENT_WAS_NOT_FOUND
+                            4 -> ServerError.Type.WRONG_DATA_FORMAT
+                            5 -> ServerError.Type.BAD_DATA
+                            else -> ServerError.Type.UNKNOWN
+                        }
+                        responseLiveData.value =
+                            ServerError(type, "${it.message}. ($functionName)")
                     }
-                } ?: run { responseLiveData.value = ServerError(-2, "Empty body") }
+                } ?: run {
+                    responseLiveData.value =
+                        ServerError(
+                            ServerError.Type.SERIALIZATION,
+                            "$functionName: ${ErrorMessages.SERIALIZATION}.\n" +
+                                    "Response: $body"
+                        )
+                }
             } else {
-                responseLiveData.value = ServerError(response.code(), response.message())
+                val type = when (response.code()) {
+                    401 -> ServerError.Type.HTTP_401
+                    else -> ServerError.Type.UNKNOWN
+                }
+                responseLiveData.value = ServerError(type, "$functionName: ${response.message()}")
             }
+
             val message = "$functionName (onR): \n" +
                     "body - ${response.body()} \n" +
                     "code - ${response.code()} \n" +
@@ -379,7 +420,7 @@ object ServerRepository {
         }
 
         override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
-            responseLiveData.value = onFailureHandling(t)
+            responseLiveData.value = onFailureHandling(functionName, t)
             Log.d(TAG, "$functionName (onF): $t")
         }
     }
@@ -391,5 +432,22 @@ object ServerRepository {
     object Constants {
         const val NETWORK_PAGE_SIZE = 50
         const val SERVER_STARTING_PAGE_INDEX = 0
+    }
+
+    private object ErrorMessages {
+        private const val EMAIL = "ilyavlasov2011@gmail.com"
+
+        const val SERIALIZATION = "Произошла ошибка во время сериализации"
+
+        const val SOCKET_TIMEOUT =
+            "К сожалению, сервер не доступен, попробуйте позднее. " +
+                    "Если ошибка повторяется, обратитесь сюда: $EMAIL"
+
+        const val IO =
+            "Произошла ошибка во время отправки вашего запроса. " +
+                    "Проверьте ваше интернет - соединение. " +
+                    "Если ошибка повторяется, обратитесь сюда: $EMAIL"
+
+        const val UNKNOWN = "Что-то пошло не так во время отправки или получения вашего запроса"
     }
 }

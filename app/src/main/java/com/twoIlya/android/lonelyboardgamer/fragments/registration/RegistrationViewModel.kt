@@ -1,7 +1,6 @@
 package com.twoIlya.android.lonelyboardgamer.fragments.registration
 
 import androidx.lifecycle.*
-import com.androidbuts.multispinnerfilter.KeyPairBoolData
 import com.twoIlya.android.lonelyboardgamer.ErrorHandler
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Event
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
@@ -15,10 +14,14 @@ class RegistrationViewModel : ViewModel() {
     private val _address = MutableLiveData<String>()
     val address: LiveData<String> = _address
 
-    private var categories = listOf<String>()
-    private var mechanics = listOf<String>()
+    private val _categories = MutableLiveData<List<String>>()
+    val categories: LiveData<List<String>> = _categories
 
-    val description = MutableLiveData<String>()
+    private val _mechanics = MutableLiveData<List<String>>()
+    val mechanics: LiveData<List<String>> = _mechanics
+
+    private val _aboutMe = MutableLiveData<String>()
+    val aboutMe: LiveData<String> = _aboutMe
 
     private val _isFormEnabled = MutableLiveData(true)
     val isFormEnabled: LiveData<Boolean> = _isFormEnabled
@@ -60,7 +63,9 @@ class RegistrationViewModel : ViewModel() {
         updateForm(isFormEnabled = false, isButtonLoading = true)
 
         val address = address.value ?: ""
-        val description = description.value ?: ""
+        val description = aboutMe.value ?: ""
+        val categories = categories.value ?: emptyList()
+        val mechanics = mechanics.value ?: emptyList()
 
         if (!checkFields(address, description)) {
             updateForm(isFormEnabled = true, isButtonLoading = false)
@@ -79,16 +84,20 @@ class RegistrationViewModel : ViewModel() {
         )
     }
 
-    fun updateCategories(items: List<KeyPairBoolData>) {
-        categories = PreferencesRepository.convertToList(items)
+    fun updateCategories(indices: IntArray) {
+        _categories.postValue(PreferencesRepository.convertToCategoriesList(indices))
     }
 
-    fun updateMechanics(items: List<KeyPairBoolData>) {
-        mechanics = PreferencesRepository.convertToList(items)
+    fun updateMechanics(indices: IntArray) {
+        _mechanics.postValue(PreferencesRepository.convertToMechanicsList(indices))
     }
 
     fun updateAddress(address: String) {
         _address.postValue(address)
+    }
+
+    fun updateAboutMe(description: String) {
+        _aboutMe.postValue(description)
     }
 
     private fun checkFields(address: String, description: String): Boolean {

@@ -70,7 +70,10 @@ class InRequestsFragment : Fragment() {
                 Event.Type.Move -> {
                     val intent = when (it.message) {
                         "Login" -> LoginActivity.newActivity(requireContext())
-                        else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                        else -> ErrorActivity.newActivity(
+                            requireContext(),
+                            "InRequestsFragment: unknown destination"
+                        )
                     }
                     startActivity(intent)
                     activity?.finish()

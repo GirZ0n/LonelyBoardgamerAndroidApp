@@ -66,7 +66,7 @@ class SearchFragment : Fragment() {
                 Event.Type.Move -> {
                     val intent = when (it.message) {
                         "Login" -> LoginActivity.newActivity(requireContext())
-                        else -> ErrorActivity.newActivity(requireContext(), "Unknown destination")
+                        else -> ErrorActivity.newActivity(requireContext(), "SearchFragment: unknown destination")
                     }
                     startActivity(intent)
                     activity?.finish()

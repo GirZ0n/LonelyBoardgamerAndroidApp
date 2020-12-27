@@ -21,14 +21,14 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:contentDescription="@string/avatar_contentDescription"
+            android:contentDescription="@string/search_profile_view_item_avatar_content_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_user_placeholder" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/search_profile_view_item_name"
             style="@style/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             tools:text="Вася Пупкин" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/search_profile_view_item_distance"
             style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

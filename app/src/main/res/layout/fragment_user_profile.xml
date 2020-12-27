@@ -27,13 +27,13 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/user_profile_fragment_avatar"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="32dp"
                     android:layout_marginEnd="16dp"
-                    android:contentDescription="@string/avatar_contentDescription"
+                    android:contentDescription="@string/user_profile_fragment_avatar_content_description"
                     app:imageUrl="@{viewModel.imageUrl}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
                     tools:srcCompat="@drawable/ic_user_placeholder" />
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/user_profile_fragment_name"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -52,82 +52,80 @@
                     android:textSize="30sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    app:layout_constraintTop_toBottomOf="@+id/user_profile_fragment_avatar"
                     tools:text="Вася Пупкин" />
 
                 <TextView
-                        android:id="@+id/textView2"
-                        style="@style/Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/categories_title"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView"
-                        android:layout_marginTop="16dp" />
+                    android:id="@+id/user_profile_fragment_categories_title"
+                    style="@style/Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/user_profile_fragment_categories_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/user_profile_fragment_name" />
 
                 <TextView
-                    android:id="@+id/category_textfield"
+                    android:id="@+id/user_profile_fragment_categories"
                     style="@style/Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/empty_text_hint"
+                    android:hint="@string/user_profile_fragment_empty_text_hint"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@{viewModel.categories}"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2"
-                    tools:text="Люблю монополию" />
+                    app:layout_constraintTop_toBottomOf="@+id/user_profile_fragment_categories_title" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/user_profile_fragment_mechanics_title"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/mechanics_title"
+                    android:text="@string/user_profile_fragment_mechanics_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/category_textfield" />
+                    app:layout_constraintTop_toBottomOf="@+id/user_profile_fragment_categories" />
 
                 <TextView
-                    android:id="@+id/mechanics_textfield"
+                    android:id="@+id/user_profile_fragment_mechanics"
                     style="@style/Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/empty_text_hint"
+                    android:hint="@string/user_profile_fragment_empty_text_hint"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@{viewModel.mechanics}"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3"
-                    tools:text="Люблю монополию" />
+                    app:layout_constraintTop_toBottomOf="@+id/user_profile_fragment_mechanics_title" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/user_profile_fragment_about_me_title"
                     style="@style/Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/description_title"
+                    android:text="@string/user_profile_fragment_about_me_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mechanics_textfield" />
+                    app:layout_constraintTop_toBottomOf="@+id/user_profile_fragment_mechanics" />
 
                 <TextView
-                    android:id="@+id/description_textfield"
+                    android:id="@+id/user_profile_fragment_about_me"
                     style="@style/Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="32dp"
-                    android:hint="@string/empty_text_hint"
+                    android:hint="@string/user_profile_fragment_empty_text_hint"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:text="@{viewModel.description}"
@@ -135,36 +133,36 @@
                     app:layout_constraintBottom_toTopOf="@+id/bottom_buttom"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:text="Люблю монополию" />
+                    app:layout_constraintTop_toBottomOf="@+id/user_profile_fragment_about_me_title"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <Button
-                        android:id="@+id/bottom_buttom"
-                        style="@style/Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="32dp"
-                        android:drawablePadding="10dp"
-                        android:enabled="@{viewModel.isLayoutEnabled}"
-                        app:isLoading="@{viewModel.isBottomButtonLoading}"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                    android:id="@+id/bottom_buttom"
+                    style="@style/Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:drawablePadding="10dp"
+                    android:enabled="@{viewModel.isLayoutEnabled}"
+                    app:isLoading="@{viewModel.isBottomButtonLoading}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="@string/user_profile_fragment_answer_button" />
 
                 <ImageView
-                        android:id="@+id/up_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:clickable="@{viewModel.isLayoutEnabled}"
-                        android:contentDescription="@string/edit_ContentDescription"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_baseline_delete_24"
-                        tools:visibility="visible"
-                        android:visibility="gone" />
+                    android:id="@+id/up_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:clickable="@{viewModel.isLayoutEnabled}"
+                    android:contentDescription="@string/user_profile_fragment_delete_button_content_description"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_baseline_delete_24"
+                    tools:visibility="visible" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

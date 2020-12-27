@@ -21,144 +21,124 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/registration_fragment_address_title"
                 style="@style/Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="@string/your_location_title"
+                android:text="@string/registration_fragment_address_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/address_textfield"
+                android:id="@+id/address"
                 style="@style/Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="@string/your_location_hint"
+                android:hint="@string/registration_fragment_text_view_hint"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="@{viewModel.address}"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-            <Button
-                android:id="@+id/location_button"
-                style="@style/Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:enabled="@{viewModel.isFormEnabled}"
-                android:text="@string/get_location_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/address_textfield" />
+                app:layout_constraintTop_toBottomOf="@+id/registration_fragment_address_title" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/registration_fragment_categories_title"
                 style="@style/Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="@string/categories_title"
-                android:textColorHint="@color/fontMainColor"
+                android:text="@string/registration_fragment_categories_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/location_button" />
+                app:layout_constraintTop_toBottomOf="@+id/address" />
 
-            <com.androidbuts.multispinnerfilter.MultiSpinnerSearch
-                android:id="@+id/categoryMultiSpinner"
+            <TextView
+                android:id="@+id/categories"
                 style="@style/Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:enabled="@{viewModel.isFormEnabled}"
+                android:hint="@string/registration_fragment_text_view_hint"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:text="@{viewModel.categories}"
                 android:textAlignment="center"
-                app:hintText="@string/multispinner_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                app:layout_constraintTop_toBottomOf="@+id/registration_fragment_categories_title" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/registration_fragment_mechanics_title"
                 style="@style/Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="@string/mechanics_title"
+                android:text="@string/registration_fragment_mechanics_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/categoryMultiSpinner" />
+                app:layout_constraintTop_toBottomOf="@+id/categories" />
 
-            <com.androidbuts.multispinnerfilter.MultiSpinnerSearch
-                android:id="@+id/mechanicsMultiSpinner"
+            <TextView
+                android:id="@+id/mechanics"
                 style="@style/Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:enabled="@{viewModel.isFormEnabled}"
+                android:hint="@string/registration_fragment_text_view_hint"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:text="@{viewModel.mechanics}"
                 android:textAlignment="center"
-                app:hintText="@string/multispinner_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toBottomOf="@+id/registration_fragment_mechanics_title" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/registration_fragment_about_me_title"
                 style="@style/Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="@string/description_title"
-                android:textColorHint="@color/fontMainColor"
+                android:text="@string/registration_fragment_about_me_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mechanicsMultiSpinner" />
+                app:layout_constraintTop_toBottomOf="@+id/mechanics" />
 
-            <EditText
-                android:id="@+id/description_textfield"
+            <TextView
+                android:id="@+id/about_me"
                 style="@style/Text"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="32dp"
-                android:autofillHints=""
-                android:background="@null"
-                android:enabled="@{viewModel.isFormEnabled}"
-                android:hint="@string/description_hint"
-                android:inputType="textMultiLine"
-                android:maxLength="250"
+                android:hint="@string/registration_fragment_about_me_hint"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:text="@={viewModel.description}"
+                android:text="@{viewModel.aboutMe}"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toTopOf="@+id/register_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/registration_fragment_about_me_title" />
 
             <Button
                 android:id="@+id/register_button"
                 style="@style/Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:layout_marginBottom="32dp"
                 android:drawablePadding="10dp"
                 android:onClick="@{() -> viewModel.register()}"
-                android:text="@string/register_button"
+                android:text="@string/registration_fragment_register_button"
                 app:isLoading="@{viewModel.isButtonLoading}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/about_me"
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
