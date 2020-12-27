@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.twoIlya.android.lonelyboardgamer.dataClasses.MyProfile
 import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerError
+import com.twoIlya.android.lonelyboardgamer.dataClasses.ServerMessage
 import com.twoIlya.android.lonelyboardgamer.dataClasses.Token
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -446,6 +447,141 @@ class ServerRepositoryTest {
         server.enqueue(MockResponse().setResponseCode(404))
 
         val liveData = repo.getProfile(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
+    }
+
+    //endregion
+
+    //region logout tests
+
+    @Test
+    fun `logout - Token received when the server returned status 0`() {
+        val body = getBodyFromJson("logout_0_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        println(result)
+
+        assert(result is ServerMessage)
+    }
+
+    @Test
+    fun `logout - ServerError with AUTHORIZATION type received when the server returned status 1`() {
+        val body = getBodyFromJson("1_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.AUTHORIZATION)
+    }
+
+    @Test
+    fun `logout - ServerError with SOME_INFO_MISSING type received when the server returned status 2`() {
+        val body = getBodyFromJson("2_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.SOME_INFO_MISSING)
+    }
+
+    @Test
+    fun `logout - ServerError with ELEMENT_WAS_NOT_FOUND type received when the server returned status 3`() {
+        val body = getBodyFromJson("3_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.ELEMENT_WAS_NOT_FOUND)
+    }
+
+    @Test
+    fun `logout - ServerError with WRONG_DATA_FORMAT type received when the server returned status 4`() {
+        val body = getBodyFromJson("4_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.WRONG_DATA_FORMAT)
+    }
+
+    @Test
+    fun `logout - ServerError with BAD_DATA type received when the server returned status 5`() {
+        val body = getBodyFromJson("5_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.BAD_DATA)
+    }
+
+    @Test
+    fun `logout - ServerError with UNKNOWN type received when the server returned unknown status`() {
+        val body = getBodyFromJson("unknown_status_response")
+
+        server.enqueue(
+            MockResponse().setBody(body)
+        )
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
+    }
+
+    @Test
+    fun `logout - ServerError with NETWORK type received when the server is not available`() {
+        // Retrofit ждёт ответ всего 1 секунду
+        server.enqueue(MockResponse().setBodyDelay(2, TimeUnit.SECONDS))
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.NETWORK)
+    }
+
+    @Test
+    fun `logout - ServerError with HTTP_401 type received when the server returned 401`() {
+        server.enqueue(MockResponse().setResponseCode(401))
+
+        val liveData = repo.logout(Token(""))
+        val result = liveData.getOrAwaitValue()
+
+        assert(result is ServerError && result.code == ServerError.Type.HTTP_401)
+    }
+
+    @Test
+    fun `logout - ServerError with UNKNOWN type received when the server returns an unsuccessful code`() {
+        server.enqueue(MockResponse().setResponseCode(404))
+
+        val liveData = repo.logout(Token(""))
         val result = liveData.getOrAwaitValue()
 
         assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
