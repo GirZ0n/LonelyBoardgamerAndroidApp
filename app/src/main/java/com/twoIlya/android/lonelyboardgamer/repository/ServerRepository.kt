@@ -14,7 +14,8 @@ import com.twoIlya.android.lonelyboardgamer.api.ServerResponse
 import com.twoIlya.android.lonelyboardgamer.dataClasses.*
 import com.twoIlya.android.lonelyboardgamer.paging.ListPagingSource
 import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.NETWORK_PAGE_SIZE
-import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Tag.TAG
+import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.TAG
+import com.twoIlya.android.lonelyboardgamer.repository.ServerRepository.Constants.URL
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
@@ -26,13 +27,17 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 
 object ServerRepository {
-    private val serverAPI: ServerAPI
+    private lateinit var serverAPI: ServerAPI
 
     init {
+        setURL(URL)
+    }
+
+    fun setURL(url: String) {
         val retrofit: Retrofit = Retrofit.Builder()
-                .baseUrl("https://immense-dusk-70422.herokuapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+            .baseUrl(url)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
         serverAPI = retrofit.create(ServerAPI::class.java)
     }
@@ -43,9 +48,28 @@ object ServerRepository {
         val tokenBody = vkToken.value.toRequestBody("text/plain".toMediaTypeOrNull())
         val loginCall = serverAPI.login(tokenBody)
 
-        loginCall.enqueue(MyCallback("Login", responseLiveData) { serverResponse ->
-            val jsonElementAsString = serverResponse.message.toString()
-            Token(jsonElementAsString.trim { it == '"' })
+        loginCall.enqueue(MyCallback("Login", responseLiveData) {
+            val response: ServerRepositoryResponse = try {
+                val message = Gson().fromJson(it.message, String::class.java)
+                Token(message)
+            } catch (e: JsonSyntaxException) {
+                Log.d(TAG, e.toString())
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "login: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
+                )
+            } catch (e: NullPointerException) {
+                Log.d(TAG, e.toString())
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "login: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
+                )
+            }
+            response
         })
 
         return responseLiveData
@@ -425,11 +449,11 @@ object ServerRepository {
         }
     }
 
-    private object Tag {
-        const val TAG = "ServerRepository_TAG"
-    }
-
     object Constants {
+        const val TAG = "ServerRepository_TAG"
+
+        const val URL = "https://immense-dusk-70422.herokuapp.com/"
+
         const val NETWORK_PAGE_SIZE = 50
         const val SERVER_STARTING_PAGE_INDEX = 0
     }
