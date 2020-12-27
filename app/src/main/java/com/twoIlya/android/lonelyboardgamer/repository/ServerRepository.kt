@@ -84,7 +84,7 @@ object ServerRepository {
     ): LiveData<ServerRepositoryResponse> {
         val responseLiveData = MutableLiveData<ServerRepositoryResponse>()
 
-        val getProfileCall = serverAPI.register(
+        val registerCall = serverAPI.register(
             vkToken.value.toRequestBody("text/plain".toMediaTypeOrNull()),
             location.toRequestBody("text/plain".toMediaTypeOrNull()),
             description.toRequestBody("text/plain".toMediaTypeOrNull()),
@@ -92,9 +92,28 @@ object ServerRepository {
             mechanics.joinToString(",").toRequestBody("text/plain".toMediaTypeOrNull())
         )
 
-        getProfileCall.enqueue(MyCallback("register", responseLiveData) { serverResponse ->
-            val jsonElementAsString = serverResponse.message.toString()
-            Token(jsonElementAsString.trim { it == '"' })
+        registerCall.enqueue(MyCallback("register", responseLiveData) {
+            val response: ServerRepositoryResponse = try {
+                val message = Gson().fromJson(it.message, String::class.java)
+                Token(message)
+            } catch (e: JsonSyntaxException) {
+                Log.d(TAG, e.toString())
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "register: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
+                )
+            } catch (e: NullPointerException) {
+                Log.d(TAG, e.toString())
+                ServerError(
+                    ServerError.Type.SERIALIZATION,
+                    "register: ${ErrorMessages.SERIALIZATION}.\n" +
+                            "Exception: $e.\n" +
+                            "Response: $it"
+                )
+            }
+            response
         })
 
         return responseLiveData
