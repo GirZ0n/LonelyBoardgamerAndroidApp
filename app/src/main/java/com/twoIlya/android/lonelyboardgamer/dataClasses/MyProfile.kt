@@ -8,10 +8,10 @@ data class MyProfile(
     val id: Int,
     val firstName: String,
     val secondName: String,
-    val address: String,
-    val description: String,
+    var address: String,
+    var description: String,
     @SerializedName("prefCategories")
-    val categories: List<String>,
+    var categories: List<String>,
     @SerializedName("prefMechanics")
-    val mechanics: List<String>,
+    var mechanics: List<String>,
 ) : ServerRepositoryResponse()

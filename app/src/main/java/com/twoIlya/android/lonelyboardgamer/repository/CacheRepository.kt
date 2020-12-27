@@ -40,65 +40,33 @@ object CacheRepository {
 
     fun setAddress(address: String) {
         getProfile()?.let {
-            setProfile(
-                MyProfile(
-                    it.id,
-                    it.firstName,
-                    it.secondName,
-                    address,
-                    it.description,
-                    it.categories,
-                    it.mechanics,
-                )
-            )
+            val new = it
+            new.address = address
+            setProfile(new)
         }
     }
 
     fun setDescription(description: String) {
         getProfile()?.let {
-            setProfile(
-                MyProfile(
-                    it.id,
-                    it.firstName,
-                    it.secondName,
-                    it.address,
-                    description,
-                    it.categories,
-                    it.mechanics
-                )
-            )
+            val new = it
+            new.description = description
+            setProfile(new)
         }
     }
 
     fun setCategories(categories: List<String>) {
         getProfile()?.let {
-            setProfile(
-                MyProfile(
-                    it.id,
-                    it.firstName,
-                    it.secondName,
-                    it.address,
-                    it.description,
-                    categories,
-                    it.mechanics,
-                )
-            )
+            val new = it
+            new.categories = categories
+            setProfile(new)
         }
     }
 
     fun setMechanics(mechanics: List<String>) {
         getProfile()?.let {
-            setProfile(
-                MyProfile(
-                    it.id,
-                    it.firstName,
-                    it.secondName,
-                    it.address,
-                    it.description,
-                    it.categories,
-                    mechanics,
-                )
-            )
+            val new = it
+            new.mechanics = mechanics
+            setProfile(new)
         }
     }
 }
