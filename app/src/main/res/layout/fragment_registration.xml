@@ -36,6 +36,7 @@
                 style="@style/Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{viewModel.address}"
                 android:layout_marginTop="16dp"
                 android:hint="@string/registration_fragment_text_view_hint"
                 android:paddingStart="16dp"
