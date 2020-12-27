@@ -21,7 +21,7 @@ class ServerRepositoryTest {
     private lateinit var server: MockWebServer
     private var repo = ServerRepository
 
-    // region
+    //region
 
     @Before
     fun init() {
@@ -42,7 +42,9 @@ class ServerRepositoryTest {
     @JvmField
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    // endregion
+    //endregion
+
+    //region Login tests
 
     @Test
     fun `Login - Token received when the server returned status 0`() {
@@ -127,7 +129,7 @@ class ServerRepositoryTest {
     }
 
     @Test
-    fun `Login - ServerError with BAD_DATA type received when the server returned status 4`() {
+    fun `Login - ServerError with BAD_DATA type received when the server returned status 5`() {
         val body = getBodyFromJson("5_status_response")
 
         server.enqueue(
@@ -185,7 +187,29 @@ class ServerRepositoryTest {
         assert(result is ServerError && result.code == ServerError.Type.UNKNOWN)
     }
 
-    // region Utils
+    //endregion
+
+    //region Registration test
+
+    @Test
+    fun `Registration - Token received when the server returned status 0`() {
+        // val body = getBodyFromJson("login_0_status_response")
+
+        /*server.enqueue(
+            MockResponse().setBody(body)
+        )*/
+
+        val a = repo.login(Token(""))
+        val result = a.getOrAwaitValue()
+
+        // assert(result is Token)
+
+        assert(false)
+    }
+
+    //endregion
+
+    //region Utils
 
     private fun getBodyFromJson(fileName: String): String {
         return javaClass.classLoader?.getResource("repository/ServerRepositoryTest/$fileName.json")
@@ -217,5 +241,5 @@ class ServerRepositoryTest {
         return data as T
     }
 
-    // endregion
+    //endregion
 }
