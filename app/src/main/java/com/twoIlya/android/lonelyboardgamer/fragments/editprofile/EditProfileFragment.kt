@@ -173,9 +173,11 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun locationPickerSetup(): Intent {
+        val apiKey = getString(R.string.google_maps_api_key)
+
         return LocationPickerActivity.Builder()
             .withLocation(59.938706, 30.315033)
-            .withGeolocApiKey("AIzaSyBxNpr3sAzxUHf8dk9T3GoPjcMgsK657Rw")
+            .withGeolocApiKey(apiKey)
             .withDefaultLocaleSearchZone()
             .shouldReturnOkOnBackPressed()
             .withCityHidden() // Прячем название города
