@@ -2,9 +2,6 @@
 
     <string name="app_name">Lonely Boardgamer</string>
 
-    <!-- VK SDK -->
-    <integer name="com_vk_sdk_AppId">7647393</integer>
-
     <!-- ################################################################################### -->
 
     <!-- Activities -->
