@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VK SDK -->
+    <integer name="com_vk_sdk_AppId">00000000</integer>
+
+    <!-- Google Maps API -->
+    <string name="google_maps_api_key">YOUR_API_KEY</string>
+</resources>
