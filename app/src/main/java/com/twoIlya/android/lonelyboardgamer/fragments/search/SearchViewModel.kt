@@ -54,7 +54,7 @@ class SearchViewModel : ViewModel() {
 
         if (loadStateRefresh is LoadState.Error) {
             val event = ErrorHandler.getListErrorHandler(loadStateRefresh.error)
-            if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+            if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                 CacheRepository.setIsLoggedIn(false)
             }
             _events.postValue(event)
@@ -67,7 +67,7 @@ class SearchViewModel : ViewModel() {
             ?: loadState.prepend as? LoadState.Error
         errorState?.let {
             val event = ErrorHandler.getListErrorHandler(it.error)
-            if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+            if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                 CacheRepository.setIsLoggedIn(false)
             }
             _events.postValue(event)

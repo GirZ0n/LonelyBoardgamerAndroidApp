@@ -94,15 +94,15 @@ class RegistrationFragment : Fragment() {
             }
 
             when (it.type) {
-                Event.Type.Notification -> {
+                Event.Type.NOTIFICATION -> {
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_LONG).show()
                 }
-                Event.Type.Error -> {
+                Event.Type.ERROR -> {
                     val intent = ErrorActivity.newActivity(requireContext(), it.message)
                     startActivity(intent)
                     activity?.finish()
                 }
-                Event.Type.Move -> {
+                Event.Type.MOVE -> {
                     when (it.message) {
                         "MyProfile" -> {
                             findNavController().navigate(R.id.action_registrationFragment_to_myProfile)

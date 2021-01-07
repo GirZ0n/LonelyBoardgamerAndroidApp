@@ -15,15 +15,15 @@ object ErrorHandler {
             ServerError.Type.NETWORK,
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.SOME_INFO_MISSING -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.ELEMENT_WAS_NOT_FOUND -> {
-                Event(Event.Type.Move, "Registration")
+                Event(Event.Type.MOVE, "Registration")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -33,15 +33,15 @@ object ErrorHandler {
             ServerError.Type.NETWORK,
             ServerError.Type.SOME_INFO_MISSING,
             ServerError.Type.ELEMENT_WAS_NOT_FOUND -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -50,17 +50,17 @@ object ErrorHandler {
         return when (error.code) {
             ServerError.Type.NETWORK,
             ServerError.Type.SOME_INFO_MISSING -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.ELEMENT_WAS_NOT_FOUND,
             ServerError.Type.HTTP_401 -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -69,17 +69,17 @@ object ErrorHandler {
         return when (error.code) {
             ServerError.Type.NETWORK,
             ServerError.Type.SOME_INFO_MISSING -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.ELEMENT_WAS_NOT_FOUND,
             ServerError.Type.HTTP_401 -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -89,16 +89,16 @@ object ErrorHandler {
             ServerError.Type.NETWORK,
             ServerError.Type.SOME_INFO_MISSING,
             ServerError.Type.ELEMENT_WAS_NOT_FOUND -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.HTTP_401 -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -106,13 +106,13 @@ object ErrorHandler {
     fun getListErrorHandler(exception: Throwable): Event {
         return when (exception) {
             is HttpException -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
             is IOException -> {
-                Event(Event.Type.Notification, exception.localizedMessage ?: "")
+                Event(Event.Type.NOTIFICATION, exception.localizedMessage ?: "")
             }
             else -> {
-                Event(Event.Type.Error, exception.toString())
+                Event(Event.Type.ERROR, exception.toString())
             }
         }
     }
@@ -124,16 +124,16 @@ object ErrorHandler {
             ServerError.Type.ELEMENT_WAS_NOT_FOUND,
             ServerError.Type.WRONG_DATA_FORMAT,
             ServerError.Type.BAD_DATA -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.HTTP_401 -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -145,16 +145,16 @@ object ErrorHandler {
             ServerError.Type.ELEMENT_WAS_NOT_FOUND,
             ServerError.Type.WRONG_DATA_FORMAT,
             ServerError.Type.BAD_DATA -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.HTTP_401 -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -166,16 +166,16 @@ object ErrorHandler {
             ServerError.Type.ELEMENT_WAS_NOT_FOUND,
             ServerError.Type.WRONG_DATA_FORMAT,
             ServerError.Type.BAD_DATA -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.HTTP_401 -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -187,16 +187,16 @@ object ErrorHandler {
             ServerError.Type.ELEMENT_WAS_NOT_FOUND,
             ServerError.Type.WRONG_DATA_FORMAT,
             ServerError.Type.BAD_DATA -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.HTTP_401 -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }
@@ -208,16 +208,16 @@ object ErrorHandler {
             ServerError.Type.ELEMENT_WAS_NOT_FOUND,
             ServerError.Type.WRONG_DATA_FORMAT,
             ServerError.Type.BAD_DATA -> {
-                Event(Event.Type.Notification, error.message)
+                Event(Event.Type.NOTIFICATION, error.message)
             }
 
             ServerError.Type.AUTHORIZATION,
             ServerError.Type.HTTP_401 -> {
-                Event(Event.Type.Move, "Login")
+                Event(Event.Type.MOVE, "Login")
             }
 
             else -> {
-                Event(Event.Type.Error, "${error.code}: ${error.message}")
+                Event(Event.Type.ERROR, "${error.code}: ${error.message}")
             }
         }
     }

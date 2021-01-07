@@ -46,14 +46,14 @@ class RegistrationViewModel : ViewModel() {
         events.addSource(registrationServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.registrationErrorHandler(it as ServerError)
-                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+                if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
-                events.postValue(Event(Event.Type.Move, "MyProfile"))
+                events.postValue(Event(Event.Type.MOVE, "MyProfile"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -102,14 +102,14 @@ class RegistrationViewModel : ViewModel() {
 
     private fun checkFields(address: String, description: String): Boolean {
         if (address.isBlank()) {
-            events.postValue(Event(Event.Type.Notification, "Укажите местоположение"))
+            events.postValue(Event(Event.Type.NOTIFICATION, "Укажите местоположение"))
             return false
         }
 
         if (description.length > MAX_LENGTH_OF_DESCRIPTION) {
             events.postValue(
                 Event(
-                    Event.Type.Notification,
+                    Event.Type.NOTIFICATION,
                     "Описание должно содержать не более 250 символов"
                 )
             )
