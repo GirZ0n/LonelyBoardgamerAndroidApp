@@ -58,20 +58,6 @@ class MyProfileViewModelTest {
         }
     }
 
-    @Test
-    fun `test`() {
-        val body = getBodyFromJson("get_profile_0_status_response")
-
-        server.enqueue(
-            MockResponse().setBody(body)
-        )
-
-        viewModel.updateProfile()
-        val event = viewModel.name.getOrAwaitValue()
-
-        assert(event == "Иван Иванов")
-    }
-
     //region logout tests
 
     @Test
