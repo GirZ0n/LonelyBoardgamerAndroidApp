@@ -1,7 +1,5 @@
 package com.twoIlya.android.lonelyboardgamer.activities.login
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -50,10 +48,10 @@ class LoginActivity : AppCompatActivity() {
             }
 
             when (it.type) {
-                Event.Type.Notification -> {
+                Event.Type.NOTIFICATION -> {
                     Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
                 }
-                Event.Type.Move -> {
+                Event.Type.MOVE -> {
                     val intent = when (it.message) {
                         "Registration" -> MainActivity.newActivity(this, true)
                         "MyProfile" -> MainActivity.newActivity(this, false)
@@ -62,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 }
-                Event.Type.Error -> {
+                Event.Type.ERROR -> {
                     val intent = ErrorActivity.newActivity(this, it.message)
                     startActivity(intent)
                     finish()

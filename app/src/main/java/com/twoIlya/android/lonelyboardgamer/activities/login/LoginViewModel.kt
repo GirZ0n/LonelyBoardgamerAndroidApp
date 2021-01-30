@@ -33,7 +33,7 @@ class LoginViewModel : ViewModel() {
             } else if (it is Token) {
                 TokenRepository.setServerToken(it)
                 CacheRepository.setIsLoggedIn(true)
-                events.postValue(Event(Event.Type.Move, "MyProfile"))
+                events.postValue(Event(Event.Type.MOVE, "MyProfile"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }

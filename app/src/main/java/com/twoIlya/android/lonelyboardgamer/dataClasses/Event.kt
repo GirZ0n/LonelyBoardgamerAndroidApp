@@ -6,8 +6,8 @@ data class Event(
     var isHandle: Boolean = false,
 ) {
     enum class Type {
-        Error,
-        Notification,
-        Move,
+        ERROR,
+        NOTIFICATION,
+        MOVE,
     }
 }

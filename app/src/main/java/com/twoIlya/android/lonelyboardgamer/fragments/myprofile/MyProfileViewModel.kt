@@ -51,7 +51,7 @@ class MyProfileViewModel : ViewModel() {
         events.addSource(getProfileServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.getProfileErrorHandler(it as ServerError)
-                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+                if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -70,7 +70,7 @@ class MyProfileViewModel : ViewModel() {
                 val event = ErrorHandler.logoutErrorHandler(it as ServerError)
                 events.postValue(event)
             } else if (it is ServerMessage) {
-                events.postValue(Event(Event.Type.Move, "Login"))
+                events.postValue(Event(Event.Type.MOVE, "Login"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }

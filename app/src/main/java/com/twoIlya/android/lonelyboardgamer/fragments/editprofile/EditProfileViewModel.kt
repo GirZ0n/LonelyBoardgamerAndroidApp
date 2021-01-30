@@ -82,7 +82,7 @@ class EditProfileViewModel : ViewModel() {
         events.addSource(getProfileServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.getProfileErrorHandler(it as ServerError)
-                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+                if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -98,7 +98,7 @@ class EditProfileViewModel : ViewModel() {
         events.addSource(changeAddressServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.changeProfileErrorHandler(it as ServerError)
-                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+                if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -107,7 +107,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setAddress(address)
                     oldAddress = address
                 }
-                events.postValue(Event(Event.Type.Notification, "Адрес изменён"))
+                events.postValue(Event(Event.Type.NOTIFICATION, "Адрес изменён"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -115,7 +115,7 @@ class EditProfileViewModel : ViewModel() {
         events.addSource(changeCategoriesServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.changeProfileErrorHandler(it as ServerError)
-                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+                if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -124,7 +124,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setCategories(categories)
                     oldCategories = categories
                 }
-                events.postValue(Event(Event.Type.Notification, "Категории изменены"))
+                events.postValue(Event(Event.Type.NOTIFICATION, "Категории изменены"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -132,7 +132,7 @@ class EditProfileViewModel : ViewModel() {
         events.addSource(changeMechanicsServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.changeProfileErrorHandler(it as ServerError)
-                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+                if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -141,7 +141,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setMechanics(mechanics)
                     oldMechanics = mechanics
                 }
-                events.postValue(Event(Event.Type.Notification, "Механики изменены"))
+                events.postValue(Event(Event.Type.NOTIFICATION, "Механики изменены"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -149,7 +149,7 @@ class EditProfileViewModel : ViewModel() {
         events.addSource(changeDescriptionServerResponse) {
             if (ErrorHandler.isError(it)) {
                 val event = ErrorHandler.changeProfileErrorHandler(it as ServerError)
-                if (event.type == Event.Type.Move || event.type == Event.Type.Error) {
+                if (event.type == Event.Type.MOVE || event.type == Event.Type.ERROR) {
                     CacheRepository.setIsLoggedIn(false)
                 }
                 events.postValue(event)
@@ -158,7 +158,7 @@ class EditProfileViewModel : ViewModel() {
                     CacheRepository.setDescription(description)
                     oldAboutMe = description
                 }
-                events.postValue(Event(Event.Type.Notification, "Описание изменено"))
+                events.postValue(Event(Event.Type.NOTIFICATION, "Описание изменено"))
             }
             updateForm(isFormEnabled = true, isButtonLoading = false)
         }
@@ -229,13 +229,13 @@ class EditProfileViewModel : ViewModel() {
     ): Boolean {
         return when {
             address.isBlank() -> {
-                events.postValue(Event(Event.Type.Notification, "Укажите местоположение"))
+                events.postValue(Event(Event.Type.NOTIFICATION, "Укажите местоположение"))
                 false
             }
             description.length > MAX_LENGTH_OF_DESCRIPTION -> {
                 events.postValue(
                     Event(
-                        Event.Type.Notification,
+                        Event.Type.NOTIFICATION,
                         "Описание должно содержать не более 250 символов"
                     )
                 )
